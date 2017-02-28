@@ -15,6 +15,66 @@
     <script src="js/stats.min.js"></script>
 
     <script>
+
+    "use strict";
+
+    var rotationX = 0;
+	var rotationZ = 0;
+	var pointAt = {
+		x:1,y:1,z:0
+	};
+	var playerAt = {
+		x:0,y:1,z:0
+	};
+	var speed = .2;
+
+    window.onkeydown = function(event) {
+    	switch(event.key) {
+    		case "a":
+    			rotationX -= .02;
+    			event.preventDefault();
+    			break;
+    		case "d":
+    			rotationX += .02;
+    			event.preventDefault();
+    			break;
+    		case "w":
+    			rotationZ += .02;
+    			event.preventDefault();
+    			break;
+    		case "s":
+    			rotationZ -= .02;
+    			event.preventDefault();
+    			break;
+    	}
+    	switch(event.keyCode) {
+    		case 38:
+    			//up
+    			playerAt.x += Math.cos(rotationX) * speed;
+    			playerAt.z += Math.sin(rotationX) * speed;
+    			event.preventDefault();
+    			break;
+    		case 40:
+    			playerAt.x -= Math.cos(rotationX) * speed;
+    			playerAt.z -= Math.sin(rotationX) * speed;
+    			//down
+    			event.preventDefault();
+    			break;
+    		case 37:
+    			//left
+    			playerAt.x -= Math.cos(rotationX + Math.PI/2) * speed;
+    			playerAt.z -= Math.sin(rotationX + Math.PI/2) * speed;
+    			event.preventDefault();
+    			break;
+    		case 39:
+    			//right
+    			playerAt.x += Math.cos(rotationX + Math.PI/2) * speed;
+    			playerAt.z += Math.sin(rotationX + Math.PI/2) * speed;
+    			event.preventDefault();
+    			break;
+    	}
+    }
+
       if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 			var container, stats;
@@ -54,7 +114,9 @@
 				document.body.appendChild( container );
 
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-				camera.position.set( 2, 2, 3 );
+				camera.position.set(0,1,0);
+
+				
 
 				scene = new THREE.Scene();
 
@@ -139,11 +201,22 @@
 
 				var timer = Date.now() * 0.0005;
 
-				camera.position.x = Math.cos( timer ) * 10;
-				camera.position.y = 2;
-				camera.position.z = Math.sin( timer ) * 10;
+				//camera.position.x = Math.cos( rotationX ) * 10;
+				//camera.position.y = 2;
+				//camera.position.z = Math.sin( rotationX ) * 10;
 
-				camera.lookAt( scene.position );
+				//camera.position.x += speed;
+				//camera.position.z += speed;
+				camera.position.x = playerAt.x;
+				camera.position.y = playerAt.y;
+				camera.position.z = playerAt.z;
+
+				pointAt.x = Math.cos(rotationX)+playerAt.x;
+				pointAt.y = Math.sin(rotationZ)+playerAt.y;
+				pointAt.z = Math.sin(rotationX)+playerAt.z;
+
+
+				camera.lookAt(pointAt);
 
 			//	particleLight.position.x = Math.sin( timer * 4 ) * 3009;
 			//	particleLight.position.y = Math.cos( timer * 5 ) * 4000;
@@ -154,6 +227,7 @@
 				renderer.render( scene, camera );
 
 			}
+
     </script>
   </body>
 </html>
