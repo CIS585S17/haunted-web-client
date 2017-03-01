@@ -50,6 +50,17 @@
   		right: false
   	};
 
+    window.onmousemove = function(event) {
+      var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+		  var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+		  rotationX -= movementX * -0.01;
+		  rotationZ -= movementY * 0.002;
+
+      rotationZ = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
+    }
+
+
     window.onkeydown = function(event) {
     	switch(event.key) {
     		case "a":
