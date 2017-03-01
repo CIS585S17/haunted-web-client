@@ -252,19 +252,19 @@
 
 			if (movementInput.left) {
 				playerAt.x -= Math.cos(rotationX + Math.PI/2) * speed;
-  				playerAt.z -= Math.sin(rotationX + Math.PI/2) * speed;
+  			playerAt.z -= Math.sin(rotationX + Math.PI/2) * speed;
 			}
 			if (movementInput.right) {
 				playerAt.x += Math.cos(rotationX + Math.PI/2) * speed;
-  				playerAt.z += Math.sin(rotationX + Math.PI/2) * speed;
+  			playerAt.z += Math.sin(rotationX + Math.PI/2) * speed;
 			}
 			if (movementInput.up) {
 				playerAt.x += Math.cos(rotationX) * speed;
-  				playerAt.z += Math.sin(rotationX) * speed;
+  			playerAt.z += Math.sin(rotationX) * speed;
 			}
 			if (movementInput.down) {
 				playerAt.x -= Math.cos(rotationX) * speed;
-  				playerAt.z -= Math.sin(rotationX) * speed;
+  			playerAt.z -= Math.sin(rotationX) * speed;
 			}
 			if (cameraInput.left) {
 				rotationX -= .02;
