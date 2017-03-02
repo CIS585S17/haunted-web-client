@@ -4,6 +4,7 @@
     <title>Haunted</title>
   </head>
   <body>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="js/three.js"></script>
     <script src="js/collada/Animation.js"></script>
     <script src="js/collada/AnimationHandler.js"></script>
@@ -17,9 +18,9 @@
     <script>
 
     "use strict";
+    var socket = io.connect('/');
 
     var rotationX = 0;
-
   	var rotationZ = 0;
 
   	var pointAt = {
@@ -57,7 +58,7 @@
 		  rotationX -= movementX * -0.01;
 		  rotationZ -= movementY * 0.002;
 
-      rotationZ = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
+   //  rotationZ = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
     }
 
 
@@ -92,10 +93,12 @@
     		case 37:
     			movementInput.left = true;
     			event.preventDefault();
+    			socket.emit('keyDown');
     			break;
     		case 39:
     			movementInput.right = true;
     			event.preventDefault();
+    			socket.emit('keyDown');
     			break;
     	}
     }
