@@ -1,12 +1,29 @@
 'use strict';
 const fs = require('fs');
 
+/**
+ * A room in the house
+ */
 class Room {
-    constructor(name) {
-        this.name = name;
+    /**
+     * 
+     * @constructor
+     * 
+     * @param {*} name
+     *   The name of the file to be stored
+     * @param {*} path
+     *   The path of the file of the room
+     */
+    constructor(name, path) {
         this.edges = {};
+        this.name = name;
+        this.path = path;
     }
 
+    /**
+     * 
+     * @param {*} room 
+     */
     addEdge(room) {
         this.edges[room.name] = room;
     }
@@ -26,7 +43,18 @@ class Graph {
     }
 
     createRoom() {
-        
+        fs.readdir(this.dir, (error, data) => {
+            if (error) {
+                console.log(error);
+            }
+            else {
+                for (let file of data) {
+                    if (file.endsWith('.dae')) {
+                        this.rooms.push(new Room(file.substr(0, file.length-4), `${this.dir}/${file}`));
+                    }
+                }
+            }
+        })
     }
 
     addEdge(room1, room2) {
