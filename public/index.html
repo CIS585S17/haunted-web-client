@@ -1,9 +1,9 @@
 <!doctype html>
 <html>
-  <head>
+<head>
     <title>Haunted</title>
-  </head>
-  <body>
+</head>
+<body>
     <script src="js/three.js"></script>
     <script src="js/collada/Animation.js"></script>
     <script src="js/collada/AnimationHandler.js"></script>
@@ -15,252 +15,189 @@
     <script src="js/stats.min.js"></script>
 
     <script>
-
     "use strict";
-
     var rotationX = 0;
-
   	var rotationZ = 0;
-
   	var pointAt = {
   		x:1,
       y:1,
       z:0
   	};
-
   	var playerAt = {
   		x:0,
       y:1,
       z:0
   	};
-
   	var speed = .05;
-
   	var movementInput = {
   		up: false,
   		down: false,
   		left: false,
   		right: false
   	};
-
   	var cameraInput = {
   		up: false,
   		down: false,
   		left: false,
   		right: false
   	};
-
     window.onmousemove = function(event) {
       var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
 		  var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
-
 		  rotationX -= movementX * -0.01;
 		  rotationZ -= movementY * 0.002;
-
       rotationZ = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
     }
-
-
     window.onkeydown = function(event) {
-    	switch(event.key) {
-    		case "a":
+    	switch(event.keyCode) {
+    		case 38:
     			cameraInput.left = true;
     			event.preventDefault();
     			break;
-    		case "d":
+    		case 40:
     			cameraInput.right = true;
     			event.preventDefault();
     			break;
-    		case "w":
+    		case 37:
     			cameraInput.up = true;
     			event.preventDefault();
     			break;
-    		case "s":
+    		case 39:
     			cameraInput.down = true;
     			event.preventDefault();
     			break;
     	}
-    	switch(event.keyCode) {
-    		case 38:
+    	switch(event.key) {
+    		case "w":
     			movementInput.up = true;
     			event.preventDefault();
     			break;
-    		case 40:
+    		case "s":
     			movementInput.down = true;
     			event.preventDefault();
     			break;
-    		case 37:
+    		case "a":
     			movementInput.left = true;
     			event.preventDefault();
     			break;
-    		case 39:
+    		case "d":
     			movementInput.right = true;
     			event.preventDefault();
     			break;
     	}
     }
-
     window.onkeyup = function(event) {
-    	switch(event.key) {
-    		case "a":
+    	switch(event.keyCode) {
+    		case 38:
     			cameraInput.left = false;
     			event.preventDefault();
     			break;
-    		case "d":
+    		case 40:
     			cameraInput.right = false;
     			event.preventDefault();
     			break;
-    		case "w":
+    		case 37:
     			cameraInput.up = false;
     			event.preventDefault();
     			break;
-    		case "s":
+    		case 39:
     			cameraInput.down = false;
     			event.preventDefault();
     			break;
     	}
-    	switch(event.keyCode) {
-    		case 38:
+    	switch(event.key) {
+    		case "w":
     			movementInput.up = false;
     			event.preventDefault();
     			break;
-    		case 40:
+    		case "s":
     			movementInput.down = false;
     			event.preventDefault();
     			break;
-    		case 37:
+    		case "a":
     			movementInput.left = false;
     			event.preventDefault();
     			break;
-    		case 39:
+    		case "d":
     			movementInput.right = false;
     			event.preventDefault();
     			break;
     	}
     }
-
     if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
-
 		var container, stats;
-
 		var camera, scene, renderer, objects;
 		var particleLight;
 		var dae;
-
 		var loader = new THREE.ColladaLoader();
 		loader.options.convertUpAxis = true;
 		loader.load( 'models/room.dae', function ( collada ) {
-
 			dae = collada.scene;
-
 			dae.traverse( function ( child ) {
-
 				if ( child instanceof THREE.SkinnedMesh ) {
-
 					var animation = new THREE.Animation( child, child.geometry.animation );
 					animation.play();
-
 				}
-
 			});
-
 			dae.scale.x = dae.scale.y = dae.scale.z = 0.02;
 			dae.updateMatrix();
-
 			init();
 			animate();
-
 		});
-
 		function init() {
-
 			container = document.createElement( 'div' );
 			document.body.appendChild( container );
-
 			camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
 			camera.position.set(0,1,0);
-
 			scene = new THREE.Scene();
-
 			// Grid
-
 			var size = 14, step = 1;
-
 			var geometry = new THREE.Geometry();
 			var material = new THREE.LineBasicMaterial( { color: 0x303030 } );
-
 			for ( var i = - size; i <= size; i += step ) {
-
 				geometry.vertices.push( new THREE.Vector3( - size, - 0.04, i ) );
 				geometry.vertices.push( new THREE.Vector3(   size, - 0.04, i ) );
-
 				geometry.vertices.push( new THREE.Vector3( i, - 0.04, - size ) );
 				geometry.vertices.push( new THREE.Vector3( i, - 0.04,   size ) );
-
 			}
-
 			var line = new THREE.LineSegments( geometry, material );
 			scene.add( line );
-
 			// Add the COLLADA
-
 			scene.add( dae );
-
 			//particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xffffff } ) );
 			//scene.add( particleLight );
-
 			// Lights
-
 			scene.add( new THREE.AmbientLight( 0xcccccc ) );
-
 			var directionalLight = new THREE.DirectionalLight(/*Math.random() * 0xffffff*/0xeeeeee );
 			directionalLight.position.x = Math.random() - 0.5;
 			directionalLight.position.y = Math.random() - 0.5;
 			directionalLight.position.z = Math.random() - 0.5;
 			directionalLight.position.normalize();
 			scene.add( directionalLight );
-
 		//	var pointLight = new THREE.PointLight( 0xffffff, 4 );
 		//	particleLight.add( pointLight );
-
 			renderer = new THREE.WebGLRenderer();
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			container.appendChild( renderer.domElement );
-
 			stats = new Stats();
 			container.appendChild( stats.dom );
-
 			window.addEventListener( 'resize', onWindowResize, false );
-
 		}
-
 		function onWindowResize() {
-
 			camera.aspect = window.innerWidth / window.innerHeight;
 			camera.updateProjectionMatrix();
-
 			renderer.setSize( window.innerWidth, window.innerHeight );
-
 		}
-
 		//
-
 		function animate() {
-
 			requestAnimationFrame( animate );
-
 			render();
 			stats.update();
-
 		}
-
 		var clock = new THREE.Clock();
-
 		function render() {
-
 			var timer = Date.now() * 0.0005;
-
 			if (movementInput.left) {
 				playerAt.x -= Math.cos(rotationX + Math.PI/2) * speed;
   			playerAt.z -= Math.sin(rotationX + Math.PI/2) * speed;
@@ -289,28 +226,19 @@
 			if (cameraInput.down) {
 				rotationZ -= .02;
 			}
-
 			camera.position.x = playerAt.x;
 			camera.position.y = playerAt.y;
 			camera.position.z = playerAt.z;
-
 			pointAt.x = Math.cos(rotationX)+playerAt.x;
 			pointAt.y = Math.sin(rotationZ)+playerAt.y;
 			pointAt.z = Math.sin(rotationX)+playerAt.z;
-
-
 			camera.lookAt(pointAt);
-
 			//particleLight.position.x = Math.sin( timer * 4 ) * 3009;
 			//particleLight.position.y = Math.cos( timer * 5 ) * 4000;
 			//particleLight.position.z = Math.cos( timer * 4 ) * 3009;
-
 			THREE.AnimationHandler.update( clock.getDelta() );
-
 			renderer.render( scene, camera );
-
 		}
-
     </script>
-  </body>
+</body>
 </html>
