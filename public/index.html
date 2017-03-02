@@ -1,10 +1,10 @@
-<<<<<<< HEAD
 <!doctype html>
 <html>
-<head>
+  <head>
     <title>Haunted</title>
-</head>
-<body>
+  </head>
+  <body>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="js/three.js"></script>
     <script src="js/collada/Animation.js"></script>
     <script src="js/collada/AnimationHandler.js"></script>
@@ -17,6 +17,7 @@
 
     <script>
     "use strict";
+    var socket = io.connect('/');
     var rotationX = 0;
   	var rotationZ = 0;
   	var pointAt = {
@@ -47,79 +48,79 @@
 		  var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 		  rotationX -= movementX * -0.01;
 		  rotationZ -= movementY * 0.002;
-      rotationZ = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
+     rotationZ = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
     }
     window.onkeydown = function(event) {
-    	switch(event.keyCode) {
-    		case 37:
+    	switch(event.key) {
+    		case "a":
     			cameraInput.left = true;
     			event.preventDefault();
     			break;
-    		case 39:
+    		case "d":
     			cameraInput.right = true;
     			event.preventDefault();
     			break;
-    		case 38:
+    		case "w":
     			cameraInput.up = true;
     			event.preventDefault();
     			break;
-    		case 40:
+    		case "s":
     			cameraInput.down = true;
     			event.preventDefault();
     			break;
     	}
-    	switch(event.key) {
-    		case "w":
+    	switch(event.keyCode) {
+    		case 38:
     			movementInput.up = true;
     			event.preventDefault();
     			break;
-    		case "s":
+    		case 40:
     			movementInput.down = true;
     			event.preventDefault();
     			break;
-    		case "a":
+    		case 37:
     			movementInput.left = true;
     			event.preventDefault();
     			break;
-    		case "d":
+    		case 39:
     			movementInput.right = true;
     			event.preventDefault();
     			break;
     	}
     }
     window.onkeyup = function(event) {
-    	switch(event.keyCode) {
-    		case 37:
+    	switch(event.key) {
+    		case "a":
     			cameraInput.left = false;
     			event.preventDefault();
     			break;
-    		case 39:
+    		case "d":
     			cameraInput.right = false;
     			event.preventDefault();
     			break;
-    		case 38:
+    		case "w":
     			cameraInput.up = false;
     			event.preventDefault();
     			break;
-    		case 40:
+    		case "s":
     			cameraInput.down = false;
     			event.preventDefault();
     			break;
     	}
-    	switch(event.key) {
-    		case "w":
+    	switch(event.keyCode) {
+    		case 38:
     			movementInput.up = false;
     			event.preventDefault();
     			break;
-    		case "s":
+    		case 40:
     			movementInput.down = false;
     			event.preventDefault();
     			break;
-    		case "a":
+    		case 37:
     			movementInput.left = false;
     			event.preventDefault();
     			break;
-    		case "d":
+    		case 39:
     			movementInput.right = false;
     			event.preventDefault();
     			break;
@@ -241,5 +242,5 @@
 			renderer.render( scene, camera );
 		}
     </script>
-</body>
+  </body>
 </html>
