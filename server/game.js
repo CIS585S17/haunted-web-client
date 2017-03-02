@@ -16,9 +16,10 @@ function Game(io, sockets, room) {
         // Join the room
         player.socket.join(room);
 
-        player.socket.on('keyDown', function () {
-            console.log("Player " + (i+1) + " pressed a key");
-        });
+        // Example function for receiving end of a socket emit
+        //player.socket.on('keyDown', function () {
+        //    console.log("Player " + (i+1) + " pressed a key");
+        //});
     });
 
     var game = this;

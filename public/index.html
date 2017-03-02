@@ -93,12 +93,10 @@
     		case 37:
     			movementInput.left = true;
     			event.preventDefault();
-    			socket.emit('keyDown');
     			break;
     		case 39:
     			movementInput.right = true;
     			event.preventDefault();
-    			socket.emit('keyDown');
     			break;
     	}
     }
