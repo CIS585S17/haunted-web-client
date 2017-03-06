@@ -146,6 +146,21 @@
 			init();
 			animate();
 		});
+		// var dae2;
+		// var loader2 = new THREE.ColladaLoader();
+		// loader.load( 'models/room1.dae', function ( collada ) {
+		// 	dae2 = collada.scene;
+		// 	dae2.traverse( function ( child ) {
+		// 		if ( child instanceof THREE.SkinnedMesh ) {
+		// 			var animation = new THREE.Animation( child, child.geometry.animation );
+		// 			animation.play();
+		// 		}
+		// 	});
+		// 	dae2.scale.x = dae2.scale.y = dae2.scale.z = 0.02;
+		// 	dae2.updateMatrix();
+		// 	init();
+		// 	animate();
+		// });
 		function init() {
 			container = document.createElement( 'div' );
 			document.body.appendChild( container );
