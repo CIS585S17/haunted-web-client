@@ -38,12 +38,39 @@
   		left: false,
   		right: false
   	};
+
+
+
+
+
+
+  	function requestFullScreen(element) {
+    	// Supports most browsers and their versions.
+    	var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+    	if (requestMethod) { // Native full screen.
+        	requestMethod.call(element);
+    	} 	
+    	else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+        	var wscript = new ActiveXObject("WScript.Shell");
+        	if (wscript !== null) {
+            	wscript.SendKeys("{F11}");
+        	}
+    	}
+	}
+
+	var elem = document.body; // Make the body go full screen.
+	requestFullScreen(elem);
+
+
+
+
     window.onmousemove = function(event) {
       var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
 		  var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 		  rotationX -= movementX * -0.01;
 		  rotationZ -= movementY * 0.002;
-     rotationZ = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
+     rotationZ = Math.max( - Math.PI, Math.min( Math.PI, rotationZ ) );
     }
     window.onkeydown = function(event) {
     	switch(event.key) {
