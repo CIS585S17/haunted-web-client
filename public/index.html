@@ -175,18 +175,6 @@
 				playerAt.x -= Math.cos(rotationX) * speed;
   			playerAt.z -= Math.sin(rotationX) * speed;
 			}
-			if (cameraInput.left) {
-				rotationX -= .02;
-			}
-			if (cameraInput.right) {
-				rotationX += .02;
-			}
-			if (cameraInput.up) {
-				rotationZ += .02;
-			}
-			if (cameraInput.down) {
-				rotationZ -= .02;
-			}
 			camera.position.x = playerAt.x;
 			camera.position.y = playerAt.y;
 			camera.position.z = playerAt.z;
