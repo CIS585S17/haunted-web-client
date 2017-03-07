@@ -5,7 +5,7 @@
 </head>
 <body>
     <p align="center">
-      <button type="button" onclick ="start();">Start Game</button>
+      <button id="startButton" type="button" onclick ="start();">Start Game</button>
     </p>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -23,6 +23,7 @@
     "use strict";
 
     function start() {
+      document.getElementById('startButton').style.visibility = 'hidden';
       var socket = io.connect('/');
 
       var rotationX = 0;
