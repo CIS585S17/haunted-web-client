@@ -1,4 +1,4 @@
-const {Graph} = require('./room');
+const {Graph} = require('./server/room');
 
 var express = require('express');
 var app = express();
