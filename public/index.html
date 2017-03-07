@@ -139,7 +139,7 @@
   		var dae;
   		var loader = new THREE.ColladaLoader();
   		loader.options.convertUpAxis = true;
-  		loader.load( 'models/room.dae', function ( collada ) {
+  		loader.load( 'models/cardroom.dae', function ( collada ) {
   			dae = collada.scene;
   			dae.traverse( function ( child ) {
   				if ( child instanceof THREE.SkinnedMesh ) {
