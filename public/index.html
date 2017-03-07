@@ -38,12 +38,6 @@
   		left: false,
   		right: false
   	};
-  	var cameraInput = {
-  		up: false,
-  		down: false,
-  		left: false,
-  		right: false
-  	};
     window.onmousemove = function(event) {
       var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
 		  var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
@@ -52,24 +46,6 @@
      rotationZ = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
     }
     window.onkeydown = function(event) {
-    	switch(event.keyCode) {
-    		case 38:
-    			cameraInput.left = true;
-    			event.preventDefault();
-    			break;
-    		case 40:
-    			cameraInput.right = true;
-    			event.preventDefault();
-    			break;
-    		case 37:
-    			cameraInput.up = true;
-    			event.preventDefault();
-    			break;
-    		case 39:
-    			cameraInput.down = true;
-    			event.preventDefault();
-    			break;
-    	}
     	switch(event.key) {
     		case "w":
     			movementInput.up = true;
@@ -90,24 +66,6 @@
     	}
     }
     window.onkeyup = function(event) {
-    	switch(event.keyCode) {
-    		case 38:
-    			cameraInput.left = false;
-    			event.preventDefault();
-    			break;
-    		case 40:
-    			cameraInput.right = false;
-    			event.preventDefault();
-    			break;
-    		case 37:
-    			cameraInput.up = false;
-    			event.preventDefault();
-    			break;
-    		case 39:
-    			cameraInput.down = false;
-    			event.preventDefault();
-    			break;
-    	}
     	switch(event.key) {
     		case "w":
     			movementInput.up = false;
