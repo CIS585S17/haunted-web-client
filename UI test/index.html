@@ -83,7 +83,7 @@
 		
 	</div>
 		<script>
-
+		//set up canvas
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
 		
@@ -101,6 +101,7 @@
 		ctx.drawImage(backBuffer,0,0);
 		isBgLoaded = true;
 		};
+		
 		//charcter info 
 		maxHP = 120;
 		currentHp = 80;
@@ -112,13 +113,9 @@
 		var itemsInGame = [];
 		var itemsInventory = []
 		
-		
-		
 		var item1 = { name: "potion" , image: new Image(), isImageReady: false };
 		item1.image.src = "item1.png";
-		
 		item1.image.onload = function() {
-		//ctx.drawImage(portraitImg, xposPortrait+2, yposPortrait+2 , widthPortrait-4 , heightPortrait-4);
 		item1.isImageReady = true;
 		drawUI();
 		};
@@ -126,9 +123,7 @@
 		
 		var item2 = { name: "dagger" , image: new Image(), isImageReady: false };
 		item2.image.src = "item2.png";
-		
 		item2.image.onload = function() {
-		//ctx.drawImage(portraitImg, xposPortrait+2, yposPortrait+2 , widthPortrait-4 , heightPortrait-4);
 		item2.isImageReady = true;
 		drawUI();
 		};
@@ -137,22 +132,19 @@
 		var item3 = { name: "spear" , image: new Image(), isImageReady: false };
 		item3.image.src = "item3.png";
 		item3.image.onload = function() {
-		//ctx.drawImage(portraitImg, xposPortrait+2, yposPortrait+2 , widthPortrait-4 , heightPortrait-4);
 		item3.isImageReady = true;
 		drawUI();
 		};
-		
 		itemsInGame.push(item3);
 		
 		var item4 = { name: "armor" , image: new Image(), isImageReady: false };
 		item4.image.src = "item4.png";
 		item4.image.onload = function() {
-		//ctx.drawImage(portraitImg, xposPortrait+2, yposPortrait+2 , widthPortrait-4 , heightPortrait-4);
 		item4.isImageReady = true;
 		drawUI();
 		};
+		itemsInGame.push(item4);
 		
-		itemsInGame.push(item4);		
 		//itemsInventory.push(0);
 		
 		//items in the items bar
@@ -169,8 +161,6 @@
 		portraitImg.src = "2.jpeg";
 		var isPortraitLoaded = false;
 		portraitImg.onload = function() {
-		//ctx.drawImage(portraitImg, xposPortrait+2, yposPortrait+2 , widthPortrait-4 , heightPortrait-4);
-		
 		isPortraitLoaded = true;
 		drawUI();
 		};
@@ -188,15 +178,13 @@
 		console.log("chatLog Length:"+chatLog.length);
 		function drawUI ()
 		{
-			
-			//ctx.clear();
+			//clear than redraw all UI elements
 			ctx.clearRect(0, 0, c.width, c.height);
 			//draw bg image
 			if (isBgLoaded)
 				ctx.drawImage(bgImg, 0, 0 , 1280 , 720);
 				
-			
-			//portrait placeholder draw
+			//draw portrait placeholder 
 			ctx.fillStyle="black";
 			ctx.fillRect(xposPortrait,yposPortrait,widthPortrait,heightPortrait);
 			ctx.stroke();
@@ -240,21 +228,19 @@
 				ctx.fillStyle="yellow";
 				ctx.fill();
 				ctx.closePath()
-
-			
 			}
 			
 			//draw chracter stats
 			var yMargin = 20;
 			var txt = "";
 			var yposStat = yposHpContainer;
+			
 			//sanity
 			yposStat = yposStat+yMargin;
 			ctx.font="20px Georgia";
 			txt = "Sanity: ";
 			ctx.fillStyle="black";
 			ctx.fillText(txt,xposHpContainer,yposStat+yMargin);
-			
 			for (var i = 0 ; i < sanity; i++)
 			{	
 				r = 5;
@@ -267,7 +253,6 @@
 			txt = "Power: ";
 			ctx.fillStyle="black";
 			ctx.fillText(txt,xposHpContainer,yposStat+yMargin);
-			
 			for (var i = 0 ; i < power; i++)
 			{	
 				r = 5;
@@ -280,7 +265,6 @@
 			txt = "Speed: ";
 			ctx.fillStyle="black";
 			ctx.fillText(txt,xposHpContainer,yposStat+yMargin);
-			
 			for (var i = 0 ; i < speed; i++)
 			{	
 				r = 5;
@@ -288,21 +272,19 @@
 			}
 			
 			
-			//end of charcter inf UI***************************************************************
+			//end of charcter info UI***************************************************************
 			
 			//chat UI
-			
-			//ctx.fillStyle = "rgba(59, 136, 147, 0.5)"; //bluesih shade
-			
+
 			var widthChat = 400;
 			var heightChat = 300;
 			var yposChat  = 720-heightChat;
 			ctx.fillStyle = "rgba(83, 128, 135, 0.7)";//draker blue
+			//ctx.fillStyle = "rgba(59, 136, 147, 0.5)"; //bluesih shade
 			ctx.fillRect(0,yposChat,widthChat,heightChat);
 			
 			ctx.fillStyle = "white";
 			ctx.font = "16px Georgia";
-			
 			for (var i = 0 ; i < chatLog.length ; i++)
 			{
 			ctx.fillText(chatLog[chatLog.length-i-1],2,720-5 - 18*i);
@@ -358,8 +340,8 @@
 				}
 			
 			}
-			//items label
 			
+			//items label
 			var widthItemsLabel = 100;
 			var heightItemsLabel = 30;
 			var xposItemLabel = ((xposItem+xposItem+widthItems-widthItemsLabel)/2);
