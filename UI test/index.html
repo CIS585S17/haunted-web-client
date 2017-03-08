@@ -153,7 +153,7 @@
 		};
 		
 		itemsInGame.push(item4);		
-		itemsInventory.push(0);
+		//itemsInventory.push(0);
 		
 		//items in the items bar
 		var itemsBarStart = 0; // will draw items starting from this one 
@@ -426,8 +426,19 @@
 		function loseRandomItem()
 		{
 		var num = (Math.floor(Math.random()*100))%itemsInventory.length;
+		var num2 = itemsInventory[num];
 		itemsInventory.splice(num,1);
-		chatLog.push("You have lost "+itemsInGame[num].name+"!");
+		chatLog.push("You have lost "+itemsInGame[num2].name+"!");
+		
+		console.log(itemsBarStart);
+		if (itemsInventory.length>4)
+			itemsBarStart--;
+		else 
+			itemsBarStart = 0;
+		
+		if (itemsBarStart<0)
+			itemsBarStart = 0;
+		
 		drawUI();
 		}
 		
