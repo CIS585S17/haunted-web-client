@@ -1,4 +1,4 @@
-#chatMessageDiv {
+#chatTextArea {
   position: absolute;
   top: 950px;
   left: 12px;
@@ -8,5 +8,14 @@
   color: white;
   resize: none;
   opacity: 1;
+}
+
+#chatLogDiv {
+    position: absolute;
+    top: 645px;
+    left: 20px;
+    font-size: 22px;
+    color: white;
+    opacity: 0.7;
 }
 	

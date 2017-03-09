@@ -1,27 +1,64 @@
 "use strict";
 
-var chatMessageDiv = document.getElementById("chatMessageDiv");
+var chatTextArea = document.getElementById("chatTextArea");
+var chatLogDiv = document.getElementById("chatLogDiv");
 
-function HUD ()
+var chatLog = [];
+
+function HUD (socket)
 {
     this.active = false;
+    this.socket = socket;
+
+    // Update chat if there's been any changes
+    this.socket.on('updateChatLog', function (msg) {
+        AddChatMsg(msg);
+    });
 }
 
 HUD.prototype.update = function (active)
 {
     // No point in setting things again if active is the same value it was in the previous update
     if (active != this.active) {
-        this.active = active;
 
+        this.active = active;
         if (this.active) {
-            chatMessageDiv.style.visibility = "visible";
+            chatTextArea.style.visibility = "visible";
+            chatLogDiv.style.opacity = 0.9;
             document.exitPointerLock();
         }
         else {
-            chatMessageDiv.style.visibility = "hidden";
+            chatTextArea.style.visibility = "hidden";
+            chatLogDiv.style.opacity = 0.7;
             document.body.requestPointerLock();
         }
     }
 
-    chatMessageDiv.style.opacity = document.activeElement == chatMessageDiv ? 1.0 : 0.6;
+    chatTextArea.style.opacity = document.activeElement == chatTextArea ? 1.0 : 0.9;
+}
+
+HUD.prototype.addChatMsg = function (msg)
+{
+    AddChatMsg(msg);
+}
+
+function AddChatMsg (msg)
+{
+    var chatDepth = 10;
+
+    if (chatLog.length == 10) {
+        chatLog.shift();
+    }
+
+    chatLog.push(msg);
+    chatDepth = 10 - chatLog.length;
+    chatLogDiv.innerHTML = "";
+
+    while (chatDepth != 0) {
+        chatLogDiv.innerHTML += ("<br>");
+        chatDepth--;
+    }
+    chatLog.forEach(function (m) {
+        chatLogDiv.innerHTML += ("<br>" + m);
+    });
 }
