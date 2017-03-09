@@ -9,6 +9,8 @@ var players = [];
 var games = 0;
 const Game = require('./server/game');
 
+// let graph = new Graph(`${__dirname}/public/models`);
+
 // Server starts listening on port 5000
 server.listen('5000', ()=>{
     console.log('Listening at http://localhost:5000');
@@ -33,12 +35,3 @@ io.on('connection', function (socket) {
         games++;
     }
 });
-
-
-let graph = new Graph(`${__dirname}/public/models`);
-graph.createRoom();
-graph.addPlayer('player', graph.rooms[1]);
-graph.addItem('knife', 1, graph.rooms[0]);
-graph.room();
-// graph.getDirTree();
-// graph.getDirTree('./public/models');
