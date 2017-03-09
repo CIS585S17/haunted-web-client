@@ -59,13 +59,12 @@ describe('RoomGraph', () => {
     /**
      * Succeed when adding an item to a room
      */
-    // describe('#addItem()', () => {
-    //     it ('room 1 should have item "key" with quantity 3', () => {
-    //         graph.addItem('key', 'key', graph.rooms[0], 3);
-    //         assert.equal(graph.rooms[0].items.key.item, 'key');
-    //         assert.equal(graph.rooms[0].items.key.quantity, 3);
-    //     });
-    // });
+    describe('#addItem()', () => {
+        it ('room 1 should have item "key"', () => {
+            graph.addItem('key', graph.rooms[0]);
+            assert.equal(graph.rooms[0].items[0], 'key');
+        });
+    });
 
     /**
      * Succeed when adding a player to a room
@@ -103,13 +102,13 @@ describe('RoomGraph', () => {
     /**
      * Succeed when removing item from room
      */
-    // describe('#removeItem()', () => {
-    //     it ('should remove item from the room', () => {
-    //         graph.addItem('knife', 'knife', graph.rooms[1], 1);
-    //         graph.removeItem('knife', graph.rooms[1]);
-    //         assert.equal(graph.rooms[1].items.length, 0);
-    //     });
-    // });
+    describe('#removeItem()', () => {
+        it ('should remove item from the room', () => {
+            graph.addItem('knife', graph.rooms[1]);
+            graph.removeItem('knife', graph.rooms[1]);
+            assert.equal(graph.rooms[1].items.length, 0);
+        });
+    });
 
     /**
      * Succeed when removing player from room
@@ -121,8 +120,4 @@ describe('RoomGraph', () => {
             assert.equal(graph.rooms[0].players.length, 0);
         });
     });
-
-    // it ('should fail for no existent room', () => {
-    //     assert.throws(ReferenceError, graph.addPlayer('player1', 'room'));
-    // });
 });

@@ -2,12 +2,6 @@
 const fs = require('fs');
 
 
-class Item {
-    constructor(item) {
-        this.item = item;
-    }
-}
-
 /**
  * A room in the house
  */
@@ -24,7 +18,7 @@ class Room {
     constructor(name, path) {
         this.edges = [];
         this.explored = false;
-        this.items = {};
+        this.items = [];
         this.name = name;
         this.path = path;
         this.players = [];
@@ -47,12 +41,11 @@ class Room {
     }
 
     /**
-     * Add an item to the room
-     * @param {string} prop The name of the item to be added 
-     * @param {object} value The item object to be added to this room
+     * Add an Item to the room
+     * @param {Item} item The item to be added to this room 
      */
-    addItem(prop, value) {
-        this.items[prop] = value;
+    addItem(item) {
+        this.items.push(item);
     }
 
     /**
@@ -75,10 +68,13 @@ class Room {
         this.edges.splice(index, 1);
     }
 
+    /**
+     * Remove an item from the room
+     * @param {Item} item The item to be removed from this room
+     */
     removeItem(item) {
-        // let index = this.items.indexOf(item);
-        // this.items.splice(index, 1);
-        delete this.items.item;
+        let index = this.items.indexOf(item);
+        this.items.splice(index, 1);
     }
 
     /**
@@ -89,9 +85,6 @@ class Room {
         let index = this.players.indexOf(player)
         if (index != -1) {
             this.players.splice(index, 1);
-        }
-        else {
-
         }
     }
 }
@@ -156,12 +149,11 @@ class RoomGraph {
 
     /**
      * Add an item to a room
-     * @param {string} prop The name of the item to be added 
-     * @param {object} value The item object to be added to this room
+     * @param {Item} item An item to be added to a room in the house/graph
      * @param {Room} room A room in the house/graph
      */
-    addItem(prop, value, room, quantity) {
-        room.addItem(prop, new Item(value, quantity));
+    addItem(item, room) {
+        room.addItem(item);
     }
 
     /**
@@ -222,6 +214,11 @@ class RoomGraph {
         room2.removeEdge(room1);
     }
 
+    /**
+     * Remove an Item form a room
+     * @param {Item} item The item to be removed
+     * @param {Room} room The room the item will be removed from 
+     */
     removeItem(item, room) {
         room.removeItem(item);
     }
