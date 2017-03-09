@@ -1,3 +1,5 @@
+const {RoomGraph} = require('./server/room');
+
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
@@ -6,6 +8,8 @@ var io = require('socket.io').listen(server);
 var players = [];
 var games = 0;
 const Game = require('./server/game');
+
+// let graph = new RoomGraph(`${__dirname}/public/models`);
 
 // Server starts listening on port 5000
 server.listen('5000', ()=>{
@@ -31,5 +35,3 @@ io.on('connection', function (socket) {
         games++;
     }
 });
-
-
