@@ -1,10 +1,10 @@
 'use strict';
 const fs = require('fs');
 
+
 class Item {
-    constructor(item, quantity) {
+    constructor(item) {
         this.item = item;
-        this.quantity = quantity;
     }
 }
 
@@ -35,7 +35,15 @@ class Room {
      * @param {Edge} edge The connction between two rooms
      */
     addEdge(edge) {
-        this.edges.push(edge);
+        let hasEdge = false;
+        for (let e of this.edges) {
+            if (e.room === edge.room) {
+                hasEdge = true;
+            }
+        }
+        if (!hasEdge) {
+            this.edges.push(edge);
+        }
     }
 
     /**
@@ -59,8 +67,11 @@ class Room {
      * The connection to be removed between two rooms
      * @param {Edge} edge 
      */
-    removeEdge(edge) {
-        let index = this.edges.indexOf(edge);
+    removeEdge(room) {
+        // let index = this.edges.indexOf(edge);
+        let index = this.edges.findIndex(function(edge) {
+            return edge.room = room;
+        });
         this.edges.splice(index, 1);
     }
 
@@ -86,17 +97,16 @@ class Room {
 }
 
 /**
- * 
+ * Edges between nodes/rooms
  */
 class Edge {
     /**
-     * 
-     * @param {Room} room1 
-     * @param {Room} room2 
+     * Create an Edge to a room
+     * @constructor
+     * @param {Room} room The room to create edge to
      */
-    constructor(room1, room2) {
-        this.room1 = room1;
-        this.room2 = room2;
+    constructor(room) {
+        this.room = room;
     }
 }
 
@@ -105,7 +115,7 @@ class Edge {
  * Where each node is a room 
  * and edges connect rooms
  */
-class Graph {
+class RoomGraph {
     /**
      * 
      * @param {*} dir The location of the dae files
@@ -125,14 +135,23 @@ class Graph {
     }
 
     /**
-     * Add an edge between
+     * Add the edge only from room1 to room2
      * @param {Room} room1 A room in the house/graph
      * @param {Room} room2 A room in the house/graph
      */
     addEdge(room1, room2) {
         // Check if Edge alredy exits between room1 and room2
-        room1.addEdge(new Edge(room1, room2));
-        room2.addEdge(new Edge(room1, room2));
+        room1.addEdge(new Edge(room2));
+    }
+
+    /**
+     * Add eges from room1 to room2 and from room2 to room1
+     * @param {Room} room1 A room in the house/graph
+     * @param {Room} room2 A room in the house/graph
+     */
+    addEdges(room1, room2) {
+        room1.addEdge(new Edge(room2));
+        room2.addEdge(new Edge(room1));
     }
 
     /**
@@ -146,13 +165,20 @@ class Graph {
     }
 
     /**
+     * Add the Foyer as the first room in the house/graph
+     */
+    createFoyer() {
+        this.rooms.push(new Room('foyer', `${this.dir}/foyer.dae`));
+    }
+
+    /**
      * Create the rooms by loading in all dae files
      */
     createRoom() {
         try {
             let files = fs.readdirSync(this.dir);
             for (let file of files) {
-                if (file.endsWith('.dae')) {
+                if (file.endsWith('.dae') && file != 'foyer.dae') {
                     this.rooms.push(new Room(file.substr(0, file.length-4), `${this.dir}/${file}`));
                 }
             }
@@ -160,18 +186,6 @@ class Graph {
         catch (e) {
             console.log(e);
         }
-        // fs.readdir(this.dir, (error, data) => {
-        //     if (error) {
-        //         console.log(error);
-        //     }
-        //     else {
-        //         for (let file of data) {
-        //             if (file.endsWith('.dae')) {
-        //                 this.rooms.push(new Room(file.substr(0, file.length-4), `${this.dir}/${file}`));
-        //             }
-        //         }
-        //     }
-        // });
     }
 
     /**
@@ -189,8 +203,23 @@ class Graph {
         }
     }
 
+    /**
+     * Remove edge from room1 to room2
+     * @param {Room} room1 A room in the house/graph
+     * @param {Room} room2 A room in the house/graph
+     */
     removeEdge(room1, room2) {
-        
+        room1.removeEdge(room2);
+    }
+
+    /**
+     * Remove edges from room1 to room2 and room2 to room1
+     * @param {Room} room1 A room in the house/graph
+     * @param {Room} room2 A room in the house/graph
+     */
+    removeEdges(room1, room2) {
+        room1.removeEdge(room2);
+        room2.removeEdge(room1);
     }
 
     removeItem(item, room) {
@@ -225,5 +254,5 @@ class Graph {
 }
 
 module.exports = {
-    Graph: Graph
+    RoomGraph: RoomGraph
 }

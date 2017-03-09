@@ -1,4 +1,4 @@
-const {Graph} = require('./server/room');
+const {RoomGraph} = require('./server/room');
 
 var express = require('express');
 var app = express();
@@ -9,7 +9,7 @@ var players = [];
 var games = 0;
 const Game = require('./server/game');
 
-// let graph = new Graph(`${__dirname}/public/models`);
+// let graph = new RoomGraph(`${__dirname}/public/models`);
 
 // Server starts listening on port 5000
 server.listen('5000', ()=>{
