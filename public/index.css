@@ -1,0 +1,12 @@
+#chatMessageDiv {
+  position: absolute;
+  top: 950px;
+  left: 12px;
+  visibility: hidden;
+  background : transparent;
+  font-size: 22px;
+  color: white;
+  resize: none;
+  opacity: 1;
+}
+	
