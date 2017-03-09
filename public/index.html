@@ -206,7 +206,7 @@
   			container.appendChild( stats.dom );
 			var c1 = getCanvasElement();
 			container.appendChild(c1);
-			c1.style.visibility = 'hidden';
+			//c1.style.visibility = 'hidden';
   			window.addEventListener( 'resize', onWindowResize, false );
   		}
 
@@ -214,6 +214,8 @@
   			camera.aspect = window.innerWidth / window.innerHeight;
   			camera.updateProjectionMatrix();
   			renderer.setSize( window.innerWidth, window.innerHeight );
+			
+			
   		}
 
   		function animate() {
