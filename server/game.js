@@ -2,27 +2,37 @@ module.exports = exports = Game;
 
 const Player = require('./player.js');
 
+const serverTag = '<span style="color: red"><b>Server </b></span>';
+
 function Game(io, sockets, room) {
     this.io = io;
     this.players = [];
     this.room = room;
+    this.updateChat = false;
 
-    // Initialize the players
-    this.players.push(new Player(sockets[0]));
-    this.players.push(new Player(sockets[1]));
+    // Initialize players and chat
+    this.players.push(new Player(1, sockets[0]));
+    this.players.push(new Player(2, sockets[1]));
+
+    var game = this;
+    var chatLog = [];
 
     this.players.forEach(function (player, i) {
 
         // Join the room
         player.socket.join(room);
 
-        // Example function for receiving end of a socket emit
-        //player.socket.on('keyDown', function () {
-        //    console.log("Player " + (i+1) + " pressed a key");
-        //});
+        // Handle chat messages sent by players
+        player.socket.on('newChatMsg', function (msg) {
+            io.to(room).emit('updateChatLog', (player.Tag + " : " + msg));
+        });
     });
 
-    var game = this;
+    io.to(room).emit('updateChatLog', (serverTag + ": Game has begun!"));
+    console.log("The game has begun!")
+}
 
-    console.log("Game is on");
+Game.prototype.update = function()
+{
+
 }
