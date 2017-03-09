@@ -5,15 +5,9 @@ var chatLogDiv = document.getElementById("chatLogDiv");
 
 var chatLog = [];
 
-function HUD (socket)
+function HUD ()
 {
     this.active = false;
-    this.socket = socket;
-
-    // Update chat if there's been any changes
-    this.socket.on('updateChatLog', function (msg) {
-        AddChatMsg(msg);
-    });
 }
 
 HUD.prototype.update = function (active)
@@ -38,11 +32,6 @@ HUD.prototype.update = function (active)
 }
 
 HUD.prototype.addChatMsg = function (msg)
-{
-    AddChatMsg(msg);
-}
-
-function AddChatMsg (msg)
 {
     var chatDepth = 10;
 

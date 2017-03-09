@@ -28,6 +28,7 @@ function Game(io, sockets, room) {
         });
     });
 
+    io.to(room).emit('updateChatLog', (serverTag + ": Game has begun!"));
     console.log("The game has begun!")
 }
 

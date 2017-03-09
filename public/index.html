@@ -30,7 +30,7 @@
       document.getElementById('startButton').style.visibility = 'hidden';
       var socket = io.connect('/');
 
-      var playerHUD;
+      var playerHUD = new HUD();
       var hudMode = false;
 
       var rotationX = 0;
@@ -157,13 +157,17 @@
                   event.preventDefault();
               }
           }
-
           // Ctrl
           if (event.keyCode == 17) {
               // Turn HUD mode on/off 
               hudMode = hudMode ? false : true;
           }
       }
+
+      // Handle incoming chat messages
+      socket.on('updateChatLog', function (msg) {
+          playerHUD.addChatMsg(msg);
+      });
 
       if ( ! Detector.webgl ) {
          Detector.addGetWebGLMessage();
@@ -195,7 +199,7 @@
   			camera.position.set(0,1,0);
   			scene = new THREE.Scene();
 
-  			playerHUD = new HUD(socket);
+  			
 
   			// Grid
   			var size = 14, step = 1;
