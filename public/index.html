@@ -1,7 +1,16 @@
 <!doctype html>
 <html>
 <head>
-    <title>Haunted</title>
+    <title>Haunted</title>3
+	<style>
+	  canvas {
+		position: absolute;
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+		left: 0;
+	  }
+	</style>
 </head>
 <body>
     <p align="center">
@@ -18,7 +27,8 @@
 
     <script src="js/Detector.js"></script>
     <script src="js/stats.min.js"></script>
-
+	<script src="js/UI.js"></script>
+	
     <script>
     "use strict";
 
@@ -194,6 +204,10 @@
   			container.appendChild( renderer.domElement );
   			stats = new Stats();
   			container.appendChild( stats.dom );
+			var c1 = getCanvasElement();
+			container.appendChild(c1);
+			//c1.width = window.innerWidth;
+			//c1.height = window.innerHeight;
   			window.addEventListener( 'resize', onWindowResize, false );
   		}
 
@@ -246,7 +260,10 @@
   			//particleLight.position.z = Math.cos( timer * 4 ) * 3009;
   			THREE.AnimationHandler.update( clock.getDelta() );
   			renderer.render( scene, camera );
+			
   		}
+		
+		
     }
     </script>
 </body>
