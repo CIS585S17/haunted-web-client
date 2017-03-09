@@ -79,7 +79,13 @@
 	            var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
 	            var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 	            rotationX -= movementX * -0.002;
-	            rotationZ -= movementY * 0.002;
+
+	            if ((rotationZ - movementY * 0.002) >= -1 && (rotationZ - movementY * 0.002) <= 1)
+	            {
+	                rotationZ -= movementY * 0.002;
+	            }
+	            
+
 	            rotationZ = Math.max(-Math.PI, Math.min(Math.PI, rotationZ));
 	        }
       }
