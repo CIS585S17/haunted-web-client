@@ -9,14 +9,14 @@ class Room {
      * 
      * @constructor
      * 
-     * @param {*} name
-     *   The name of the file to be stored
-     * @param {*} path
-     *   The path of the file of the room
+     * @param {*} edges Array holding edges between rooms
+     * @param {*} items Dictionary of items in the room
+     * @param {*} name The name of the file to be stored
+     * @param {*} path The path of the file of the room
      */
     constructor(name, path) {
-        this.doors = [];
         this.edges = [];
+        this.items = {};
         this.name = name;
         this.path = path;
         this.players = [];
@@ -28,6 +28,10 @@ class Room {
      */
     addEdge(edge) {
         this.edges.push(edge);
+    }
+
+    addItem(prop, value) {
+        this.items[prop] = value;
     }
 
     /**
@@ -77,8 +81,7 @@ class Edge {
 class Graph {
     /**
      * 
-     * @param {*} dir 
-     *   The location of the dae files
+     * @param {*} dir The location of the dae files
      */
     constructor(dir) {
         this.dir = dir;
@@ -88,12 +91,14 @@ class Graph {
     /**
      * Getter to get array of rooms
      */
-    get rooms() {
-        return this.rooms;
+    room() {
+        for (let room of this.rooms) {
+            console.log(room);
+        }
     }
 
     /**
-     * 
+     * Add an edge between
      * @param {*} room1 
      * @param {*} room2 
      */
@@ -103,22 +108,37 @@ class Graph {
         room2.addEdge(new Edge(room1, room2));
     }
 
+    addItem(prop, value, room) {
+        room.addItem(prop, value);
+    }
+
     /**
      * Create the rooms by loading in all dae files
      */
     createRoom() {
-        fs.readdir(this.dir, (error, data) => {
-            if (error) {
-                console.log(error);
-            }
-            else {
-                for (let file of data) {
-                    if (file.endsWith('.dae')) {
-                        this.rooms.push(new Room(file.substr(0, file.length-4), `${this.dir}/${file}`));
-                    }
+        try {
+            let files = fs.readdirSync(this.dir);
+            for (let file of files) {
+                if (file.endsWith('.dae')) {
+                    this.rooms.push(new Room(file.substr(0, file.length-4), `${this.dir}/${file}`));
                 }
             }
-        });
+        }
+        catch (e) {
+            console.log(e);
+        }
+        // fs.readdir(this.dir, (error, data) => {
+        //     if (error) {
+        //         console.log(error);
+        //     }
+        //     else {
+        //         for (let file of data) {
+        //             if (file.endsWith('.dae')) {
+        //                 this.rooms.push(new Room(file.substr(0, file.length-4), `${this.dir}/${file}`));
+        //             }
+        //         }
+        //     }
+        // });
     }
 
     /**

@@ -34,6 +34,11 @@ io.on('connection', function (socket) {
     }
 });
 
+
 let graph = new Graph(`${__dirname}/public/models`);
-graph.getDirTree();
+graph.createRoom();
+graph.addPlayer('player', graph.rooms[1]);
+graph.addItem('knife', 1, graph.rooms[0]);
+graph.room();
+// graph.getDirTree();
 // graph.getDirTree('./public/models');
