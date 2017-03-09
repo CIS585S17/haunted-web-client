@@ -1,0 +1,299 @@
+<!doctype html>
+<html>
+<head>
+    <title>Haunted</title>
+</head>
+<body>
+    <p align="center">
+      <button id="startButton" type="button" onclick ="start();">Start Game</button>
+    </p>
+    <link type="text/css" rel="stylesheet" href="index.css">
+    <textarea id="chatTextArea" rows="1" cols="30"></textarea>
+    <div id="chatLogDiv">Waiting for players..</div>
+    <meta charset="UTF8">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/three.js"></script>
+    <script src="js/collada/Animation.js"></script>
+    <script src="js/collada/AnimationHandler.js"></script>
+    <script src="js/collada/KeyFrameAnimation.js"></script>
+
+    <script src="js/ColladaLoader.js"></script>
+
+    <script src="js/Detector.js"></script>
+    <script src="js/stats.min.js"></script>
+    <script src="js/hud.js"></script>
+
+    <script>
+    "use strict";
+
+    function start() {
+      document.getElementById('startButton').style.visibility = 'hidden';
+      var socket = io.connect('/');
+
+      var playerHUD = new HUD();
+      var hudMode = false;
+
+      var rotationX = 0;
+    	var rotationZ = 0;
+    	var pointAt = {
+    		x:1,
+        y:1,
+        z:0
+    	};
+    	var playerAt = {
+    		x:0,
+        y:1,
+        z:0
+    	};
+    	var speed = .05;
+    	var movementInput = {
+    		up: false,
+    		down: false,
+    		left: false,
+    		right: false
+    	};
+
+    	function requestFullScreen(element) {
+      	// Supports most browsers and their versions.
+      	var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+      	if (requestMethod) { // Native full screen.
+          	requestMethod.call(element);
+      	}
+      	else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+          var wscript = new ActiveXObject("WScript.Shell");
+          if (wscript !== null) {
+            wscript.SendKeys("{F11}");
+          }
+      	}
+      	document.body.requestPointerLock();
+      }
+
+
+      var elem = document.body; // Make the body go full screen.
+	    requestFullScreen(elem);
+
+	    window.onmousemove = function (event) {
+	        // Only move the camera if the player is not navigating the hud
+	        if (!hudMode) {
+	            var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+	            var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+	            rotationX -= movementX * -0.002;
+	            rotationZ -= movementY * 0.002;
+	            rotationZ = Math.max(-Math.PI, Math.min(Math.PI, rotationZ));
+	        }
+      }
+
+      window.onkeydown = function (event) {
+          // Only move the player if the player is not navigating the hud
+          if (!hudMode) {
+              switch (event.key) {
+                  case "w":
+                      movementInput.up = true;
+                      event.preventDefault();
+                      break;
+                  case "s":
+                      movementInput.down = true;
+                      event.preventDefault();
+                      break;
+                  case "a":
+                      movementInput.left = true;
+                      event.preventDefault();
+                      break;
+                  case "d":
+                      movementInput.right = true;
+                      event.preventDefault();
+                      break;
+                  case "ArrowUp":
+                      event.preventDefault();
+                      break;
+                  case "ArrowDown":
+                      event.preventDefault();
+                      break;
+                  case "ArrowLeft":
+                      event.preventDefault();
+                      break;
+                  case "ArrowRight":
+                      event.preventDefault();
+                      break;
+                  case " ":
+                      event.preventDefault();
+                      break;
+              }
+          }
+          else {
+              // Enter
+              if (event.keyCode == 13 && document.activeElement == chatTextArea) {
+                  event.preventDefault();
+              }
+          }
+      }
+      window.onkeyup = function (event) {
+          if (!hudMode) {
+              switch (event.key) {
+                  case "w":
+                      movementInput.up = false;
+                      event.preventDefault();
+                      break;
+                  case "s":
+                      movementInput.down = false;
+                      event.preventDefault();
+                      break;
+                  case "a":
+                      movementInput.left = false;
+                      event.preventDefault();
+                      break;
+                  case "d":
+                      movementInput.right = false;
+                      event.preventDefault();
+                      break;
+              }
+          }
+          else {
+              // Enter
+              if (event.keyCode == 13 && chatTextArea.value != "") {
+                  socket.emit('newChatMsg', chatTextArea.value);
+                  chatTextArea.value = "";
+                  event.preventDefault();
+              }
+          }
+          // Ctrl
+          if (event.keyCode == 17) {
+              // Turn HUD mode on/off 
+              hudMode = hudMode ? false : true;
+          }
+      }
+
+      // Handle incoming chat messages
+      socket.on('updateChatLog', function (msg) {
+          playerHUD.addChatMsg(msg);
+      });
+
+      if ( ! Detector.webgl ) {
+         Detector.addGetWebGLMessage();
+      }
+  		var container, stats;
+  		var camera, scene, renderer, objects;
+  		var particleLight;
+  		var dae;
+  		var loader = new THREE.ColladaLoader();
+  		loader.options.convertUpAxis = true;
+  		loader.load( 'models/room.dae', function ( collada ) {
+  			dae = collada.scene;
+  			dae.traverse( function ( child ) {
+  				if ( child instanceof THREE.SkinnedMesh ) {
+  					var animation = new THREE.Animation( child, child.geometry.animation );
+  					animation.play();
+  				}
+  			});
+  			dae.scale.x = dae.scale.y = dae.scale.z = 0.02;
+  			dae.updateMatrix();
+  			init();
+  			animate();
+		  });
+
+  		function init() {
+  			container = document.createElement( 'div' );
+  			document.body.appendChild( container );
+  			camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+  			camera.position.set(0,1,0);
+  			scene = new THREE.Scene();
+
+  			
+
+  			// Grid
+  			var size = 14, step = 1;
+  			var geometry = new THREE.Geometry();
+  			var material = new THREE.LineBasicMaterial( { color: 0x303030 } );
+
+        for ( var i = - size; i <= size; i += step ) {
+  				geometry.vertices.push( new THREE.Vector3( - size, - 0.04, i ) );
+  				geometry.vertices.push( new THREE.Vector3(   size, - 0.04, i ) );
+  				geometry.vertices.push( new THREE.Vector3( i, - 0.04, - size ) );
+  				geometry.vertices.push( new THREE.Vector3( i, - 0.04,   size ) );
+  			}
+
+        var line = new THREE.LineSegments( geometry, material );
+  			scene.add( line );
+  			// Add the COLLADA
+  			scene.add( dae );
+  			//particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xffffff } ) );
+  			//scene.add( particleLight );
+  			// Lights
+  			scene.add( new THREE.AmbientLight( 0xcccccc ) );
+  			var directionalLight = new THREE.DirectionalLight(/*Math.random() * 0xffffff*/0xeeeeee );
+  			directionalLight.position.x = Math.random() - 0.5;
+  			directionalLight.position.y = Math.random() - 0.5;
+  			directionalLight.position.z = Math.random() - 0.5;
+  			directionalLight.position.normalize();
+  			scene.add( directionalLight );
+  		//	var pointLight = new THREE.PointLight( 0xffffff, 4 );
+  		//	particleLight.add( pointLight );
+  			renderer = new THREE.WebGLRenderer();
+  			renderer.setPixelRatio( window.devicePixelRatio );
+  			renderer.setSize( window.innerWidth, window.innerHeight );
+  			container.appendChild( renderer.domElement );
+  			stats = new Stats();
+  			container.appendChild( stats.dom );
+  			window.addEventListener( 'resize', onWindowResize, false );
+  		}
+
+  		function onWindowResize() {
+  			camera.aspect = window.innerWidth / window.innerHeight;
+  			camera.updateProjectionMatrix();
+  			renderer.setSize( window.innerWidth, window.innerHeight );
+  		}
+
+  		function animate() {
+  		    requestAnimationFrame(animate);
+  		    update();
+  			render();
+  			stats.update();
+  		}
+
+      var clock = new THREE.Clock();
+
+      function update() {
+          playerHUD.update(hudMode);
+      }
+
+      function render() {
+  			var timer = Date.now() * 0.0005;
+
+        if (movementInput.left) {
+  				playerAt.x -= Math.cos(rotationX + Math.PI/2) * speed;
+    			playerAt.z -= Math.sin(rotationX + Math.PI/2) * speed;
+  			}
+
+        if (movementInput.right) {
+  				playerAt.x += Math.cos(rotationX + Math.PI/2) * speed;
+    			playerAt.z += Math.sin(rotationX + Math.PI/2) * speed;
+  			}
+
+        if (movementInput.up) {
+  				playerAt.x += Math.cos(rotationX) * speed;
+    			playerAt.z += Math.sin(rotationX) * speed;
+  			}
+
+        if (movementInput.down) {
+  				playerAt.x -= Math.cos(rotationX) * speed;
+    			playerAt.z -= Math.sin(rotationX) * speed;
+  			}
+
+        camera.position.x = playerAt.x;
+  			camera.position.y = playerAt.y;
+  			camera.position.z = playerAt.z;
+  			pointAt.x = Math.cos(rotationX)+playerAt.x;
+        pointAt.y = Math.sin(rotationZ)+playerAt.y;
+  			pointAt.z = Math.sin(rotationX)+playerAt.z;
+  			camera.lookAt(pointAt);
+  			//particleLight.position.x = Math.sin( timer * 4 ) * 3009;
+  			//particleLight.position.y = Math.cos( timer * 5 ) * 4000;
+  			//particleLight.position.z = Math.cos( timer * 4 ) * 3009;
+  			THREE.AnimationHandler.update( clock.getDelta() );
+  			renderer.render( scene, camera );
+  		}
+    }
+    </script>
+</body>
+</html>
