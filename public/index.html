@@ -206,8 +206,7 @@
   			container.appendChild( stats.dom );
 			var c1 = getCanvasElement();
 			container.appendChild(c1);
-			//c1.width = window.innerWidth;
-			//c1.height = window.innerHeight;
+			c1.style.visibility = 'hidden';
   			window.addEventListener( 'resize', onWindowResize, false );
   		}
 
