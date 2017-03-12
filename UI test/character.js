@@ -18,10 +18,9 @@ Character.prototype.setUp = function  (name, portraitImage, maxHp, power, speed,
 	this.portraitImage = new Image();
 	this.portraitImage.src = portraitImage;
 	this.portraitImageReady = false;
+	var temp = this;
 	this.portraitImage.onload = function() {
-		console.log("It should be ok now");
-		this.portraitImageReady = true;
-		
+		temp.portraitImageReady = true;
 		};
 	this.currentHp = maxHp;
 	this.maxHp = maxHp;
