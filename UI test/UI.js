@@ -1,6 +1,11 @@
 		//set up canvas
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
+		var charcter = new Character ();
+		charcter.setUp ("Jacop", "1.png", 133, 2, 6, 5);
+		
+		console.log(charcter);
+		
 		
 		// load bg image
 		var bgImg = new Image();
