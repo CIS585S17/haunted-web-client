@@ -1,0 +1,52 @@
+body {
+				
+				background-color: green;
+				
+			}
+			
+			div{
+			float: left
+			}
+			
+			#myCanvas{
+			 
+			 border:1px solid #000000;
+			}
+			
+			#button  {
+			
+			background-color:#8080ff;
+			color: white;
+			padding: 14px 25px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			cursor: pointer;
+			border: 3px solid black;
+			width: 80px
+			
+			
+			}
+			#button:hover, #button:active {
+
+				background-color: #b3b3ff;
+				 cursor: pointer;
+			}
+			
+			}
+			#test  {
+			background-color:#8080ff;
+			color: white;
+			padding: 14px 25px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			cursor: pointer;
+			border: 3px solid black;
+			
+			
+			}
+			#test:hover, #test:active {
+				background-color: #b3b3ff;
+				 cursor: pointer;
+			}
