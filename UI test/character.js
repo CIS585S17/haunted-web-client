@@ -10,6 +10,7 @@ function Character ()
 	this.sanity;
 	this.inventory;
 	this.messagesLog;
+	
 }
 
 Character.prototype.setUp = function  (name, portraitImage, maxHp, power, speed, sanity)

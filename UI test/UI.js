@@ -1,11 +1,20 @@
 		//set up canvas
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
-		var charcter = new Character ();
-		charcter.setUp ("Jacop", "2.jpeg", 133, 2, 6, 5);
+		var charcter; 
 		
+		var char1 = new Character ();
+		char1.setUp ("Jacop", "char1.jpeg", 133, 2, 6, 5);
+		
+		var char2 = new Character ();
+		char2.setUp ("Jacop", "char2.jpg", 289, 4, 7, 7);
+		
+		var charsArray = [];
+		charsArray.push(char1);
+		charsArray.push(char2);
+		
+		charcter = char1;
 		console.log(charcter);
-		
 		
 		// load bg image
 		var bgImg = new Image();
@@ -21,15 +30,7 @@
 		ctx.drawImage(backBuffer,0,0);
 		isBgLoaded = true;
 		};
-		
-		//charcter info 
-		/*
-		maxHp = 120;
-		currentHp = 80;
-		sanity = 4;
-		power = 2;
-		speed = 7;
-		*/
+
 		//items
 		var itemsInGame = [];
 		var itemsInventory = []
@@ -65,8 +66,7 @@
 		//drawUI();
 		};
 		itemsInGame.push(item4);
-		
-		//itemsInventory.push(0);
+
 		
 		//items in the items bar
 		var itemsBarStart = 0; // will draw items starting from this one 
@@ -77,16 +77,6 @@
 		var widthPortrait = 100;
 		var heightPortrait = 100;
 		
-		// load portrait image
-		/*
-		var portraitImg = new Image();
-		portraitImg.src = "2.jpeg";
-		var isPortraitLoaded = false;
-		portraitImg.onload = function() {
-		isPortraitLoaded = true;
-		//drawUI();
-		};
-		*/
 		
 		xMargin = 6;
 		//hp container
@@ -95,12 +85,6 @@
 		var widthHpContainer = 200;
 		var heightHpContainer = 20;
 		
-		//chat info 
-		/*
-		var charcter.messagesLog = [];
-		console.log("charcter.messagesLog Length:"+charcter.messagesLog.length);
-		console.log("charcter.messagesLog Length:"+charcter.messagesLog.length);
-		*/
 		function drawUI ()
 		{
 			//clear than redraw all UI elements
@@ -115,7 +99,6 @@
 			ctx.stroke();
 			
 			//draw portrait image
-			//console.log(charcter.portraitImageReady);
 			if (charcter.portraitImageReady)
 				ctx.drawImage(charcter.portraitImage, xposPortrait+2, yposPortrait+2 , widthPortrait-4 , heightPortrait-4);
 				
@@ -370,5 +353,11 @@
 					
 				//drawUI();
 			}
+		}
+		
+		function swapCharacter (x)
+		{	
+		
+		charcter = charsArray[x];
 		}
 		
