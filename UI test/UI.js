@@ -37,7 +37,7 @@
 		item1.image.src = "item1.png";
 		item1.image.onload = function() {
 		item1.isImageReady = true;
-		drawUI();
+		//drawUI();
 		};
 		itemsInGame.push(item1);
 		
@@ -45,7 +45,7 @@
 		item2.image.src = "item2.png";
 		item2.image.onload = function() {
 		item2.isImageReady = true;
-		drawUI();
+		//drawUI();
 		};
 		itemsInGame.push(item2);
 		
@@ -53,7 +53,7 @@
 		item3.image.src = "item3.png";
 		item3.image.onload = function() {
 		item3.isImageReady = true;
-		drawUI();
+		//drawUI();
 		};
 		itemsInGame.push(item3);
 		
@@ -61,7 +61,7 @@
 		item4.image.src = "item4.png";
 		item4.image.onload = function() {
 		item4.isImageReady = true;
-		drawUI();
+		//drawUI();
 		};
 		itemsInGame.push(item4);
 		
@@ -82,7 +82,7 @@
 		var isPortraitLoaded = false;
 		portraitImg.onload = function() {
 		isPortraitLoaded = true;
-		drawUI();
+		//drawUI();
 		};
 		
 		xMargin = 6;
@@ -287,8 +287,9 @@
 
 		}
 		
-		drawUI();
+		setInterval(drawUI, 1000/60);
 		
+		// Debugging functions 
 		function changeStat(stat, num)
 		{
 			switch(stat){
@@ -314,7 +315,7 @@
 					chatLog.push("You gained "+num+" "+stat+"!");
 				else
 					chatLog.push("You lost "+(-1)*num+" "+stat+"!");
-			drawUI();
+			//drawUI();
 		}
 		
 		function gainRandomItem()
@@ -322,7 +323,7 @@
 		var num = (Math.floor(Math.random()*100))%itemsInGame.length;
 		itemsInventory.push(num)
 		chatLog.push("You gained a "+itemsInGame[num].name+"!");
-		drawUI();
+		//drawUI();
 		}
 		
 		function loseRandomItem()
@@ -341,7 +342,7 @@
 		if (itemsBarStart<0)
 			itemsBarStart = 0;
 		
-		drawUI();
+		//drawUI();
 		}
 		
 		function scrollItemsRight ()
@@ -351,7 +352,7 @@
 				if (itemsBarStart< itemsInventory.length-4)
 					itemsBarStart++;
 				console.log(itemsBarStart);
-				drawUI();
+				//drawUI();
 			}
 		}
 		
@@ -361,7 +362,7 @@
 				if (itemsBarStart> 0)
 					itemsBarStart--;
 					
-				drawUI();
+				//drawUI();
 			}
 		}
 		

@@ -2,6 +2,7 @@ function Character ()
 {
 	this.name;
 	this.portraitImage;
+	this.portraitImageReady;
 	this.currentHp;
 	this.maxHp;
 	this.power;
@@ -14,7 +15,13 @@ function Character ()
 Character.prototype.setUp = function  (name, portraitImage, maxHp, power, speed, sanity)
 {
 	this.name = name;
-	this.portraitImage = portraitImage;
+	this.portraitImage = new Image();
+	this.portraitImage.src = portraitImage;
+	this.portraitImageReady = false;
+	this.portraitImage.onload = function() {
+		this.portraitImageReady = true;
+		
+		};
 	this.currentHp = maxHp;
 	this.maxHp = maxHp;
 	this.power = power;
