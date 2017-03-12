@@ -9,7 +9,7 @@ function Character ()
 	this.speed;
 	this.sanity;
 	this.inventory;
-	this.messagestLog;
+	this.messagesLog;
 }
 
 Character.prototype.setUp = function  (name, portraitImage, maxHp, power, speed, sanity)
@@ -19,6 +19,7 @@ Character.prototype.setUp = function  (name, portraitImage, maxHp, power, speed,
 	this.portraitImage.src = portraitImage;
 	this.portraitImageReady = false;
 	this.portraitImage.onload = function() {
+		console.log("It should be ok now");
 		this.portraitImageReady = true;
 		
 		};
@@ -28,7 +29,7 @@ Character.prototype.setUp = function  (name, portraitImage, maxHp, power, speed,
 	this.speed = speed;
 	this.sanity = sanity;
 	this.inventory = [];
-	this.messagestLog = [];
+	this.messagesLog = [];
 	
 }
 
@@ -64,6 +65,6 @@ Character.prototype.addItem = function(item)
 
 Character.prototype.addMessage = function(message)
 {
-	this.messagestLog.push(message);
+	this.messagesLog.push(message);
 	
 }

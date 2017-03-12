@@ -2,7 +2,7 @@
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");
 		var charcter = new Character ();
-		charcter.setUp ("Jacop", "1.png", 133, 2, 6, 5);
+		charcter.setUp ("Jacop", "2.jpeg", 133, 2, 6, 5);
 		
 		console.log(charcter);
 		
@@ -23,12 +23,13 @@
 		};
 		
 		//charcter info 
-		maxHP = 120;
+		/*
+		maxHp = 120;
 		currentHp = 80;
 		sanity = 4;
 		power = 2;
 		speed = 7;
-		
+		*/
 		//items
 		var itemsInGame = [];
 		var itemsInventory = []
@@ -77,6 +78,7 @@
 		var heightPortrait = 100;
 		
 		// load portrait image
+		/*
 		var portraitImg = new Image();
 		portraitImg.src = "2.jpeg";
 		var isPortraitLoaded = false;
@@ -84,6 +86,7 @@
 		isPortraitLoaded = true;
 		//drawUI();
 		};
+		*/
 		
 		xMargin = 6;
 		//hp container
@@ -93,9 +96,11 @@
 		var heightHpContainer = 20;
 		
 		//chat info 
-		var chatLog = [];
-		console.log("chatLog Length:"+chatLog.length);
-		console.log("chatLog Length:"+chatLog.length);
+		/*
+		var charcter.messagesLog = [];
+		console.log("charcter.messagesLog Length:"+charcter.messagesLog.length);
+		console.log("charcter.messagesLog Length:"+charcter.messagesLog.length);
+		*/
 		function drawUI ()
 		{
 			//clear than redraw all UI elements
@@ -110,8 +115,9 @@
 			ctx.stroke();
 			
 			//draw portrait image
-			if (isPortraitLoaded)
-				ctx.drawImage(portraitImg, xposPortrait+2, yposPortrait+2 , widthPortrait-4 , heightPortrait-4);
+			//console.log(charcter.portraitImageReady);
+			if (charcter.portraitImageReady)
+				ctx.drawImage(charcter.portraitImage, xposPortrait+2, yposPortrait+2 , widthPortrait-4 , heightPortrait-4);
 				
 			//hp container draw
 			ctx.fillStyle="black";
@@ -126,12 +132,12 @@
 			ctx.fillStyle="grey";
 			ctx.fillRect(xposHpBar,yposHpBar,widthHpBar,heightHpBar);
 			ctx.fillStyle="#FF0000";
-			ctx.fillRect(xposHpBar,yposHpBar,(currentHp/maxHP)*widthHpBar,heightHpBar);
+			ctx.fillRect(xposHpBar,yposHpBar,(charcter.currentHp/charcter.maxHp)*widthHpBar,heightHpBar);
 			
 			//hp text
 			ctx.font="20px Georgia";
 			ctx.fillStyle="black";
-			ctx.fillText(currentHp+"/"+maxHP+"hp",xposHpContainer+widthHpContainer+xMargin,yposHpContainer+15);
+			ctx.fillText(charcter.currentHp+"/"+charcter.maxHp+"hp",xposHpContainer+widthHpContainer+xMargin,yposHpContainer+15);
 			
 			//charcter stats image		
 			function drawStatImage(x , y )
@@ -161,7 +167,7 @@
 			txt = "Sanity: ";
 			ctx.fillStyle="black";
 			ctx.fillText(txt,xposHpContainer,yposStat+yMargin);
-			for (var i = 0 ; i < sanity; i++)
+			for (var i = 0 ; i < charcter.sanity; i++)
 			{	
 				r = 5;
 				drawStatImage(xposHpContainer +ctx.measureText(txt).width+ i*xMargin+(i*2*r),yposStat+10);
@@ -173,7 +179,7 @@
 			txt = "Power: ";
 			ctx.fillStyle="black";
 			ctx.fillText(txt,xposHpContainer,yposStat+yMargin);
-			for (var i = 0 ; i < power; i++)
+			for (var i = 0 ; i < charcter.power; i++)
 			{	
 				r = 5;
 				drawStatImage(xposHpContainer +ctx.measureText(txt).width+ i*xMargin+(i*2*r),yposStat+10);
@@ -185,7 +191,7 @@
 			txt = "Speed: ";
 			ctx.fillStyle="black";
 			ctx.fillText(txt,xposHpContainer,yposStat+yMargin);
-			for (var i = 0 ; i < speed; i++)
+			for (var i = 0 ; i < charcter.speed; i++)
 			{	
 				r = 5;
 				drawStatImage(xposHpContainer +ctx.measureText(txt).width+ i*xMargin+(i*2*r),yposStat+10);
@@ -205,9 +211,9 @@
 			
 			ctx.fillStyle = "white";
 			ctx.font = "16px Georgia";
-			for (var i = 0 ; i < chatLog.length ; i++)
+			for (var i = 0 ; i < charcter.messagesLog.length ; i++)
 			{
-			ctx.fillText(chatLog[chatLog.length-i-1],2,720-5 - 18*i);
+			ctx.fillText(charcter.messagesLog[charcter.messagesLog.length-i-1],2,720-5 - 18*i);
 			if (i > 14)
 				break;
 			}
@@ -230,16 +236,16 @@
 				ctx.fillStyle = "white";
 				ctx.fillRect ((i*w)+((i+1)*10)+xposItem,10+yposItems,w,h);
 			}
-			if (itemsInventory.length < 4)
+			if (charcter.inventory.length < 4)
 			{
-				for (var i = 0 ;i < itemsInventory.length ;i++)
+				for (var i = 0 ;i < charcter.inventory.length ;i++)
 				{	
 					if (i == 4)
 						break;
 					
 					var w = (widthItems/4)-12;
 					var h = heightItems-20;
-					var img = itemsInGame[itemsInventory[i]].image;
+					var img = itemsInGame[charcter.inventory[i]].image;
 					ctx.drawImage(img, (i*w)+((i+1)*10)+xposItem,10+yposItems,w,h);
 				}
 			}
@@ -249,11 +255,11 @@
 				console.log("j is: "+j);
 				for (var i = 0 ;i < 4 ;i++)
 				{	
-					if (j == itemsInventory.length)
+					if (j == charcter.inventory.length)
 						console.log("it went too much");
 					var w = (widthItems/4)-12;
 					var h = heightItems-20;
-					var img = itemsInGame[itemsInventory[j]].image;
+					var img = itemsInGame[charcter.inventory[j]].image;
 					ctx.drawImage(img, (i*w)+((i+1)*10)+xposItem,10+yposItems,w,h);
 					
 					j++;
@@ -283,7 +289,7 @@
 			
 			ctx.fillStyle = "white";
 			ctx.font = "16px Georgia";
-			ctx.fillText("You have "+itemsInventory.length+" items",xposItemNumber+9, yposItemNumber+18);
+			ctx.fillText("You have "+charcter.inventory.length+" items",xposItemNumber+9, yposItemNumber+18);
 
 		}
 		
@@ -294,47 +300,47 @@
 		{
 			switch(stat){
 				case 'hp':
-				currentHp+=num; console.log(currentHp);
+				charcter.currentHp+=num;  
 				
 				break;
 				
 				case 'sanity':
-				sanity+=num;
+				charcter.sanity+=num;
 				break;
 				
 				case 'power':
-				power+=num;
+				charcter.power+=num;
 				break;
 				
 				case 'speed':
-				speed+=num;console.log("current speed:"+speed);
+				charcter.speed+=num; 
 				break;
 			
 			}
 			if (num > 0)
-					chatLog.push("You gained "+num+" "+stat+"!");
+					charcter.messagesLog.push("You gained "+num+" "+stat+"!");
 				else
-					chatLog.push("You lost "+(-1)*num+" "+stat+"!");
+					charcter.messagesLog.push("You lost "+(-1)*num+" "+stat+"!");
 			//drawUI();
 		}
 		
 		function gainRandomItem()
 		{
 		var num = (Math.floor(Math.random()*100))%itemsInGame.length;
-		itemsInventory.push(num)
-		chatLog.push("You gained a "+itemsInGame[num].name+"!");
+		charcter.inventory.push(num)
+		charcter.messagesLog.push("You gained a "+itemsInGame[num].name+"!");
 		//drawUI();
 		}
 		
 		function loseRandomItem()
 		{
-		var num = (Math.floor(Math.random()*100))%itemsInventory.length;
-		var num2 = itemsInventory[num];
-		itemsInventory.splice(num,1);
-		chatLog.push("You have lost "+itemsInGame[num2].name+"!");
+		var num = (Math.floor(Math.random()*100))%charcter.inventory.length;
+		var num2 = charcter.inventory[num];
+		charcter.inventory.splice(num,1);
+		charcter.messagesLog.push("You have lost "+itemsInGame[num2].name+"!");
 		
 		console.log(itemsBarStart);
-		if (itemsInventory.length>4)
+		if (charcter.inventory.length>4)
 			itemsBarStart--;
 		else 
 			itemsBarStart = 0;
@@ -347,9 +353,9 @@
 		
 		function scrollItemsRight ()
 		{
-			if (itemsInventory.length>4)
+			if (charcter.inventory.length>4)
 			{
-				if (itemsBarStart< itemsInventory.length-4)
+				if (itemsBarStart< charcter.inventory.length-4)
 					itemsBarStart++;
 				console.log(itemsBarStart);
 				//drawUI();
@@ -357,7 +363,7 @@
 		}
 		
 		function scrollItemsLeft ()
-		{	if (itemsInventory.length>3)
+		{	if (charcter.inventory.length>3)
 			{
 				if (itemsBarStart> 0)
 					itemsBarStart--;
