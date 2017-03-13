@@ -75,7 +75,7 @@ Character.prototype.removeItem = function(item)// place of the item in the inven
 	// this part should be removed if we don't use a scrollable item bar
 	if (item < this.itemsPointer)
 	{
-		itemsPointer--;
+		this.itemsPointer--;
 	}
 	else 
 	{
