@@ -99,7 +99,44 @@
 		var yposFullMessageLog = 20;
 		var widthFullMessageLog = 500;
 		var heightFullMessageLog = 500;
+		var currentX;
+		var currentY;
 		
+		//arrow box variables
+		var widthArrowBox = 25;
+		var heightArrowBox = 25;
+		var xposArrowBox = xposFullMessageLog+widthFullMessageLog-5-widthArrowBox;
+		var yposArrowBox = yposFullMessageLog;
+		
+		//track mouse movement
+		c.onmousemove = function(event) {
+				event.preventDefault();
+				currentX = event.offsetX;
+				currentY = event.offsetY;
+				 
+				}
+		//handle mouse clicks when menus UI is active
+		c.onclick = function(event) {
+			event.preventDefault();
+			if (true)
+				{
+					//bool is where the cursor is NOT on the box
+					var bool = currentX<xposArrowBox||xposArrowBox+widthArrowBox<currentX||currentY<yposArrowBox+5||yposArrowBox+heightArrowBox+5<currentY;
+					if (!bool)
+					{
+						console.log("it is working on arrow up");
+					}
+					//bool is where the cursor is NOT on the box
+					bool = currentX<xposArrowBox||xposArrowBox+widthArrowBox<currentX||currentY<yposArrowBox+
+														heightFullMessageLog-heightArrowBox-5||yposArrowBox+heightFullMessageLog-5<currentY;
+					if (!bool)
+					{
+						console.log("it is working on arrow down");
+					}
+				}
+			
+			}
+			
 		//full item list UI 
 		function drawUI ()
 		{
@@ -285,20 +322,20 @@
 			ctx.font = "16px Georgia";
 			ctx.fillText("You have "+charcter.inventory.length+" items",xposItemNumber+9, yposItemNumber+18);
 			
+				
+			
 			//the full messages log UI
 			if(true)
 			{
+				
+				
+				//console.log(currentX);
+				
 				//background box
 				ctx.fillStyle = "crimson";
 				ctx.fillRect(xposFullMessageLog,yposFullMessageLog,widthFullMessageLog,heightFullMessageLog);
 				
-				//arrow box variables
 				
-				
-				var widthArrowBox = 25;
-				var heightArrowBox = 25;
-				var xposArrowBox = xposFullMessageLog+widthFullMessageLog-5-widthArrowBox;
-				var yposArrowBox = yposFullMessageLog;
 				//draw up and down arrows
 				ctx.fillStyle = "green";
 				ctx.fillRect(xposArrowBox,yposArrowBox+5,widthArrowBox,heightArrowBox);
@@ -329,10 +366,12 @@
 				//messages
 				ctx.fillStyle = "white";
 				ctx.font = "16px Georgia";
+				ctx.fillText("There are "+charcter.messagesLog.length+" messages",xposArrowBox-170,yposFullMessageLog+5+heightArrowBox);
+				
 				for (var i = 0 ; i < charcter.messagesLog.length ; i++)
 				{
 				ctx.fillText(charcter.messagesLog[charcter.messagesLog.length-i-1],xposFullMessageLog+2,yposFullMessageLog+widthFullMessageLog-5 - 18*i);
-				if (i > 25)
+				if (i > 23)
 					break;
 				}
 				
