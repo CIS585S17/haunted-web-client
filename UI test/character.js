@@ -125,7 +125,7 @@ Character.prototype.scrollItemsRight = function()
 
 Character.prototype.scrollItemsLeft = function()
 {
-	if (this.inventory.length>0)
+	if (this.itemsPointer>0)
 	{
 		this.itemsPointer--;
 	}

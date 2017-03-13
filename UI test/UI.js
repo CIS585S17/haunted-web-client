@@ -219,36 +219,24 @@
 				ctx.fillStyle = "white";
 				ctx.fillRect ((i*w)+((i+1)*10)+xposItem,10+yposItems,w,h);
 			}
-			if (charcter.inventory.length < 4)
-			{
-				for (var i = 0 ;i < charcter.inventory.length ;i++)
-				{	
-					if (i == 4)
-						break;
-					
-					var w = (widthItems/4)-12;
-					var h = heightItems-20;
-					var img = itemsInGame[charcter.inventory[i]].image;
-					ctx.drawImage(img, (i*w)+((i+1)*10)+xposItem,10+yposItems,w,h);
-				}
-			}
-			else
-			{
-				var j = itemsBarStart;
-				console.log("j is: "+j);
+			
+				var j = charcter.itemsPointer;
+				
 				for (var i = 0 ;i < 4 ;i++)
-				{	
+				{	if (j>= charcter.inventory.length)
+						break;
 					if (j == charcter.inventory.length)
 						console.log("it went too much");
 					var w = (widthItems/4)-12;
 					var h = heightItems-20;
 					var img = itemsInGame[charcter.inventory[j]].image;
+					//console.log("img is: "+img);
 					ctx.drawImage(img, (i*w)+((i+1)*10)+xposItem,10+yposItems,w,h);
 					
 					j++;
 				}
 			
-			}
+			
 			
 			//items label
 			var widthItemsLabel = 100;
@@ -283,20 +271,19 @@
 		{
 			switch(stat){
 				case 'hp':
-				charcter.currentHp+=num;  
-				
+				charcter.changeHp(num);//+=num;  
 				break;
 				
 				case 'sanity':
-				charcter.sanity+=num;
+				charcter.changeSanity(num)
 				break;
 				
 				case 'power':
-				charcter.power+=num;
+				charcter.changePower(num)
 				break;
 				
 				case 'speed':
-				charcter.speed+=num; 
+				charcter.changeSpeed(num)
 				break;
 			
 			}
@@ -304,55 +291,38 @@
 					charcter.messagesLog.push("You gained "+num+" "+stat+"!");
 				else
 					charcter.messagesLog.push("You lost "+(-1)*num+" "+stat+"!");
-			//drawUI();
+			 
 		}
 		
 		function gainRandomItem()
 		{
 		var num = (Math.floor(Math.random()*100))%itemsInGame.length;
-		charcter.inventory.push(num)
+		//charcter.inventory.push(num)
+		charcter.addItem(num);
 		charcter.messagesLog.push("You gained a "+itemsInGame[num].name+"!");
-		//drawUI();
+		 
 		}
 		
 		function loseRandomItem()
 		{
 		var num = (Math.floor(Math.random()*100))%charcter.inventory.length;
 		var num2 = charcter.inventory[num];
-		charcter.inventory.splice(num,1);
+		
+		charcter.removeItem(num);
+		//charcter.inventory.splice(num,1);
 		charcter.messagesLog.push("You have lost "+itemsInGame[num2].name+"!");
 		
-		console.log(itemsBarStart);
-		if (charcter.inventory.length>4)
-			itemsBarStart--;
-		else 
-			itemsBarStart = 0;
-		
-		if (itemsBarStart<0)
-			itemsBarStart = 0;
-		
-		//drawUI();
+		 
 		}
 		
 		function scrollItemsRight ()
 		{
-			if (charcter.inventory.length>4)
-			{
-				if (itemsBarStart< charcter.inventory.length-4)
-					itemsBarStart++;
-				console.log(itemsBarStart);
-				//drawUI();
-			}
+			charcter.scrollItemsRight();
 		}
 		
 		function scrollItemsLeft ()
-		{	if (charcter.inventory.length>3)
-			{
-				if (itemsBarStart> 0)
-					itemsBarStart--;
-					
-				//drawUI();
-			}
+		{	 
+			charcter.scrollItemsLeft();
 		}
 		
 		function swapCharacter (x)
