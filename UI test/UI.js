@@ -86,8 +86,7 @@
 		var yposPortrait = 2;
 		var widthPortrait = 100;
 		var heightPortrait = 100;
-		
-		
+	
 		xMargin = 6;
 		//hp container
 		var xposHpContainer = xposPortrait + widthPortrait + xMargin;
@@ -95,6 +94,13 @@
 		var widthHpContainer = 200;
 		var heightHpContainer = 20;
 		
+		//full message log UI 
+		var xposFullMessageLog = 600;
+		var yposFullMessageLog = 20;
+		var widthFullMessageLog = 500;
+		var heightFullMessageLog = 500;
+		
+		//full item list UI 
 		function drawUI ()
 		{
 			//clear than redraw all UI elements
@@ -208,6 +214,7 @@
 			//ctx.fillStyle = "rgba(59, 136, 147, 0.5)"; //bluesih shade
 			ctx.fillRect(0,yposChat,widthChat,heightChat);
 			
+			//messages
 			ctx.fillStyle = "white";
 			ctx.font = "16px Georgia";
 			for (var i = 0 ; i < charcter.messagesLog.length ; i++)
@@ -277,6 +284,61 @@
 			ctx.fillStyle = "white";
 			ctx.font = "16px Georgia";
 			ctx.fillText("You have "+charcter.inventory.length+" items",xposItemNumber+9, yposItemNumber+18);
+			
+			//the full messages log UI
+			if(true)
+			{
+				//background box
+				ctx.fillStyle = "crimson";
+				ctx.fillRect(xposFullMessageLog,yposFullMessageLog,widthFullMessageLog,heightFullMessageLog);
+				
+				//arrow box variables
+				
+				
+				var widthArrowBox = 25;
+				var heightArrowBox = 25;
+				var xposArrowBox = xposFullMessageLog+widthFullMessageLog-5-widthArrowBox;
+				var yposArrowBox = yposFullMessageLog;
+				//draw up and down arrows
+				ctx.fillStyle = "green";
+				ctx.fillRect(xposArrowBox,yposArrowBox+5,widthArrowBox,heightArrowBox);
+				ctx.fillRect(xposArrowBox,yposArrowBox+heightFullMessageLog-5-heightArrowBox,widthArrowBox,heightArrowBox);
+				
+				 
+				ctx.beginPath();
+				ctx.moveTo(xposArrowBox+widthArrowBox/2,yposArrowBox+7);
+				ctx.lineTo(xposArrowBox+widthArrowBox,yposArrowBox+2+heightArrowBox);
+				ctx.lineTo(xposArrowBox,yposArrowBox+2+heightArrowBox);
+				ctx.lineTo(xposArrowBox+widthArrowBox/2,yposArrowBox+7);
+				ctx.fillStyle = "yellow";
+				ctx.fill();
+				ctx.closePath();
+				
+				
+				
+				 
+				ctx.beginPath();
+				ctx.moveTo(xposArrowBox+widthArrowBox/2, yposArrowBox+heightFullMessageLog-7);
+				ctx.lineTo(xposArrowBox+widthArrowBox, yposArrowBox+heightFullMessageLog-heightArrowBox-2);
+				ctx.lineTo(xposArrowBox,yposArrowBox+heightFullMessageLog-heightArrowBox-2);
+				ctx.lineTo(xposArrowBox+widthArrowBox/2, yposArrowBox+heightFullMessageLog-7);
+				ctx.fillStyle = "yellow";
+				ctx.fill();
+				ctx.closePath();
+				
+				//messages
+				ctx.fillStyle = "white";
+				ctx.font = "16px Georgia";
+				for (var i = 0 ; i < charcter.messagesLog.length ; i++)
+				{
+				ctx.fillText(charcter.messagesLog[charcter.messagesLog.length-i-1],xposFullMessageLog+2,yposFullMessageLog+widthFullMessageLog-5 - 18*i);
+				if (i > 25)
+					break;
+				}
+				
+			}
+			
+			//the full item list UI  
 
 		}
 		
