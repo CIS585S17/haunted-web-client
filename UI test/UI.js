@@ -125,6 +125,16 @@
 					if (!bool)
 					{
 						console.log("it is working on arrow up");
+						
+						if (charcter.messagesLog.length>23) 
+						{
+							if (charcter.chatPointer<charcter.messagesLog.length-23) // you can only move if the items being viewed will not go byoned the last postion  
+							{
+								
+								charcter.chatPointer++;
+								console.log("char pointer: "+charcter.chatPointer);
+							}
+						}
 					}
 					//bool is where the cursor is NOT on the box
 					bool = currentX<xposArrowBox||xposArrowBox+widthArrowBox<currentX||currentY<yposArrowBox+
@@ -132,6 +142,10 @@
 					if (!bool)
 					{
 						console.log("it is working on arrow down");
+						if (charcter.chatPointer>0)
+						{
+							charcter.chatPointer--;
+						}
 					}
 				}
 			
@@ -368,12 +382,25 @@
 				ctx.font = "16px Georgia";
 				ctx.fillText("There are "+charcter.messagesLog.length+" messages",xposArrowBox-170,yposFullMessageLog+5+heightArrowBox);
 				
-				for (var i = 0 ; i < charcter.messagesLog.length ; i++)
+				
+				var jj = charcter.chatPointer;
+				if (charcter.messagesLog.length<24)
 				{
-				ctx.fillText(charcter.messagesLog[charcter.messagesLog.length-i-1],xposFullMessageLog+2,yposFullMessageLog+widthFullMessageLog-5 - 18*i);
-				if (i > 23)
-					break;
+						for (var i = 0 ; i < charcter.messagesLog.length ; i++)
+					{
+					ctx.fillText(charcter.messagesLog[charcter.messagesLog.length-i-1],xposFullMessageLog+2,yposFullMessageLog+widthFullMessageLog-5 - 18*i);
+
+					}
 				}
+				else 
+				{
+					for (var i = 0 ; i < 23 ; i++)
+					{
+						ctx.fillText(charcter.messagesLog[charcter.messagesLog.length-jj-1],xposFullMessageLog+2,yposFullMessageLog+widthFullMessageLog-5 - 18*i);
+						jj++;
+					}
+				}
+			
 				
 			}
 			
