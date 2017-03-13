@@ -30,7 +30,10 @@
 		ctx.drawImage(backBuffer,0,0);
 		isBgLoaded = true;
 		};
-
+		
+		
+		
+		
 		//items
 		var itemsInGame = [];
 		var itemsInventory = []
@@ -69,8 +72,15 @@
 
 		
 		//items in the items bar
-		var itemsBarStart = 0; // will draw items starting from this one 
+		//var itemsBarStart = 0; // will draw items starting from this one 
 		
+		// UI colors 
+		var statsColors = "green"; // inculdes stats text, hp bar and portrait borders
+		var statsBackgroundColor = 'pink'; // inculdes all statsColors elements 
+		var itemsBarColor = 0;
+		var messagesLogColor = 0;
+		
+		//sizes and postions
 		//charcter portrait placeholder
 		var xposPortrait = 2;
 		var yposPortrait = 2;
@@ -92,7 +102,13 @@
 			//draw bg image
 			if (isBgLoaded)
 				ctx.drawImage(bgImg, 0, 0 , 1280 , 720);
-				
+			
+			
+			//draw background for portrait, stats and hp bar
+			//ctx.fillStyle = "rgba(59, 136, 147, 0.5)"; //bluesih shade
+			ctx.fillStyle=statsBackgroundColor;
+			ctx.fillRect(0,0,widthPortrait+widthHpContainer+120,heightPortrait+4);
+			
 			//draw portrait placeholder 
 			ctx.fillStyle="black";
 			ctx.fillRect(xposPortrait,yposPortrait,widthPortrait,heightPortrait);
@@ -119,7 +135,7 @@
 			
 			//hp text
 			ctx.font="20px Georgia";
-			ctx.fillStyle="black";
+			ctx.fillStyle=statsColors;
 			ctx.fillText(charcter.currentHp+"/"+charcter.maxHp+"hp",xposHpContainer+widthHpContainer+xMargin,yposHpContainer+15);
 			
 			//charcter stats image		
@@ -148,7 +164,7 @@
 			yposStat = yposStat+yMargin;
 			ctx.font="20px Georgia";
 			txt = "Sanity: ";
-			ctx.fillStyle="black";
+			ctx.fillStyle=statsColors;
 			ctx.fillText(txt,xposHpContainer,yposStat+yMargin);
 			for (var i = 0 ; i < charcter.sanity; i++)
 			{	
@@ -160,7 +176,7 @@
 			yposStat = yposStat+yMargin;
 			ctx.font="20px Georgia";
 			txt = "Power: ";
-			ctx.fillStyle="black";
+			ctx.fillStyle=statsColors;
 			ctx.fillText(txt,xposHpContainer,yposStat+yMargin);
 			for (var i = 0 ; i < charcter.power; i++)
 			{	
@@ -172,7 +188,7 @@
 			yposStat = yposStat+yMargin;
 			ctx.font="20px Georgia";
 			txt = "Speed: ";
-			ctx.fillStyle="black";
+			ctx.fillStyle=statsColors;
 			ctx.fillText(txt,xposHpContainer,yposStat+yMargin);
 			for (var i = 0 ; i < charcter.speed; i++)
 			{	
