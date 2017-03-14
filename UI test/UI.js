@@ -1,10 +1,15 @@
 		//set up canvas
 		var c = document.getElementById("myCanvas");
+		c = document.createElement('canvas');
+		
+		c.setAttribute("width","1280") ;
+		c.setAttribute("height","720") ;
 		var ctx = c.getContext("2d");
 		var charcter; 
 		
 		var char1 = new Character ();
 		char1.setUp ("Jacop", "char1.jpeg", 133, 2, 6, 5);
+		
 		
 		var char2 = new Character ();
 		char2.setUp ("Jacop", "char2.jpg", 289, 4, 7, 7);
@@ -409,6 +414,11 @@
 		}
 		
 		setInterval(drawUI, 1000/60);
+		
+		function getCanvasElement(){
+			
+			return c;
+		}
 		
 		// Debugging functions 
 		function changeStat(stat, num)

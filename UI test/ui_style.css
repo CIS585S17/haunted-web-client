@@ -1,4 +1,4 @@
-body {
+		body {
 				
 				background-color: green;
 				
@@ -11,7 +11,20 @@ body {
 			#myCanvas{
 			 
 			 border:1px solid #000000;
+			 position: absolute;
+			 width: 100vw;
+			 height: 100vh;
+			 top: 0;
+			 left: 0;
 			}
+			
+			canvas {
+				position: absolute;
+				width: 100vw;
+				height: 100vh;
+				top: 0;
+				left: 0;
+			  }
 			
 			#button  {
 			

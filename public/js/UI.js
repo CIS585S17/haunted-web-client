@@ -1,13 +1,25 @@
 		//set up canvas
-		var c = document.createElement('canvas');
-		console.log(document);
+		var c = document.getElementById("myCanvas");
+		c = document.createElement('canvas');
 		
 		c.setAttribute("width","1280") ;
 		c.setAttribute("height","720") ;
 		var ctx = c.getContext("2d");
-		//ctx.width = 1280;
-		//ctx.height = 720;
+		var charcter; 
 		
+		var char1 = new Character ();
+		char1.setUp ("Jacop", "char1.jpeg", 133, 2, 6, 5);
+		
+		
+		//var char2 = new Character ();
+		//char2.setUp ("Jacop", "char2.jpg", 289, 4, 7, 7);
+		
+		var charsArray = [];
+		charsArray.push(char1);
+		//charsArray.push(char2);
+		
+		charcter = char1;
+		console.log(charcter);
 		
 		// load bg image
 		var bgImg = new Image();
@@ -24,12 +36,8 @@
 		//isBgLoaded = true;
 		};
 		
-		//charcter info 
-		maxHP = 120;
-		currentHp = 80;
-		sanity = 4;
-		power = 2;
-		speed = 7;
+		
+		
 		
 		//items
 		var itemsInGame = [];
@@ -39,7 +47,7 @@
 		item1.image.src = "item1.png";
 		item1.image.onload = function() {
 		item1.isImageReady = true;
-		drawUI();
+		//drawUI();
 		};
 		itemsInGame.push(item1);
 		
@@ -47,7 +55,7 @@
 		item2.image.src = "item2.png";
 		item2.image.onload = function() {
 		item2.isImageReady = true;
-		drawUI();
+		//drawUI();
 		};
 		itemsInGame.push(item2);
 		
@@ -55,7 +63,7 @@
 		item3.image.src = "item3.png";
 		item3.image.onload = function() {
 		item3.isImageReady = true;
-		drawUI();
+		//drawUI();
 		};
 		itemsInGame.push(item3);
 		
@@ -63,30 +71,27 @@
 		item4.image.src = "item4.png";
 		item4.image.onload = function() {
 		item4.isImageReady = true;
-		drawUI();
+		//drawUI();
 		};
 		itemsInGame.push(item4);
-		
-		//itemsInventory.push(0);
+
 		
 		//items in the items bar
-		var itemsBarStart = 0; // will draw items starting from this one 
+		//var itemsBarStart = 0; // will draw items starting from this one 
 		
+		// UI colors 
+		var statsColors = "green"; // inculdes stats text, hp bar and portrait borders
+		var statsBackgroundColor = 'pink'; // inculdes all statsColors elements 
+		var itemsBarColor = 0;
+		var messagesLogColor = 0;
+		
+		//sizes and postions
 		//charcter portrait placeholder
 		var xposPortrait = 2;
 		var yposPortrait = 2;
 		var widthPortrait = 100;
 		var heightPortrait = 100;
-		
-		// load portrait image
-		var portraitImg = new Image();
-		portraitImg.src = "2.jpeg";
-		var isPortraitLoaded = false;
-		portraitImg.onload = function() {
-		isPortraitLoaded = true;
-		drawUI();
-		};
-		
+	
 		xMargin = 6;
 		//hp container
 		var xposHpContainer = xposPortrait + widthPortrait + xMargin;
@@ -94,10 +99,64 @@
 		var widthHpContainer = 200;
 		var heightHpContainer = 20;
 		
-		//chat info 
-		var chatLog = [];
-		console.log("chatLog Length:"+chatLog.length);
-		console.log("chatLog Length:"+chatLog.length);
+		//full message log UI 
+		var xposFullMessageLog = 600;
+		var yposFullMessageLog = 20;
+		var widthFullMessageLog = 500;
+		var heightFullMessageLog = 500;
+		var currentX;
+		var currentY;
+		
+		//arrow box variables
+		var widthArrowBox = 25;
+		var heightArrowBox = 25;
+		var xposArrowBox = xposFullMessageLog+widthFullMessageLog-5-widthArrowBox;
+		var yposArrowBox = yposFullMessageLog;
+		
+		//track mouse movement
+		c.onmousemove = function(event) {
+				event.preventDefault();
+				currentX = event.offsetX;
+				currentY = event.offsetY;
+				 
+				}
+		//handle mouse clicks when menus UI is active
+		c.onclick = function(event) {
+			event.preventDefault();
+			if (true)
+				{
+					//bool is where the cursor is NOT on the box
+					var bool = currentX<xposArrowBox||xposArrowBox+widthArrowBox<currentX||currentY<yposArrowBox+5||yposArrowBox+heightArrowBox+5<currentY;
+					if (!bool)
+					{
+						console.log("it is working on arrow up");
+						
+						if (charcter.messagesLog.length>23) 
+						{
+							if (charcter.chatPointer<charcter.messagesLog.length-23) // you can only move if the items being viewed will not go byoned the last postion  
+							{
+								
+								charcter.chatPointer++;
+								console.log("char pointer: "+charcter.chatPointer);
+							}
+						}
+					}
+					//bool is where the cursor is NOT on the box
+					bool = currentX<xposArrowBox||xposArrowBox+widthArrowBox<currentX||currentY<yposArrowBox+
+														heightFullMessageLog-heightArrowBox-5||yposArrowBox+heightFullMessageLog-5<currentY;
+					if (!bool)
+					{
+						console.log("it is working on arrow down");
+						if (charcter.chatPointer>0)
+						{
+							charcter.chatPointer--;
+						}
+					}
+				}
+			
+			}
+			
+		//full item list UI 
 		function drawUI ()
 		{
 			//clear than redraw all UI elements
@@ -105,15 +164,21 @@
 			//draw bg image
 			if (isBgLoaded)
 				ctx.drawImage(bgImg, 0, 0 , 1280 , 720);
-				
+			
+			
+			//draw background for portrait, stats and hp bar
+			//ctx.fillStyle = "rgba(59, 136, 147, 0.5)"; //bluesih shade
+			ctx.fillStyle=statsBackgroundColor;
+			ctx.fillRect(0,0,widthPortrait+widthHpContainer+120,heightPortrait+4);
+			
 			//draw portrait placeholder 
 			ctx.fillStyle="black";
 			ctx.fillRect(xposPortrait,yposPortrait,widthPortrait,heightPortrait);
 			ctx.stroke();
 			
 			//draw portrait image
-			if (isPortraitLoaded)
-				ctx.drawImage(portraitImg, xposPortrait+2, yposPortrait+2 , widthPortrait-4 , heightPortrait-4);
+			if (charcter.portraitImageReady)
+				ctx.drawImage(charcter.portraitImage, xposPortrait+2, yposPortrait+2 , widthPortrait-4 , heightPortrait-4);
 				
 			//hp container draw
 			ctx.fillStyle="black";
@@ -128,12 +193,12 @@
 			ctx.fillStyle="grey";
 			ctx.fillRect(xposHpBar,yposHpBar,widthHpBar,heightHpBar);
 			ctx.fillStyle="#FF0000";
-			ctx.fillRect(xposHpBar,yposHpBar,(currentHp/maxHP)*widthHpBar,heightHpBar);
+			ctx.fillRect(xposHpBar,yposHpBar,(charcter.currentHp/charcter.maxHp)*widthHpBar,heightHpBar);
 			
 			//hp text
 			ctx.font="20px Georgia";
-			ctx.fillStyle="black";
-			ctx.fillText(currentHp+"/"+maxHP+"hp",xposHpContainer+widthHpContainer+xMargin,yposHpContainer+15);
+			ctx.fillStyle=statsColors;
+			ctx.fillText(charcter.currentHp+"/"+charcter.maxHp+"hp",xposHpContainer+widthHpContainer+xMargin,yposHpContainer+15);
 			
 			//charcter stats image		
 			function drawStatImage(x , y )
@@ -161,9 +226,9 @@
 			yposStat = yposStat+yMargin;
 			ctx.font="20px Georgia";
 			txt = "Sanity: ";
-			ctx.fillStyle="black";
+			ctx.fillStyle=statsColors;
 			ctx.fillText(txt,xposHpContainer,yposStat+yMargin);
-			for (var i = 0 ; i < sanity; i++)
+			for (var i = 0 ; i < charcter.sanity; i++)
 			{	
 				r = 5;
 				drawStatImage(xposHpContainer +ctx.measureText(txt).width+ i*xMargin+(i*2*r),yposStat+10);
@@ -173,9 +238,9 @@
 			yposStat = yposStat+yMargin;
 			ctx.font="20px Georgia";
 			txt = "Power: ";
-			ctx.fillStyle="black";
+			ctx.fillStyle=statsColors;
 			ctx.fillText(txt,xposHpContainer,yposStat+yMargin);
-			for (var i = 0 ; i < power; i++)
+			for (var i = 0 ; i < charcter.power; i++)
 			{	
 				r = 5;
 				drawStatImage(xposHpContainer +ctx.measureText(txt).width+ i*xMargin+(i*2*r),yposStat+10);
@@ -185,9 +250,9 @@
 			yposStat = yposStat+yMargin;
 			ctx.font="20px Georgia";
 			txt = "Speed: ";
-			ctx.fillStyle="black";
+			ctx.fillStyle=statsColors;
 			ctx.fillText(txt,xposHpContainer,yposStat+yMargin);
-			for (var i = 0 ; i < speed; i++)
+			for (var i = 0 ; i < charcter.speed; i++)
 			{	
 				r = 5;
 				drawStatImage(xposHpContainer +ctx.measureText(txt).width+ i*xMargin+(i*2*r),yposStat+10);
@@ -205,11 +270,12 @@
 			//ctx.fillStyle = "rgba(59, 136, 147, 0.5)"; //bluesih shade
 			ctx.fillRect(0,yposChat,widthChat,heightChat);
 			
+			//messages
 			ctx.fillStyle = "white";
 			ctx.font = "16px Georgia";
-			for (var i = 0 ; i < chatLog.length ; i++)
+			for (var i = 0 ; i < charcter.messagesLog.length ; i++)
 			{
-			ctx.fillText(chatLog[chatLog.length-i-1],2,720-5 - 18*i);
+			ctx.fillText(charcter.messagesLog[charcter.messagesLog.length-i-1],2,720-5 - 18*i);
 			if (i > 14)
 				break;
 			}
@@ -232,36 +298,24 @@
 				ctx.fillStyle = "white";
 				ctx.fillRect ((i*w)+((i+1)*10)+xposItem,10+yposItems,w,h);
 			}
-			if (itemsInventory.length < 4)
-			{
-				for (var i = 0 ;i < itemsInventory.length ;i++)
-				{	
-					if (i == 4)
-						break;
-					
-					var w = (widthItems/4)-12;
-					var h = heightItems-20;
-					var img = itemsInGame[itemsInventory[i]].image;
-					ctx.drawImage(img, (i*w)+((i+1)*10)+xposItem,10+yposItems,w,h);
-				}
-			}
-			else
-			{
-				var j = itemsBarStart;
-				console.log("j is: "+j);
+			
+				var j = charcter.itemsPointer;
+				
 				for (var i = 0 ;i < 4 ;i++)
-				{	
-					if (j == itemsInventory.length)
+				{	if (j>= charcter.inventory.length)
+						break;
+					if (j == charcter.inventory.length)
 						console.log("it went too much");
 					var w = (widthItems/4)-12;
 					var h = heightItems-20;
-					var img = itemsInGame[itemsInventory[j]].image;
+					var img = itemsInGame[charcter.inventory[j]].image;
+					//console.log("img is: "+img);
 					ctx.drawImage(img, (i*w)+((i+1)*10)+xposItem,10+yposItems,w,h);
 					
 					j++;
 				}
 			
-			}
+			
 			
 			//items label
 			var widthItemsLabel = 100;
@@ -285,90 +339,149 @@
 			
 			ctx.fillStyle = "white";
 			ctx.font = "16px Georgia";
-			ctx.fillText("You have "+itemsInventory.length+" items",xposItemNumber+9, yposItemNumber+18);
+			ctx.fillText("You have "+charcter.inventory.length+" items",xposItemNumber+9, yposItemNumber+18);
+			
+				
+			
+			//the full messages log UI
+			if(true)
+			{
+				
+				
+				//console.log(currentX);
+				
+				//background box
+				ctx.fillStyle = "crimson";
+				ctx.fillRect(xposFullMessageLog,yposFullMessageLog,widthFullMessageLog,heightFullMessageLog);
+				
+				
+				//draw up and down arrows
+				ctx.fillStyle = "green";
+				ctx.fillRect(xposArrowBox,yposArrowBox+5,widthArrowBox,heightArrowBox);
+				ctx.fillRect(xposArrowBox,yposArrowBox+heightFullMessageLog-5-heightArrowBox,widthArrowBox,heightArrowBox);
+				
+				 
+				ctx.beginPath();
+				ctx.moveTo(xposArrowBox+widthArrowBox/2,yposArrowBox+7);
+				ctx.lineTo(xposArrowBox+widthArrowBox,yposArrowBox+2+heightArrowBox);
+				ctx.lineTo(xposArrowBox,yposArrowBox+2+heightArrowBox);
+				ctx.lineTo(xposArrowBox+widthArrowBox/2,yposArrowBox+7);
+				ctx.fillStyle = "yellow";
+				ctx.fill();
+				ctx.closePath();
+				
+				
+				
+				 
+				ctx.beginPath();
+				ctx.moveTo(xposArrowBox+widthArrowBox/2, yposArrowBox+heightFullMessageLog-7);
+				ctx.lineTo(xposArrowBox+widthArrowBox, yposArrowBox+heightFullMessageLog-heightArrowBox-2);
+				ctx.lineTo(xposArrowBox,yposArrowBox+heightFullMessageLog-heightArrowBox-2);
+				ctx.lineTo(xposArrowBox+widthArrowBox/2, yposArrowBox+heightFullMessageLog-7);
+				ctx.fillStyle = "yellow";
+				ctx.fill();
+				ctx.closePath();
+				
+				//messages
+				ctx.fillStyle = "white";
+				ctx.font = "16px Georgia";
+				ctx.fillText("There are "+charcter.messagesLog.length+" messages",xposArrowBox-170,yposFullMessageLog+5+heightArrowBox);
+				
+				
+				var jj = charcter.chatPointer;
+				if (charcter.messagesLog.length<24)
+				{
+						for (var i = 0 ; i < charcter.messagesLog.length ; i++)
+					{
+					ctx.fillText(charcter.messagesLog[charcter.messagesLog.length-i-1],xposFullMessageLog+2,yposFullMessageLog+widthFullMessageLog-5 - 18*i);
+
+					}
+				}
+				else 
+				{
+					for (var i = 0 ; i < 23 ; i++)
+					{
+						ctx.fillText(charcter.messagesLog[charcter.messagesLog.length-jj-1],xposFullMessageLog+2,yposFullMessageLog+widthFullMessageLog-5 - 18*i);
+						jj++;
+					}
+				}
+			
+				
+			}
+			
+			//the full item list UI  
 
 		}
 		
-		drawUI();
+		setInterval(drawUI, 1000/60);
 		
+		function getCanvasElement(){
+			
+			return c;
+		}
+		
+		// Debugging functions 
 		function changeStat(stat, num)
 		{
 			switch(stat){
 				case 'hp':
-				currentHp+=num; console.log(currentHp);
-				
+				charcter.changeHp(num);//+=num;  
 				break;
 				
 				case 'sanity':
-				sanity+=num;
+				charcter.changeSanity(num)
 				break;
 				
 				case 'power':
-				power+=num;
+				charcter.changePower(num)
 				break;
 				
 				case 'speed':
-				speed+=num;console.log("current speed:"+speed);
+				charcter.changeSpeed(num)
 				break;
 			
 			}
 			if (num > 0)
-					chatLog.push("You gained "+num+" "+stat+"!");
+					charcter.messagesLog.push("You gained "+num+" "+stat+"!");
 				else
-					chatLog.push("You lost "+(-1)*num+" "+stat+"!");
-			drawUI();
+					charcter.messagesLog.push("You lost "+(-1)*num+" "+stat+"!");
+			 
 		}
 		
 		function gainRandomItem()
 		{
 		var num = (Math.floor(Math.random()*100))%itemsInGame.length;
-		itemsInventory.push(num)
-		chatLog.push("You gained a "+itemsInGame[num].name+"!");
-		drawUI();
+		//charcter.inventory.push(num)
+		charcter.addItem(num);
+		charcter.messagesLog.push("You gained a "+itemsInGame[num].name+"!");
+		 
 		}
 		
 		function loseRandomItem()
 		{
-		var num = (Math.floor(Math.random()*100))%itemsInventory.length;
-		var num2 = itemsInventory[num];
-		itemsInventory.splice(num,1);
-		chatLog.push("You have lost "+itemsInGame[num2].name+"!");
+		var num = (Math.floor(Math.random()*100))%charcter.inventory.length;
+		var num2 = charcter.inventory[num];
 		
-		console.log(itemsBarStart);
-		if (itemsInventory.length>4)
-			itemsBarStart--;
-		else 
-			itemsBarStart = 0;
+		charcter.removeItem(num);
+		//charcter.inventory.splice(num,1);
+		charcter.messagesLog.push("You have lost "+itemsInGame[num2].name+"!");
 		
-		if (itemsBarStart<0)
-			itemsBarStart = 0;
-		
-		drawUI();
+		 
 		}
 		
 		function scrollItemsRight ()
 		{
-			if (itemsInventory.length>4)
-			{
-				if (itemsBarStart< itemsInventory.length-4)
-					itemsBarStart++;
-				console.log(itemsBarStart);
-				drawUI();
-			}
+			charcter.scrollItemsRight();
 		}
 		
 		function scrollItemsLeft ()
-		{	if (itemsInventory.length>3)
-			{
-				if (itemsBarStart> 0)
-					itemsBarStart--;
-					
-				drawUI();
-			}
+		{	 
+			charcter.scrollItemsLeft();
 		}
 		
-		function getCanvasElement(){
-			
-			return c;
+		function swapCharacter (x)
+		{	
+		
+		charcter = charsArray[x];
 		}
 		
