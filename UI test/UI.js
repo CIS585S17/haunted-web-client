@@ -1,9 +1,11 @@
 		//set up canvas
 		var c = document.getElementById("myCanvas");
+		/*
 		c = document.createElement('canvas');
 		
 		c.setAttribute("width","1280") ;
 		c.setAttribute("height","720") ;
+		*/
 		var ctx = c.getContext("2d");
 		var charcter; 
 		
