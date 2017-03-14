@@ -90,6 +90,10 @@
 	        }
       }
 
+      window.onmousedown = function (event) {
+          requestFullScreen(document.body);
+      }
+
       window.onkeydown = function (event) {
           // Only move the player if the player is not navigating the hud
           if (!hudMode) {
