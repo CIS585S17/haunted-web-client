@@ -2,6 +2,17 @@
 <html>
   <head>
     <title>Haunted</title>
+	
+	<style>
+	  canvas {
+		position: absolute;
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+		left: 0;
+	  }
+	</style>
+	
 </head>
 <body>
     <p align="center">
@@ -34,7 +45,7 @@
 
       var playerHUD = new HUD();
       var hudMode = false;
-
+	  var UI = getCanvasElement();UI.style.visibility = 'hidden';
       var rotationX = 0;
       var rotationZ = 0;
     	var pointAt = {
@@ -130,6 +141,14 @@
                       break;
                   case " ":
                       event.preventDefault();
+                      break;
+					  
+					case "h":
+                      event.preventDefault();
+					  if (UI.style.visibility == 'hidden')
+						UI.style.visibility = 'visible';
+					  else 
+						UI.style.visibility = 'hidden';
                       break;
               }
           }
@@ -247,6 +266,8 @@
   			container.appendChild( renderer.domElement );
   			stats = new Stats();
   			container.appendChild( stats.dom );
+			container.appendChild(UI);
+			
   			window.addEventListener( 'resize', onWindowResize, false );
   		}
 
