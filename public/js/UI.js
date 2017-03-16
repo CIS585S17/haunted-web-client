@@ -8,7 +8,7 @@
 		var charcter; 
 		
 		var char1 = new Character ();
-		char1.setUp ("Jacop", "char1.jpeg", 133, 2, 6, 5);
+		char1.setUp ("Jacop", "models/characters portraits/char1.jpeg", 133, 2, 6, 5);
 		
 		
 		//var char2 = new Character ();
@@ -23,7 +23,7 @@
 		
 		// load bg image
 		var bgImg = new Image();
-		bgImg.src = "1.png";
+		bgImg.src = "models/characters portraits/1.png";
 		var isBgLoaded = false;
 		bgImg.onload = function() {
 		var backBuffer = document.createElement('canvas');
@@ -44,7 +44,7 @@
 		var itemsInventory = []
 		
 		var item1 = { name: "potion" , image: new Image(), isImageReady: false };
-		item1.image.src = "item1.png";
+		item1.image.src = "models/items/item1.png";
 		item1.image.onload = function() {
 		item1.isImageReady = true;
 		//drawUI();
@@ -52,7 +52,7 @@
 		itemsInGame.push(item1);
 		
 		var item2 = { name: "dagger" , image: new Image(), isImageReady: false };
-		item2.image.src = "item2.png";
+		item2.image.src = "models/items/item2.png";
 		item2.image.onload = function() {
 		item2.isImageReady = true;
 		//drawUI();
@@ -60,7 +60,7 @@
 		itemsInGame.push(item2);
 		
 		var item3 = { name: "spear" , image: new Image(), isImageReady: false };
-		item3.image.src = "item3.png";
+		item3.image.src = "models/items/item3.png";
 		item3.image.onload = function() {
 		item3.isImageReady = true;
 		//drawUI();
@@ -68,7 +68,7 @@
 		itemsInGame.push(item3);
 		
 		var item4 = { name: "armor" , image: new Image(), isImageReady: false };
-		item4.image.src = "item4.png";
+		item4.image.src = "models/items/item4.png";
 		item4.image.onload = function() {
 		item4.isImageReady = true;
 		//drawUI();
