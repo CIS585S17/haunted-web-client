@@ -1,0 +1,45 @@
+<html >
+	<head>
+		<title>ui test</title>
+		<meta charset="utf-8">
+		<meta name="viewport" >
+		<link rel="stylesheet" href="ui_style.css">
+		
+	</head>
+	<body>
+	<div>
+		<canvas id="myCanvas" width="1280" height="720">
+		</canvas>
+	</div>
+		<text id = "button"  onclick = "changeStat('hp',-20)">lose hp</text>
+		<text id = "button"  onclick = "changeStat('hp',10)">gain hp</text>
+		
+		<text id = "button"  onclick = "changeStat('sanity',-1)">lose sanity</text>
+		<text id = "button"  onclick = "changeStat('sanity',1)">gain sanity</text>
+				
+		<text id = "button"  onclick = "changeStat('power',-1)">lose power</text>
+		<text id = "button"  onclick = "changeStat('power',1)">gain power</text>
+				
+		<text id = "button"  onclick = "changeStat('speed',-1)">lose speed</text>
+		<text id = "button"  onclick = "changeStat('speed',1)">gain speed</text>
+		
+		<text id = "button"  onclick = "loseRandomItem()">lose item</text>
+		<text id = "button"  onclick = "gainRandomItem()">gain item</text>
+		
+		<text id = "button"  onclick = "scrollItemsRight()">scroll items right</text>
+		<text id = "button"  onclick = "scrollItemsLeft()">scroll items left</text>
+		
+		<text id = "button"  onclick = "swapCharacter(0)">Change Into Charcter 0</text>
+		<text id = "button"  onclick = "swapCharacter(1)">Change Into Charcter 1</text>
+		
+	</div>
+		
+		<script src="character.js"></script>
+		<script src="UI.js"></script>
+		<script >
+		var c1 = getCanvasElement();
+		document.body.appendChild( c1 );
+		</script>
+		
+	</body>
+</html>
