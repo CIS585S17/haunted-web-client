@@ -415,8 +415,65 @@
 
 		}
 		
-		setInterval(drawUI, 1000/60);
+		function drawPortraitUiElement(ctx)
+		{
+			//draw place
+			var x = 0
+			var y = 0
+			
+			//draw size
+			var width = 100
+			var height = 100
+			
+			//draw colors
+			var color1 = 'yellow'
+			
+			
+			
+		}
 		
+		function drawChatUiElement(ctx)
+		{
+			
+			
+		}
+		
+		function drawItemsUiElement(ctx)
+		{
+			
+			
+		}
+		
+		function drawFullMessageUiElement(ctx)
+		{
+			
+			
+		}
+		
+		function drawFullItemsUiElement(ctx)
+		{
+			
+			
+		}
+		
+		
+		function drawUiTwo()
+		{
+			ctx.clearRect(0, 0, c.width, c.height);
+			
+			if (isBgLoaded)
+				ctx.drawImage(bgImg, 0, 0 , 1280 , 720);
+			
+			drawPortraitUiElement(ctx);
+			drawChatUiElement(ctx);
+			drawItemsUiElement(ctx);
+			drawFullMessageUiElement(ctx);
+			drawFullItemsUiElement(ctx);
+			
+		}
+		
+		//setInterval(drawUI, 1000/60);
+		setInterval(drawUiTwo, 1000/60);
 		function getCanvasElement(){
 			
 			return c;
