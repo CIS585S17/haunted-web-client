@@ -415,20 +415,97 @@
 
 		}
 		
+		// it will have a portrait , hp bar and stat list 
 		function drawPortraitUiElement(ctx)
 		{
+			
+			
+			//***outer box***
 			//draw place
 			var x = 0
 			var y = 0
 			
-			//draw size
-			var width = 100
-			var height = 100
+			//draw margins after all inside elments are drawn
+			var marginx = 5
+			var marginy = 3
+			
+			//draw size (will be changed to inculde each element)
+			var width = marginx
+			var height = marginy
 			
 			//draw colors
-			var color1 = 'yellow'
+			var outerBoxColor = 'yellow'
+			var color2 = 'orange'
 			
+			//***inner elements***
+			//**section 1**
+			//*portrait*
+			//draw place
+			var inPortx = 4
+			var inPorty = 4
+			var portx = inPortx+x+width-marginx
+			var porty = inPorty+y
 			
+			//draw size
+			var portWidth = 120
+			var portHeight = 120
+			borderSize = 2
+			width = width+inPortx+portWidth+borderSize
+			height = height+inPorty+portHeight+borderSize
+			
+			//**section 2**
+			//*hp bar*
+			//draw place
+			var inHpx = 4
+			var inHpy = 8
+			hpx = inHpx+x+width-marginx
+			hpy = inHpy+y
+			
+			//draw size
+			hpWidth = 250
+			hpHeight = 20
+			width = width+inHpx+hpWidth
+			//height (no need for now)
+			hpBarOuterColor = "black"
+			hpFillingColor = 'red'
+			//hp text 
+			var intTextx = 2
+			var intTexty = 0
+			var textx = intTextx+width-marginx
+			var	texty = intTexty+hpy//it should be aligned with the hp bar
+			var hpText = charcter.currentHp+"/"+charcter.maxHp+"hp"
+			//hp font details
+			var textSize = 16;
+			var hpFont = textSize+"px Georgia";
+			var hpTextColor = "green"
+			var avrageTextWidth = ctx.measureText("@@@/@@@hp").width
+			ctx.font = hpFont
+			width = width+intTextx+avrageTextWidth
+			texty = texty+textSize
+			
+			//***draw all elements***
+			//draw outer box
+			ctx.fillStyle = outerBoxColor
+			ctx.fillRect(x,y,width,height)
+			
+			//draw portrait frame
+			ctx.fillStyle = color2
+			ctx.fillRect(portx-borderSize,porty-borderSize,portWidth+borderSize+borderSize,portHeight+borderSize+borderSize)
+			
+			//draw portrait
+			if (charcter.portraitImageReady)
+				ctx.drawImage(charcter.portraitImage, portx, porty, portWidth, portHeight)
+			
+			//draw outer hp bar
+			ctx.fillStyle = hpBarOuterColor
+			ctx.fillRect(hpx,hpy,hpWidth,hpHeight)
+			//draw hp filling 
+			ctx.fillStyle = hpFillingColor
+			ctx.fillRect(hpx,hpy,(charcter.currentHp/charcter.maxHp)*hpWidth,hpHeight);
+			//draw hp text
+			ctx.font = hpFont;
+			ctx.fillStyle = hpTextColor;
+			ctx.fillText(hpText,textx,texty);
 			
 		}
 		
