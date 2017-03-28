@@ -22,7 +22,7 @@
     <textarea id="chatTextArea" rows="1" cols="30"></textarea>
     <div id="chatLogDiv"></div>
     <meta charset="UTF8">
-    <script src="/socket.io/socket.io.js"></script>
+    <!--<script src="/socket.io/socket.io.js"></script>-->
     <script src="js/three.js"></script>
     <script src="js/collada/Animation.js"></script>
     <script src="js/collada/AnimationHandler.js"></script>
@@ -41,7 +41,7 @@
 
     function start() {
       document.getElementById('startButton').style.visibility = 'hidden';
-      var socket = io.connect('/');
+    //   var socket = io.connect('/');
 
       var playerHUD = new HUD();
       var hudMode = false;
@@ -183,7 +183,7 @@
           else {
               // Enter
               if (event.keyCode == 13 && chatTextArea.value != "") {
-                  socket.emit('newChatMsg', chatTextArea.value);
+                //   socket.emit('newChatMsg', chatTextArea.value);
                   chatTextArea.value = "";
                   event.preventDefault();
               }
@@ -196,9 +196,9 @@
       }
 
       // Handle incoming chat messages
-      socket.on('updateChatLog', function (msg) {
-          playerHUD.addChatMsg(msg);
-      });
+    //   socket.on('updateChatLog', function (msg) {
+    //       playerHUD.addChatMsg(msg);
+    //   });
 
       if ( ! Detector.webgl ) {
          Detector.addGetWebGLMessage();
@@ -209,9 +209,9 @@
   		var dae;
   		init();
   		
-                load( 'models/room1.dae', 5, 0, 0 );
-                load( 'models/room.dae', 0, 0, 0);
-                load( 'models/cardroom.dae', 0, 0, 10);
+                load( 'models/library_room.dae', 5, 0, 0 );
+                // load( 'models/room.dae', 0, 0, 0);
+                // load( 'models/cardroom.dae', 0, 0, 10);
                 
                 function load( ObjectPath, X, Y, Z){
                     var loader = new THREE.ColladaLoader();
