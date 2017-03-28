@@ -1,45 +1,25 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Haunted</title>
-	
-	<style>
-	  canvas {
-		position: absolute;
-		width: 100vw;
-		height: 100vh;
-		top: 0;
-		left: 0;
-	  }
-	</style>
-	
-</head>
-<body>
-    <p align="center">
-      <button id="startButton" type="button" onclick ="start();">Start Game</button>
-    </p>
-    <link type="text/css" rel="stylesheet" href="index.css">
-    <textarea id="chatTextArea" rows="1" cols="30"></textarea>
-    <div id="chatLogDiv"></div>
-    <meta charset="UTF8">
-    <!--<script>require('./index.js')</script>-->
-    <!--<script src="/socket.io/socket.io.js"></script>-->
-    <script src="js/three.js"></script>
-    <script src="js/collada/Animation.js"></script>
-    <script src="js/collada/AnimationHandler.js"></script>
-    <script src="js/collada/KeyFrameAnimation.js"></script>
+"use strict";
+const THREE = require('./js/three.js')
+const Animation = require('./js/collada/Animation.js')
+const KeyFrameAnimation = require('./js/collada/AnimationHandler.js')
+const ColladaLoader = require('./js/ColladaLoader.js')
+const Detector = require('./js/Detector.js')
+const Stats = require('./js/stats.min.js')
+const HUD = require('./js/hud.js')
+const UI = require('./js/UI.js')
+// {/*<script src="js/collada/Animation.js"></script>*/}
+// {/*<script src="js/collada/AnimationHandler.js"></script>*/}
+// {/*<script src="js/collada/KeyFrameAnimation.js"></script>*/}
 
-    <script src="js/ColladaLoader.js"></script>
+// {/*<script src="js/ColladaLoader.js"></script>*/}
 
-    <script src="js/Detector.js"></script>
-    <script src="js/stats.min.js"></script>
-    <script src="js/hud.js"></script>
-	<script src="js/character.js"></script>
-	<script src="js/UI.js"></script>
+// {/*<script src="js/Detector.js"></script>*/}
+// {/*<script src="js/stats.min.js"></script>*/}
+// {/*<script src="js/hud.js"></script>*/}
+// {/*<script src="js/character.js"></script>*/}
+// {/*<script src="js/UI.js"></script>*/}
 
-    <script>
-    "use strict";
-
+window.onload = function() {
     function start() {
       document.getElementById('startButton').style.visibility = 'hidden';
     //   var socket = io.connect('/');
@@ -51,8 +31,8 @@
       var rotationZ = 0;
     	var pointAt = {
     		x:1,
-            y:1,
-            z:0
+        y:1,
+        z:0
     	};
     	var playerAt = {
     		x:0,
@@ -333,6 +313,4 @@
   			renderer.render( scene, camera );
   		}
     }
-    </script>
-</body>
-</html>
+}

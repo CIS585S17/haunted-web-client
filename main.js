@@ -1,7 +1,7 @@
 'use strict'
 const {app, BrowserWindow, ipcMain} = require('electron')
 
-let debug = false
+let debug = true
 let win
 
 function createWindow () {
