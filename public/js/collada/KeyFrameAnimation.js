@@ -234,3 +234,5 @@ THREE.KeyFrameAnimation.prototype = {
 	}
 
 };
+
+module.exports = THREE.KeyFrameAnimation
