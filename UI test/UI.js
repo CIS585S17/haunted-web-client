@@ -30,7 +30,10 @@
 		var buttonTimer = 0;
 		var clickedButton = "none"
 		
-		
+		var maxQuickBarItems = 4;
+		var chatBoxHighlighted = false;
+		var isFullUIActive = false;
+		var chatMessage = "";
 		// load bg image
 		var bgImg = new Image();
 		bgImg.src = "1.png";
@@ -129,6 +132,59 @@
 				currentX = event.offsetX;
 				currentY = event.offsetY;
 				 
+				}
+				window.onkeydown = function (event) {
+					if (chatBoxHighlighted)
+					{
+						if (event.key=="Enter")
+						{
+							chatBoxHighlighted = false;
+							console.log("chat mesasage is: "+chatMessage);
+							chatMessage = "";
+						}
+						else if (event.key=="Escape")
+						{
+							console.log("ESC was pressed")
+							chatBoxHighlighted = false;
+							chatMessage = "";
+						}
+						else if (event.key=="Backspace")
+						{
+							console.log("backspace was pressed")
+							 
+							chatMessage = chatMessage.substring(0, chatMessage.length - 1);
+							 
+						}
+						else
+						{	
+							console.log(event.key+" was pressed");
+							if ((47 < event.keyCode &&  event.keyCode < 91) || (event.keyCode == 32))
+							{
+								chatMessage+=event.key;
+								//console.log(chatMessage);
+							}
+							
+						}
+					}
+					else
+					{
+						switch (event.key) {
+						case "i":
+							if (!isFullUIActive)
+							{
+								isFullUIActive = true;
+							}
+								
+							else
+							{
+								isFullUIActive = false;
+							}
+							break;
+						case "Enter":
+							chatBoxHighlighted = true;
+							break;
+						}						
+					}
 				}
 		/*
 		//handle mouse clicks when menus UI is active
@@ -372,7 +428,7 @@
 				
 			
 			//the full messages log UI
-			if(true)
+			if(isFullUIActive)
 			{
 				
 				
@@ -579,24 +635,82 @@
 			var font = textSize+"px georgia";
 			var textColor = "white" ;
 			
+			//chat input 
+			var chatx = 0;
+			var chaty = y+height;
+			var chatWidth = width;
+			var chatHeight = textSize;
+			chaty-=chatHeight;
+			var chatMargin = 2;
+			chatHeight+=chatMargin;
+			chatWidth -= chatMargin;
+			chatHeight -= chatMargin;
+			chaty-=chatMargin;
+			chatx+=chatMargin;
+			var chatColorActive = "black";
+			var chatColorInactive = "grey";
+			var chatBorderColor = "white";
+			
 			//draw everything
 			ctx.fillStyle = color;
 			ctx.fillRect(x,y,width,height);
 			
+			ctx.strokeStyle = chatBorderColor;
+			ctx.lineWidth = chatMargin;
+			ctx.rect(chatx,chaty,chatWidth+1,chatHeight);
+			ctx.stroke();
+			if (chatBoxHighlighted)
+			{
+				ctx.fillStyle = chatColorActive;
+			}
+			else
+			{
+				ctx.fillStyle = chatColorInactive;
+			}
+			
+			ctx.fillRect(chatx,chaty,chatWidth,chatHeight);
 			ctx.font = font;
 			ctx.fillStyle = textColor;
 			for (var i = 0 ; i < charcter.messagesLog.length ; i++)
 			{
-			ctx.fillText(charcter.messagesLog[charcter.messagesLog.length-i-1],textx,ctx.canvas.height- texty- textSize*i);
+			ctx.fillText(charcter.messagesLog[charcter.messagesLog.length-i-1],textx,ctx.canvas.height- texty- textSize*i-chatHeight-chatMargin);
 			if (i > 14)
 				break;
 			}
+			ctx.fillText(chatMessage,chatx,chaty+textSize);
+			
 			
 		}
 		
 		function drawItemsUiElement(ctx)
 		{
+			var x = ctx.canvas.width*0.3;
+			var y = ctx.canvas.height;
+			var width = 400;
+			var height = 100;
+			y -=height; 
+			var numberOfShownItems = 4;
+			var itemWidth = 80;
+			var itemHeight = 80;
+			var marginx = 15;
+			var marginy = 10;
+			var color1 = "purple";
+			var color2 = "white";
 			
+			ctx.fillStyle = color1;
+			ctx.fillRect(x,y,width,height);
+			ctx.fillStyle = color2;
+			
+			for (i = 0 ; i < numberOfShownItems; i++)
+			{
+				ctx.fillRect(x+i*itemWidth+marginx*(i+1),y+marginy,itemWidth,itemHeight);
+			}
+			
+			for (i = 0 ; i < numberOfShownItems && i< charcter.inventory.length; i++)
+			{
+				var img = itemsInGame[charcter.quickBarItems[i]].image;
+				ctx.drawImage(img,x+i*itemWidth+marginx*(i+1),y+marginy,itemWidth,itemHeight);
+			}
 			
 		}
 		
@@ -914,12 +1028,13 @@
 			
 			if (isBgLoaded)
 				ctx.drawImage(bgImg, 0, 0 , 1280 , 720);
-			
 			drawPortraitUiElement(ctx);
 			drawChatUiElement(ctx);
 			drawItemsUiElement(ctx);
-			drawPasuedMenuUi(ctx);
-			
+			if (isFullUIActive)
+			{
+				drawPasuedMenuUi(ctx);
+			}
 			
 		}
 		
@@ -963,6 +1078,8 @@
 		var num = (Math.floor(Math.random()*100))%itemsInGame.length;
 		//charcter.inventory.push(num)
 		charcter.addItem(num);
+		if (charcter.quickBarItems.length<maxQuickBarItems)
+			charcter.quickBarItems.push(num)
 		charcter.messagesLog.push("You gained a "+itemsInGame[num].name+"!");
 		 
 		}

@@ -34,6 +34,7 @@ Character.prototype.setUp = function  (name, portraitImage, maxHp, power, speed,
 	this.sanity = sanity;
 	this.inventory = [];
 	this.messagesLog = [];
+	this.quickBarItems = [];
 	this.itemsPointer = 0;
 	this.chatPointer = 0;
 }
@@ -110,6 +111,7 @@ Character.prototype.removeItem = function(item)// place of the item in the inven
 Character.prototype.addMessage = function(message)
 {
 	this.messagesLog.push(message);
+	console.log("added message:"+message)
 	
 }
 

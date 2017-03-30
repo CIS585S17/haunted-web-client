@@ -14,6 +14,7 @@ function Character ()
 	// might be moved outside of this class
 	this.itemsPointer;
 	this.chatPointer;
+	this.quickBarItems;
 	
 }
 
@@ -34,6 +35,7 @@ Character.prototype.setUp = function  (name, portraitImage, maxHp, power, speed,
 	this.sanity = sanity;
 	this.inventory = [];
 	this.messagesLog = [];
+	this.quickBarItems = [];
 	this.itemsPointer = 0;
 	this.chatPointer = 0;
 }

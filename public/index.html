@@ -108,6 +108,7 @@
       }
 
       window.onkeydown = function (event) {
+		
           // Only move the player if the player is not navigating the hud
           if (!hudMode) {
               switch (event.key) {
@@ -144,6 +145,14 @@
                       break;
 					  
 					case "h":
+                      event.preventDefault();
+					  if (UI.style.visibility == 'hidden')
+						UI.style.visibility = 'visible';
+					  else 
+						UI.style.visibility = 'hidden';
+                      break;
+					  
+					  case "i":
                       event.preventDefault();
 					  if (UI.style.visibility == 'hidden')
 						UI.style.visibility = 'visible';
@@ -198,6 +207,8 @@
       // Handle incoming chat messages
       socket.on('updateChatLog', function (msg) {
           playerHUD.addChatMsg(msg);
+		  UI.charcter.addMessage(msg);
+		  
       });
 
       if ( ! Detector.webgl ) {

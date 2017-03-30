@@ -52,3 +52,14 @@
 				background-color: #b3b3ff;
 				 cursor: pointer;
 			}
+			#chatTextArea {
+			  position: absolute;
+			  top:  40vw;
+			  left: 15vh;
+			   
+			  background : black;
+			  font-size: 22px;
+			  color: white;
+			  resize: none;
+			   
+			}
