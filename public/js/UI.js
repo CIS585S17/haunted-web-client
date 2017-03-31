@@ -133,6 +133,7 @@
 				currentY = event.offsetY;
 				 
 				}
+				/*
 				window.onkeydown = function (event) {
 					if (chatBoxHighlighted)
 					{
@@ -186,6 +187,7 @@
 						}						
 					}
 				}
+				*/
 		/*
 		//handle mouse clicks when menus UI is active
 		c.onclick = function(event) {

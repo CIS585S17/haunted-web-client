@@ -45,7 +45,7 @@
 
       var playerHUD = new HUD();
       var hudMode = false;
-	  var UI = getCanvasElement();UI.style.visibility = 'hidden';
+	  var UI = getCanvasElement();//UI.style.visibility = 'hidden';
       var rotationX = 0;
       var rotationZ = 0;
     	var pointAt = {
@@ -154,10 +154,16 @@
 					  
 					  case "i":
                       event.preventDefault();
-					  if (UI.style.visibility == 'hidden')
-						UI.style.visibility = 'visible';
-					  else 
-						UI.style.visibility = 'hidden';
+					  if (!isFullUIActive)
+							{
+								isFullUIActive = true;
+							}
+								
+							else
+							{
+								isFullUIActive = false;
+							}
+							break;
                       break;
               }
           }
@@ -190,25 +196,63 @@
               }
           }
           else {
-              // Enter
-              if (event.keyCode == 13 && chatTextArea.value != "") {
-                  socket.emit('newChatMsg', chatTextArea.value);
-                  chatTextArea.value = "";
-                  event.preventDefault();
-              }
+		  
+				
+						if (event.key=="Enter")
+						{
+							chatBoxHighlighted = false;
+							if (chatMessage != "")
+							{
+							socket.emit('newChatMsg', chatMessage);
+							console.log(chatMessage);
+							}
+							
+							chatMessage = "";
+						}
+						else if (event.key=="Escape")
+						{
+							
+							chatBoxHighlighted = false;
+							chatMessage = "";
+						}
+						else if (event.key=="Backspace")
+						{
+							
+							 
+							chatMessage = chatMessage.substring(0, chatMessage.length - 1);
+							 
+						}
+						else
+						{	
+							console.log(event.key+" was pressed");
+							if ((47 < event.keyCode &&  event.keyCode < 91) || (event.keyCode == 32))
+							{
+								chatMessage+=event.key;
+								//console.log(chatMessage);
+							}
+							
+						}
+				  // Enter
+				  if (event.keyCode == 13 && chatTextArea.value != "") {
+					  //socket.emit('newChatMsg', chatTextArea.value);
+					  chatTextArea.value = "";
+					  event.preventDefault();
+				  }
           }
           // Ctrl
           if (event.keyCode == 17) {
               // Turn HUD mode on/off
+			  chatBoxHighlighted = true;
               hudMode = hudMode ? false : true;
           }
       }
 
       // Handle incoming chat messages
-      socket.on('updateChatLog', function (msg) {
-          playerHUD.addChatMsg(msg);
-		  UI.charcter.addMessage(msg);
-		  
+      socket.on('newChatMsg', function (msg) {
+          //playerHUD.addChatMsg(msg);
+		  //UI.charcter.addMessage();
+		  charcter.addMessage(msg)
+		  console.log("socket on handle:"+msg)
       });
 
       if ( ! Detector.webgl ) {
