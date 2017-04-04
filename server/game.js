@@ -2,7 +2,7 @@ module.exports = exports = Game;
 
 const Player = require('./player.js');
 
-const serverTag = '<span style="color: red"><b>Server </b></span>';
+const serverColor = 'red';
 
 function Game(io, sockets, room) {
     this.io = io;
@@ -24,11 +24,11 @@ function Game(io, sockets, room) {
 
         // Handle chat messages sent by players
         player.socket.on('newChatMsg', function (msg) {
-            io.to(room).emit('updateChatLog', (player.Tag + " : " + msg));
+            io.to(room).emit('updateChatLog', player.color ,( player.tag+": " + msg));
         });
     });
 
-    io.to(room).emit('updateChatLog', (serverTag + ": Game has begun!"));
+    io.to(room).emit('updateChatLog', serverColor ,( "System: Game has begun!"));
     console.log("The game has begun!")
 }
 

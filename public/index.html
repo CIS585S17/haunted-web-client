@@ -248,11 +248,13 @@
       }
 
       // Handle incoming chat messages
-      socket.on('newChatMsg', function (msg) {
+      socket.on('updateChatLog', function (c,msg) {
           //playerHUD.addChatMsg(msg);
 		  //UI.charcter.addMessage();
+		  
 		  charcter.addMessage(msg)
 		  console.log("socket on handle:"+msg)
+		  console.log("color:"+c )
       });
 
       if ( ! Detector.webgl ) {

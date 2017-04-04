@@ -110,8 +110,14 @@ Character.prototype.removeItem = function(item)// place of the item in the inven
 
 Character.prototype.addMessage = function(message)
 {
-	this.messagesLog.push(message);
-	console.log("added message:"+message)
+	var m = message;
+	if (m.length > 25)
+	{
+		
+		this.addMessage()
+	}
+	this.messagesLog.push(m);
+	console.log("added message:"+m)
 	
 }
 

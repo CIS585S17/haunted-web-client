@@ -4,8 +4,9 @@ module.exports = exports = Player;
 
 function Player(id, socket) {
     this.id = id;
-    this.Tag = '<span style="color: royalblue">Player ' + id + '</span>';
+    this.color = 'royalblue';
     this.socket = socket;
+	this.tag = "Player"+this.id;
 
     this.send = {
         id: this.id
