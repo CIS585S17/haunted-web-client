@@ -235,4 +235,4 @@ THREE.KeyFrameAnimation.prototype = {
 
 };
 
-module.exports = THREE.KeyFrameAnimation
+// module.exports = THREE.KeyFrameAnimation

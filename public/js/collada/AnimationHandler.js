@@ -219,4 +219,4 @@ THREE.AnimationHandler = {
 
 };
 
-module.exports = THREE.AnimationHandler
+// module.exports = THREE.AnimationHandler

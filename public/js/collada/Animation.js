@@ -4,7 +4,7 @@
  * @author alteredq / http://alteredqualia.com/
  */
 
-const THREE = require('./js/three.js')
+// const THREE = require('./js/three.js')
 
 THREE.Animation = function ( root, data ) {
 

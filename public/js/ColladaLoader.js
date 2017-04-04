@@ -3,7 +3,7 @@
 * @author Tony Parisi / http://www.tonyparisi.com/
 */
 
-const THREE = require('./three')
+// const THREE = require('./three')
 
 THREE.ColladaLoader = function () {
 
@@ -5535,4 +5535,4 @@ THREE.ColladaLoader = function () {
 
 };
 
-module.exports = THREE.ColladaLoader;
+// module.exports = THREE.ColladaLoader;
