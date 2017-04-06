@@ -15,9 +15,9 @@
 	
 </head>
 <body>
-    <p align="center">
+    <!--<p align="center">
       <button id="startButton" type="button" onclick ="start();">Start Game</button>
-    </p>
+    </p>-->
     <link type="text/css" rel="stylesheet" href="index.css">
     <textarea id="chatTextArea" rows="1" cols="30"></textarea>
     <div id="chatLogDiv"></div>
@@ -40,7 +40,7 @@
     <script type="text/javascript">
       "use strict";
       const index = require('./index')
-      function start() {
+      // function start() {
         // document.getElementById('startButton').style.visibility = 'hidden';
         // var socket = io.connect('/');
         // var playerHUD = new HUD();
@@ -51,12 +51,12 @@
       	  var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
       	  if (requestMethod) { // Native full screen.
           	requestMethod.call(element);
-      	  } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
-            var wscript = new ActiveXObject("WScript.Shell");
-            if (wscript !== null) {
-              wscript.SendKeys("{F11}");
-            }
-      	  }
+      	  } // else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+          //   var wscript = new ActiveXObject("WScript.Shell");
+          //   if (wscript !== null) {
+          //     wscript.SendKeys("{F11}");
+          //   }
+      	  // }
       	  document.body.requestPointerLock();
         }
         var elem = document.body; // Make the body go full screen.
@@ -157,7 +157,7 @@
   			  THREE.AnimationHandler.update( clock.getDelta() );
   			  renderer.render( scene, camera );
   		  }
-      }
+      // }
     </script>
 </body>
 </html>
