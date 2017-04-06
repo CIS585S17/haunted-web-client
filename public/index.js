@@ -33,9 +33,9 @@ window.onmousemove = function (event) {
     rotationZ = Math.max(-Math.PI, Math.min(Math.PI, rotationZ))
   }
 }
-// window.onmousedown = function (event) {
-//   requestFullScreen(document.body)
-// }
+window.onmousedown = function (event) {
+  document.body.requestPointerLock();
+}
 window.onkeydown = function (event) {
           // Only move the player if the player is not navigating the hud
   if (!hudMode) {

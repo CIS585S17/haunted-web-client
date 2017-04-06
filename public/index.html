@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Haunted</title>
-	
+
 	<style>
 	  canvas {
 		position: absolute;
@@ -12,7 +12,7 @@
 		left: 0;
 	  }
 	</style>
-	
+
 </head>
 <body>
     <!--<p align="center">
@@ -57,10 +57,10 @@
           //     wscript.SendKeys("{F11}");
           //   }
       	  // }
-      	  document.body.requestPointerLock();
+      	  //document.body.requestPointerLock();
         }
-        var elem = document.body; // Make the body go full screen.
-	      requestFullScreen(elem);
+        //var elem = document.body; // Make the body go full screen.
+	      //requestFullScreen(elem);
         // window.onmousedown = function (event) {
         //     requestFullScreen(document.body);
         // }
@@ -84,7 +84,7 @@
           loader.options.convertUpAxis = true;
           loader.load( ObjectPath, function( collada ) {
             dae = collada.scene;
-            dae.position.set(X, Y, Z); 
+            dae.position.set(X, Y, Z);
             scene.add( dae );
             dae.scale.x = dae.scale.y = dae.scale.z = 0.02;
             dae.updateMatrix();
@@ -131,7 +131,7 @@
   			  // stats = new Stats();
   			  // container.appendChild( stats.dom );
 			    // container.appendChild(UI);
-			
+
   			  window.addEventListener( 'resize', onWindowResize, false );
   		  }
   		  function onWindowResize() {
