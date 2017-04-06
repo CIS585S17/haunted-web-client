@@ -6,18 +6,14 @@ let win = []
 let gameWin
 
 function createWindow () {
-  // win = new BrowserWindow({ width: 1800, height: 1000, frame:false, transparent: true, experimentalCanvasFeatures: true })
   win.push(new BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false}))
   let index = win.length - 1
   win[index].loadURL(`file://${__dirname}/public/menu/menu.html`)
-  // startWin = new BrowserWindow({fullscreen: true})
-  // startWin.loadURL(`file://${__dirname}/public/menu/menu.html`)
   win[index].webContents.on('did-finish-load', () => {
     win[index].webContents.send('load', index)
   })
   if (debug) {
     win[index].webContents.openDevTools()
-    // startWin.webContents.openDevTools()
   }
 }
 
@@ -45,8 +41,23 @@ app.on('browser-window-created', (event, window) => {
   window.setMenu(null)
 })
 
-ipcMain.on('options', (event) => {
+ipcMain.on('options', (event, index) => {
+  win.push(new BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: win[index], modal: true, show: false}))
+  let i = win.length - 1
+  win[i].loadURL(`file://${__dirname}/public/options/options.html`)
+  win[i].once('ready-to-show', () => {
+    win[i].show()
+  })
+  win[i].webContents.on('did-finish-load', () => {
+    win[i].webContents.send('load', index)
+  })
+  if (debug) {
+    win[i].webContents.openDevTools()
+  }
 
+  win[i].on('closed', () => {
+    win.splice(i, 1)
+  })
 })
 
 ipcMain.on('host-game', (evnet) => {
