@@ -156,5 +156,6 @@ function render (camera) {
 }
 
 module.exports = {
-  render: render
+  render: render,
+  playerAt: playerAt
 }
