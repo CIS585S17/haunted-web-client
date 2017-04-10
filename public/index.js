@@ -1,5 +1,8 @@
 'use strict'
+const {ipcRenderer} = require('electron')
 
+
+let index
 let rotationX = 0
 let rotationZ = 0
 let pointAt = {
@@ -21,6 +24,11 @@ let movementInput = {
 }
 let hudMode = false
 
+ipcRenderer.on('load', (event, i) => {
+  index = i
+  console.log('index', index)
+})
+
 window.onmousemove = function (event) {
   // Only move the camera if the player is not navigating the hud
   if (!hudMode) {
@@ -34,7 +42,7 @@ window.onmousemove = function (event) {
   }
 }
 window.onmousedown = function (event) {
-  document.body.requestPointerLock();
+  document.body.requestPointerLock()
 }
 window.onkeydown = function (event) {
           // Only move the player if the player is not navigating the hud
@@ -71,11 +79,14 @@ window.onkeydown = function (event) {
       case ' ':
         event.preventDefault()
         break
-
       case 'h':
         event.preventDefault()
         if (UI.style.visibility == 'hidden') { UI.style.visibility = 'visible' } else { UI.style.visibility = 'hidden' }
         break
+      case 'Tab':
+        event.preventDefault()
+        ipcRenderer.send('pause-game', 0)
+        console.log(index)
     }
   } else {
               // Enter
