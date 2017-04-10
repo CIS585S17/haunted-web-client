@@ -11,18 +11,19 @@ class WindowForms {
   ingameWindow (index) {
     this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false}))
     let i = this.windows.length - 1
-    this.windows[i].loadURL(`file://${this.dirname}/public/menu/ingame_menu.html`)
-    this.windows[i].once('ready-to-show', () => {
-      this.windows[i].show()
+    let ingameWin = this.windows[i]
+    ingameWin.loadURL(`file://${this.dirname}/public/menu/ingame_menu.html`)
+    ingameWin.once('ready-to-show', () => {
+      ingameWin.show()
     })
-    this.windows[i].webContents.on('did-finish-load', () => {
-      this.windows[i].webContents.send('load', {parentIndex: index, childIndex: i})
+    ingameWin.webContents.on('did-finish-load', () => {
+      ingameWin.webContents.send('load', {parentIndex: index, childIndex: i})
     })
     if (this.debug) {
-      this.windows[i].webContents.openDevTools()
+      ingameWin.webContents.openDevTools()
     }
 
-    this.windows[i].on('closed', () => {
+    ingameWin.on('closed', () => {
       this.windows.splice(i, 1)
     })
   }
@@ -30,18 +31,19 @@ class WindowForms {
   optionsWindow (index) {
     this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false}))
     let i = this.windows.length - 1
-    this.windows[i].loadURL(`file://${this.dirname}/public/options/options.html`)
-    this.windows[i].once('ready-to-show', () => {
-      this.windows[i].show()
+    let optionsWin = this.windows[i]
+    optionsWin.loadURL(`file://${this.dirname}/public/options/options.html`)
+    optionsWin.once('ready-to-show', () => {
+      optionsWin.show()
     })
-    this.windows[i].webContents.on('did-finish-load', () => {
-      this.windows[i].webContents.send('load', i)
+    optionsWin.webContents.on('did-finish-load', () => {
+      optionsWin.webContents.send('load', i)
     })
     if (this.debug) {
-      this.windows[i].webContents.openDevTools()
+      optionsWin.webContents.openDevTools()
     }
 
-    this.windows[i].on('closed', () => {
+    optionsWin.on('closed', () => {
       this.windows.splice(i, 1)
     })
   }
@@ -49,16 +51,16 @@ class WindowForms {
   gameWindow () {
     this.windows.push(new this.BrowserWindow({ width: 1800, height: 1000, experimentalCanvasFeatures: true, fullscreen: true }))
     let i = this.windows.length - 1
-    this.windows[i].loadURL(`file://${this.dirname}/public/index.html`)
-    this.windows[i].webContents.on('did-finish-load', () => {
-      console.log(this.windows[i].webContents)
-      // this.windows[i].webContents.send('load', i)
+    let gameWin = this.windows[i]
+    gameWin.loadURL(`file://${this.dirname}/public/index.html`)
+    gameWin.webContents.on('did-finish-load', () => {
+      gameWin.webContents.send('load', i)
     })
     if (this.debug) {
-      this.windows[i].webContents.openDevTools()
+      gameWin.webContents.openDevTools()
     }
 
-    this.windows[i].on('closed', () => {
+    gameWin.on('closed', () => {
       this.windows.splice(i, 1)
     })
   }
@@ -66,15 +68,16 @@ class WindowForms {
   startWindow () {
     this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false}))
     let i = this.windows.length - 1
-    this.windows[i].loadURL(`file://${this.dirname}/public/menu/menu.html`)
-    this.windows[i].webContents.on('did-finish-load', () => {
-      this.windows[i].webContents.send('load', i)
+    let startWin = this.windows[i]
+    startWin.loadURL(`file://${this.dirname}/public/menu/menu.html`)
+    startWin.webContents.on('did-finish-load', () => {
+      startWin.webContents.send('load', i)
     })
     if (this.debug) {
-      this.windows[i].webContents.openDevTools()
+      startWin.webContents.openDevTools()
     }
 
-    this.windows[i].on('closed', () => {
+    startWin.on('closed', () => {
       this.windows.splice(i, 1)
     })
   }
