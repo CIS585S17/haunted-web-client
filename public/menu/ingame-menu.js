@@ -7,17 +7,22 @@ window.onload = function () {
   ipcRenderer.on('load', (event, index) => {
     $('#resumeBtn').on('click', (event) => {
       event.preventDefault()
-      ipcRenderer.send('resume-game', index)
+      ipcRenderer.send('resume-game', index.childIndex)
     })
 
     $('#optionsBtn').on('click', (event) => {
       event.preventDefault()
-      ipcRenderer.send('options', index)
+      ipcRenderer.send('options', index.childIndex)
     })
 
     $('#quitBtn').on('click', (event) => {
       event.preventDefault()
-      ipcRenderer.send('quit-game', index)
+      ipcRenderer.send('quit-game')
+    })
+
+    $('#quitToMainBtn').on('click', (event) => {
+      event.preventDefault()
+      ipcRenderer.send('quit-to-main-window', index)
     })
   })
 }

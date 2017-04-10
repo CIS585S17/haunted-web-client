@@ -86,7 +86,6 @@ window.onkeydown = function (event) {
       case 'Tab':
         event.preventDefault()
         ipcRenderer.send('pause-game', 0)
-        console.log(index)
     }
   } else {
               // Enter

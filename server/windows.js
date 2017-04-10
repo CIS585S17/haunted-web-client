@@ -16,7 +16,7 @@ class WindowForms {
       this.windows[i].show()
     })
     this.windows[i].webContents.on('did-finish-load', () => {
-      this.windows[i].webContents.send('load', i)
+      this.windows[i].webContents.send('load', {parentIndex: index, childIndex: i})
     })
     if (this.debug) {
       this.windows[i].webContents.openDevTools()
@@ -51,7 +51,8 @@ class WindowForms {
     let i = this.windows.length - 1
     this.windows[i].loadURL(`file://${this.dirname}/public/index.html`)
     this.windows[i].webContents.on('did-finish-load', () => {
-      this.windows[i].webContents.send('load', i)
+      console.log(this.windows[i].webContents)
+      // this.windows[i].webContents.send('load', i)
     })
     if (this.debug) {
       this.windows[i].webContents.openDevTools()

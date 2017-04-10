@@ -55,6 +55,13 @@ ipcMain.on('resume-game', (event, index) => {
   win[index].close()
 })
 
+ipcMain.on('quit-to-main-window', (event, index) => {
+  windowFrom.startWindow()
+  for (let i in index) {
+    win[index[i]].close()
+  }
+})
+
 ipcMain.on('quit-game', (event) => {
   for (let w of win) {
     w.close()
