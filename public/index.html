@@ -80,6 +80,7 @@
         var pos = index.playerAt;
         console.log(index);
         var cube = addCube(pos.x, .75, pos.z+4);
+        roomBox = addCollisionBox(8.18, 1.5, -4.75, 3.96, 3, 8.1);
         // load( 'models/room.dae', 0, 0, 0);
         // load( 'models/cardroom.dae', 0, 0, 10);
         function load( ObjectPath, X, Y, Z){
@@ -102,6 +103,20 @@
           cube.position.set(X, Y, Z);
           scene.add(cube);
           return cube;
+        }
+
+        function addCollisionBox(X, Y, Z, xScale, yScale, zScale) {
+          var geometry = new THREE.BoxGeometry(xScale, yScale, zScale);
+          var material = new THREE.MeshBasicMaterial({color: 0xfffff, wireframe: true});
+          var box = new THREE.Mesh(geometry, material);
+          box.position.set(X, Y, Z);
+          scene.add(box);
+          return {
+            xBottom: X - xScale/2,
+            xTop: X + xScale/2,
+            zBottom: Z - zScale/2,
+            zTop: Z + zScale/2
+          };
         }
 
   	    function init() {
