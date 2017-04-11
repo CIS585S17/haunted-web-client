@@ -45,9 +45,9 @@ ipcMain.on('host-game', (evnet) => {
 })
 
 ipcMain.on('join-game', (event, index) => {
-  windowFrom.joinGameWindow(index)
-  // windowFrom.gameWindow()
-  // win[index].close()
+  // windowFrom.joinGameWindow(index)
+  windowFrom.gameWindow()
+  win[index].close()
 })
 
 ipcMain.on('join', (event, data) => {

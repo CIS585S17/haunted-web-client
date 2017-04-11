@@ -1,13 +1,16 @@
+'use strict'
+
 const {RoomGraph} = require('./server/room')
+const {Game} = require('./server/game')
 
 var express = require('express')
 var app = express()
 var server = require('http').createServer(app)
 var io = require('socket.io').listen(server)
 
-var players = []
-var games = 0
-const Game = require('./server/game')
+let playerSockets = []
+let games = []
+// let games = 0
 
 // let graph = new RoomGraph(`${__dirname}/public/models`);
 
@@ -35,7 +38,17 @@ io.on('connection', function (socket) {
   //   games++
   // }
 
+  // field for game name, each game can be named by host
+  socket.on('host-game', (player) => {
+    games.push(new Game(io, new RoomGraph(`${__dirname}/public/models`), (games.length - 1)))
+    games[games.length - 1].addPlayer(player)
+  })
+
   socket.on('join', (data) => {
-    console.log(data)
+    games[data.gameIndex].addPlayer(data.player)
+  })
+
+  socket.on('start-game', () => {
+
   })
 })
