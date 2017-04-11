@@ -1,6 +1,20 @@
 'use strict'
 
+/**
+ * A class to create windows for the game
+ * 
+ * @class WindowForms
+ */
 class WindowForms {
+  /**
+   * Creates an instance of WindowForms.
+   * @param {object} BrowserWindow 
+   * @param {boolean} debug 
+   * @param {string} dirname Path 
+   * @param {array} windows Stores open windows
+   * 
+   * @memberOf WindowForms
+   */
   constructor(BrowserWindow, debug, dirname, windows) {
     this.BrowserWindow = BrowserWindow
     this.debug = debug
@@ -8,6 +22,13 @@ class WindowForms {
     this.windows = windows
   }
 
+  /**
+   * Creates in game menu modal window
+   * 
+   * @param {integer} index Position of the parent BrowserWindow in windows array
+   * 
+   * @memberOf WindowForms
+   */
   ingameWindow (index) {
     this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false}))
     let i = this.windows.length - 1
@@ -28,6 +49,33 @@ class WindowForms {
     })
   }
 
+  joinGameWindow (index) {
+    this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false}))
+    let i = this.windows.length - 1
+    let joinWin = this.windows[i]
+    joinWin.loadURL(`file://${this.dirname}/public/join/join.html`)
+    joinWin.once('ready-to-show', () => {
+      joinWin.show()
+    })
+    joinWin.webContents.on('did-finish-load', () => {
+      joinWin.webContents.send('load', {parentIndex: index, childIndex: i})
+    })
+    if (this.debug) {
+      joinWin.webContents.openDevTools()
+    }
+
+    joinWin.on('closed', () => {
+      this.windows.splice(i, 1)
+    })
+  }
+
+  /**
+   * Creates options modal window.
+   * 
+   * @param {integer} index Position of the parent BrowserWindow in windows array
+   * 
+   * @memberOf WindowForms
+   */
   optionsWindow (index) {
     this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false}))
     let i = this.windows.length - 1
@@ -48,6 +96,12 @@ class WindowForms {
     })
   }
 
+  /**
+   * Creates the main game window
+   * 
+   * 
+   * @memberOf WindowForms
+   */
   gameWindow () {
     this.windows.push(new this.BrowserWindow({ width: 1800, height: 1000, experimentalCanvasFeatures: true, fullscreen: true }))
     let i = this.windows.length - 1
@@ -65,9 +119,16 @@ class WindowForms {
     })
   }
 
+  /**
+   * Creates the start window
+   * 
+   * 
+   * @memberOf WindowForms
+   */
   startWindow () {
-    this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false}))
-    let i = this.windows.length - 1
+    this.windows.unshift(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false}))
+    // let i = this.windows.length - 1
+    let i = 0
     let startWin = this.windows[i]
     startWin.loadURL(`file://${this.dirname}/public/menu/menu.html`)
     startWin.webContents.on('did-finish-load', () => {

@@ -1,10 +1,12 @@
 'use strict'
 const {app, BrowserWindow, ipcMain} = require('electron')
-const {WindowForms} = require('./server/windows')
+const {WindowForms} = require('./main/windows')
+const {Player} = require('./server/player')
 
 let debug = true
 let win = []
 let windowFrom = new WindowForms(BrowserWindow, debug, __dirname, win)
+let player = new Player()
 
 function createWindow () {
   windowFrom.startWindow()
@@ -43,8 +45,13 @@ ipcMain.on('host-game', (evnet) => {
 })
 
 ipcMain.on('join-game', (event, index) => {
-  windowFrom.gameWindow()
-  win[index].close()
+  windowFrom.joinGameWindow(index)
+  // windowFrom.gameWindow()
+  // win[index].close()
+})
+
+ipcMain.on('join', (event, data) => {
+
 })
 
 ipcMain.on('pause-game', (event, index) => {
@@ -58,7 +65,9 @@ ipcMain.on('resume-game', (event, index) => {
 ipcMain.on('quit-to-main-window', (event, index) => {
   windowFrom.startWindow()
   for (let i in index) {
-    win[index[i]].close()
+    if (index[i] !== 0) {
+      win[index[i]].close()
+    }
   }
 })
 

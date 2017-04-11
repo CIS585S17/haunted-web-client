@@ -25,13 +25,17 @@ app.use('/static', express.static('node_modules'))
 
 // Handles a player connection
 io.on('connection', function (socket) {
-  console.log('A user connected')
-  players.push(socket)
+  // console.log('A user connected')
+  // players.push(socket)
 
-    // If we have two players, Launch a game instance
-  if (players.length == 2) {
-    new Game(io, players, games)
-    players = []
-    games++
-  }
+  //   // If we have two players, Launch a game instance
+  // if (players.length == 2) {
+  //   new Game(io, players, games)
+  //   players = []
+  //   games++
+  // }
+
+  socket.on('join', (data) => {
+    console.log(data)
+  })
 })

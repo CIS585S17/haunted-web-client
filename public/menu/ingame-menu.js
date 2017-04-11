@@ -20,9 +20,9 @@ window.onload = function () {
       ipcRenderer.send('quit-game')
     })
 
-    // $('#quitToMainBtn').on('click', (event) => {
-    //   event.preventDefault()
-    //   ipcRenderer.send('quit-to-main-window', index)
-    // })
+    $('#quitToMainBtn').on('click', (event) => {
+      event.preventDefault()
+      ipcRenderer.send('quit-to-main-window', index)
+    })
   })
 }
