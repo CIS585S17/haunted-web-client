@@ -8,9 +8,9 @@
 class WindowForms {
   /**
    * Creates an instance of WindowForms.
-   * @param {object} BrowserWindow 
-   * @param {boolean} debug 
-   * @param {string} dirname Path 
+   * @param {object} BrowserWindow
+   * @param {boolean} debug
+   * @param {string} dirname Path
    * @param {array} windows Stores open windows
    *
    * @memberOf WindowForms

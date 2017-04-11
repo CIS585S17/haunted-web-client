@@ -52,4 +52,8 @@ io.on('connection', function (socket) {
   socket.on('start-game', () => {
 
   })
+
+  socket.on('host', (msg) => {
+    console.log(msg)
+  })
 })

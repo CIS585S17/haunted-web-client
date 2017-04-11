@@ -57,14 +57,14 @@ class Game {
       player.socket.join(this.gameIndex)
 
       // Handle chat messages sent by players
-      players.socket.on('newChatMsg', (msg) => {
-        io.to(this.gameIndex).emit('updateChatLog', `${player.tag} : ${msg}`)
+      player.socket.on('newChatMsg', (msg) => {
+        this.io.to(this.gameIndex).emit('updateChatLog', `${player.tag} : ${msg}`)
       })
     }
   }
 
   updateChat () {
-    io.to(this.gameIndex).emit('updateChatLog', `${serverTag} : Game has begun!`)
+    this.io.to(this.gameIndex).emit('updateChatLog', `${serverTag} : Game has begun!`)
     console.log('The game has begun!')
   }
 }

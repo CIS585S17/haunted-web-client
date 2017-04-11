@@ -2,6 +2,7 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 const {WindowForms} = require('./main/windows')
 // const {Player} = require('./server/player')
+const socket = require('socket.io')
 
 let debug = true
 let win = []
@@ -40,8 +41,16 @@ ipcMain.on('options', (event, index) => {
   windowForm.optionsWindow(index)
 })
 
-ipcMain.on('host-game', (evnet, index) => {
+ipcMain.on('host-game', (event, index) => {
   windowForm.hostGameWindow(index)
+})
+
+ipcMain.on('host', (event, msg) => {
+  // let connect = socket.connect('/')
+  console.log(msg)
+  // console.log(socket)
+  // socket.on('connection')
+  // connect.emit('host', msg)
 })
 
 ipcMain.on('join-game', (event, index) => {
