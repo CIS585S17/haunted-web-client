@@ -1,4 +1,4 @@
-"use strict";
+'use strict'
 
 // module.exports = exports = Player;
 
@@ -19,21 +19,21 @@
 // }
 
 class Player {
-    constructor (id, socket) {
-        this.id = id
-        this.socket = socket
-        this.tag = `<span style="color: royalblue">Player ${this.id}</span>`
-    }
+  constructor (id, socket) {
+    this.id = id
+    this.socket = socket
+    this.tag = `<span style="color: royalblue">Player ${this.id}</span>`
+  }
 
-    joinGame () {
+  joinGame () {
 
-    }
+  }
 
-    update () {
+  update () {
 
-    }
+  }
 }
 
 module.exports = {
-    Player: Player
+  Player: Player
 }

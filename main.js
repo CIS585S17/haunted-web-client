@@ -1,15 +1,15 @@
 'use strict'
 const {app, BrowserWindow, ipcMain} = require('electron')
 const {WindowForms} = require('./main/windows')
-const {Player} = require('./server/player')
+// const {Player} = require('./server/player')
 
 let debug = true
 let win = []
-let windowFrom = new WindowForms(BrowserWindow, debug, __dirname, win)
-let player = new Player()
+let windowForm = new WindowForms(BrowserWindow, debug, __dirname, win)
+// let player = new Player()
 
 function createWindow () {
-  windowFrom.startWindow()
+  windowForm.startWindow()
 }
 
 // This method will be called when Electron has finished
@@ -37,17 +37,17 @@ app.on('browser-window-created', (event, window) => {
 })
 
 ipcMain.on('options', (event, index) => {
-  windowFrom.optionsWindow(index)
+  windowForm.optionsWindow(index)
 })
 
-ipcMain.on('host-game', (evnet) => {
-
+ipcMain.on('host-game', (evnet, index) => {
+  windowForm.hostGameWindow(index)
 })
 
 ipcMain.on('join-game', (event, index) => {
-  // windowFrom.joinGameWindow(index)
-  windowFrom.gameWindow()
-  win[index].close()
+  windowForm.joinGameWindow(index)
+  // windowFrom.gameWindow()
+  // win[index].close()
 })
 
 ipcMain.on('join', (event, data) => {
@@ -55,7 +55,7 @@ ipcMain.on('join', (event, data) => {
 })
 
 ipcMain.on('pause-game', (event, index) => {
-  windowFrom.ingameWindow(index)
+  windowForm.ingameWindow(index)
 })
 
 ipcMain.on('resume-game', (event, index) => {
@@ -63,7 +63,7 @@ ipcMain.on('resume-game', (event, index) => {
 })
 
 ipcMain.on('quit-to-main-window', (event, index) => {
-  windowFrom.startWindow()
+  windowForm.startWindow()
   for (let i in index) {
     if (index[i] !== 0) {
       win[index[i]].close()

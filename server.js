@@ -2,6 +2,7 @@
 
 const {RoomGraph} = require('./server/room')
 const {Game} = require('./server/game')
+const {Player} = require('./server/player')
 
 var express = require('express')
 var app = express()
@@ -39,13 +40,13 @@ io.on('connection', function (socket) {
   // }
 
   // field for game name, each game can be named by host
-  socket.on('host-game', (player) => {
-    games.push(new Game(io, new RoomGraph(`${__dirname}/public/models`), (games.length - 1)))
-    games[games.length - 1].addPlayer(player)
+  socket.on('host-game', (data) => {
+    games.push(new Game((games.length - 1), io, data.name, new RoomGraph(`${__dirname}/public/models`)))
+    games[games.length - 1].addPlayer(new Player(1, socket))
   })
 
   socket.on('join', (data) => {
-    games[data.gameIndex].addPlayer(data.player)
+    games[data.gameIndex].addPlayer(new Player(2, socket))
   })
 
   socket.on('start-game', () => {

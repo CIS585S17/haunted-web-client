@@ -2,7 +2,7 @@
 
 /**
  * A class to create windows for the game
- * 
+ *
  * @class WindowForms
  */
 class WindowForms {
@@ -12,21 +12,41 @@ class WindowForms {
    * @param {boolean} debug 
    * @param {string} dirname Path 
    * @param {array} windows Stores open windows
-   * 
+   *
    * @memberOf WindowForms
    */
-  constructor(BrowserWindow, debug, dirname, windows) {
+  constructor (BrowserWindow, debug, dirname, windows) {
     this.BrowserWindow = BrowserWindow
     this.debug = debug
     this.dirname = dirname
     this.windows = windows
   }
 
+  hostGameWindow (index) {
+    this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false}))
+    let i = this.windows.length - 1
+    let hostGameWin = this.windows[i]
+    hostGameWin.loadURL(`file://${this.dirname}/public/host/host.html`)
+    hostGameWin.once('ready-to-show', () => {
+      hostGameWin.show()
+    })
+    hostGameWin.webContents.on('did-finish-load', () => {
+      hostGameWin.webContents.send('load', {parentIndex: index, childIndex: i})
+    })
+    if (this.debug) {
+      hostGameWin.webContents.openDevTools()
+    }
+
+    hostGameWin.on('closed', () => {
+      this.windows.splice(i, 1)
+    })
+  }
+
   /**
    * Creates in game menu modal window
-   * 
+   *
    * @param {integer} index Position of the parent BrowserWindow in windows array
-   * 
+   *
    * @memberOf WindowForms
    */
   ingameWindow (index) {
@@ -71,9 +91,9 @@ class WindowForms {
 
   /**
    * Creates options modal window.
-   * 
+   *
    * @param {integer} index Position of the parent BrowserWindow in windows array
-   * 
+   *
    * @memberOf WindowForms
    */
   optionsWindow (index) {
@@ -98,8 +118,8 @@ class WindowForms {
 
   /**
    * Creates the main game window
-   * 
-   * 
+   *
+   *
    * @memberOf WindowForms
    */
   gameWindow () {
@@ -121,8 +141,8 @@ class WindowForms {
 
   /**
    * Creates the start window
-   * 
-   * 
+   *
+   *
    * @memberOf WindowForms
    */
   startWindow () {

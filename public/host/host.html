@@ -7,11 +7,41 @@
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <script type="text/javascript" src="../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="../index.css">
-    <script type="text/javascript">require('./menu')</script>
+    <script type="text/javascript">require('./host')</script>
   </head>
   <body>
     <main class="container">
-      host game
+      <section class="panel pan-join">
+        <div class="panel-heading"><h2 class="text-center title">Host A Game</h2></div>
+        <div class="panel-body">
+          <form>
+            <div class="row">
+              <div class="col-xs-12 form-group">
+                <label for="name" class="control-label">Game name: </label>
+                <input type="text" class="form-control" id="name" required>
+              </div>
+            </div>
+            <!--<section class="row">
+              <div class="col-xs-12 form-group">
+                <label for="ipAddress" class="control-label">IP Address: </label>
+                <input type="text" class="form-control" id="ipAddress" required>
+              </div>
+            </section>
+            <section class="row">
+              <div class="col-xs-12 form-group">
+                <label for="port" class="control-label">Port: </label>
+                <input type="text" class="form-control" id="port" required>
+              </div>
+            </section>-->
+            <br>
+            <section class="row">
+              <div class="col-xs-12">
+                <button class="btn" style="width: 100%" type="button" id="joinGameBtn">Host</button>
+              </div>
+            </section>
+          </form>
+        </div>
+      </section>
     </main>
   </body>
 </html>

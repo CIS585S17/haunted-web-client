@@ -37,10 +37,11 @@ const serverTag = '<span style="color: red"><b>Server </b></span>'
 // }
 
 class Game {
-  constructor (io, roomGraph, gameIndex) {
-    this.io = io
-    this.roomGraph = roomGraph
+  constructor (gameIndex, io, name, roomGraph) {
     this.gameIndex = gameIndex
+    this.io = io
+    this.name = name
+    this.roomGraph = roomGraph
     this.players = []
     this.chatLog = []
     this.updateChat = false
