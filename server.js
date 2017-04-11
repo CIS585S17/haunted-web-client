@@ -4,9 +4,11 @@ const {RoomGraph} = require('./server/room')
 const {Game} = require('./server/game')
 const {Player} = require('./server/player')
 
-var express = require('express')
-var app = express()
-var server = require('http').createServer(app)
+
+// var express = require('express')
+// var app = express()
+// var server = require('http').createServer(app)
+var server = require('http').createServer()
 var io = require('socket.io').listen(server)
 
 let playerSockets = []
@@ -17,15 +19,15 @@ let games = []
 
 // Server starts listening on port 5000
 server.listen('5000', () => {
-  console.log('Listening at http://localhost:5000')
+  // console.log('Listening at http://localhost:5000')
 })
 
-app.use(express.static('public'))
-app.get('/', function (req, res, next) {
-  res.sendFile(__dirname + '/index.html')
-})
+// app.use(express.static('public'))
+// app.get('/', function (req, res, next) {
+//   res.sendFile(__dirname + '/index.html')
+// })
 
-app.use('/static', express.static('node_modules'))
+// app.use('/static', express.static('node_modules'))
 
 // Handles a player connection
 io.on('connection', function (socket) {
