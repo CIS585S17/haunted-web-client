@@ -2,8 +2,13 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 const {WindowForms} = require('./main/windows')
 // const {Player} = require('./server/player')
-const io = require('socket.io-client')
-let socket = io('cislinux.cs.ksu.edu:5000')
+// const io = (require('socket.io-client')).io
+let socket = require('socket.io-client')('ws://cslinux.cs.ksu.edu:5000')
+// console.log(socket)
+socket.on('connect', () => {
+  console.log('connected')
+})
+
 
 let debug = true
 let win = []
