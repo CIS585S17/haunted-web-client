@@ -97,7 +97,7 @@ class WindowForms {
    * @memberOf WindowForms
    */
   optionsWindow (index) {
-    this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false}))
+    this.windows.push(new this.BrowserWindow({width: 400, height: 450, resizable: true, maximizable: false, parent: this.windows[index], modal: true, show: false}))
     let i = this.windows.length - 1
     let optionsWin = this.windows[i]
     optionsWin.loadURL(`file://${this.dirname}/public/options/options.html`)
