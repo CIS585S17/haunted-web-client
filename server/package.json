@@ -1,0 +1,17 @@
+{
+  "name": "haunted-web-client",
+  "version": "1.0.0",
+  "description": "A web-based client for the haunted game.",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Kansas State University CIS 585 Class, Spring 2017",
+  "license": "MIT",
+  "dependencies": {
+    "socket.io": "^1.7.3"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0"
+  }
+}
