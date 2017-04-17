@@ -4,15 +4,15 @@ const {ipcRenderer} = require('electron')
 const $ = require('jquery')
 
 window.onload = function () {
-  ipcRenderer.on('load', (event, index) => {
+  ipcRenderer.on('load', (event, data) => {
     $('#resumeBtn').on('click', (event) => {
       event.preventDefault()
-      ipcRenderer.send('resume-game', index.childIndex)
+      ipcRenderer.send('resume-game', data.index.childIndex)
     })
 
     $('#optionsBtn').on('click', (event) => {
       event.preventDefault()
-      ipcRenderer.send('options', index.childIndex)
+      ipcRenderer.send('options', data.index.childIndex)
     })
 
     $('#quitBtn').on('click', (event) => {
@@ -22,7 +22,7 @@ window.onload = function () {
 
     $('#quitToMainBtn').on('click', (event) => {
       event.preventDefault()
-      ipcRenderer.send('quit-to-main-window', index)
+      ipcRenderer.send('quit-to-main-window', data.index)
     })
   })
 }

@@ -19,19 +19,19 @@ ipcRenderer.on('load', (event, data) => {
       table += `<tr>
       <td>${games[i].id}</td>
       <td>${games[i].name}</td>
-      <td><a href="#" id="view_${i}">join<a/></td></tr>`
+      <td><a href="#" id="join_${i}">join<a/></td></tr>`
     }
     $('#tableBody').append(table)
     for (let i = 0; i < games.length; i++) {
-      $(`#view_${i}`).on('click', () => {
-        ipcRenderer.send('view-part', {part: games[i], index: data.index})
+      $(`#join_${i}`).on('click', () => {
+        ipcRenderer.send('join', {game: games[i], index: data.index})
       })
     }
   }
 
-  // loadTable(data.games)
+  loadTable(data.games)
 
-  ipcRenderer.on('update-join-table', (event, games) => {
-    loadTable(games)
-  })
+  // ipcRenderer.on('update-join-table', (event, games) => {
+  //   loadTable(games)
+  // })
 })

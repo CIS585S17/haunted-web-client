@@ -15,7 +15,9 @@ const {Connect} = require('./main/connect')
 // socket.on('connect', () => {
 //   console.log('connected')
 // })
+
 let connect
+// let connect = new Connect()
 
 let debug = true
 let win = []
@@ -66,9 +68,11 @@ ipcMain.on('host', (event, message) => {
 })
 
 ipcMain.on('join-game', (event, index) => {
-  windowForm.joinGameWindow(index)
+  // connect.getGames()
   let c = new Connect()
-  c.getGames()
+  c.getGames((games) => {
+    windowForm.joinGameWindow({index: index, games: games})
+  })
   // connect.work()
   // windowForm.gameWindow()
   // win[index].close()
