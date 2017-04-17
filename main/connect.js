@@ -6,15 +6,15 @@ const io = require('socket.io-client')
 
 class Connect {
   constructor () {
-    this.socket = io('ws://cslinux.cs.ksu.edu:5000')
+    this.socket = io('ws://cslinux.cs.ksu.edu:3000')
     this.message = 'i work'
   }
 
-  connect (msg) {
-    this.socket.on('connect', () => {
-      console.log('connected in class')
-    })
-    this.socket.emit('join', msg)
+  connect (gameName) {
+    // this.socket.on('connect', () => {
+    //   console.log('connected in class')
+    // })
+    this.socket.emit('host-game', gameName)
   }
 
   work (msg) {
@@ -22,6 +22,13 @@ class Connect {
     //   console.log('work function')
     // })
     this.socket.emit('join', msg)
+  }
+
+  getGames () {
+    this.socket.on('get-games', (games) => {
+      console.log(games)
+      return games
+    })
   }
 }
 

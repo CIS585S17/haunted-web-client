@@ -29,7 +29,7 @@ ipcRenderer.on('load', (event, data) => {
     }
   }
 
-  loadTable(data.games)
+  // loadTable(data.games)
 
   ipcRenderer.on('update-join-table', (event, games) => {
     loadTable(games)
