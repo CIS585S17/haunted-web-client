@@ -78,8 +78,8 @@
   		  init();
         load( 'models/library_room.dae', 5, 0, 0 );
         var pos = index.playerAt;
-        console.log(index);
-        var cube = addCube(pos.x, .75, pos.z+4);
+        var cube = addCube(pos.x, .75, pos.z);
+		var roomCube = addRoomCube(8.5, 2, -4.75);
         // load( 'models/room.dae', 0, 0, 0);
         // load( 'models/cardroom.dae', 0, 0, 10);
         function load( ObjectPath, X, Y, Z){
@@ -94,10 +94,26 @@
             animate();
           });
         }
-
+		
+		function collision(cube, roomCube)
+		{
+			if (cube.x == roomCube.x)
+				return true;
+		}
+		
+		function addRoomCube( X, Y, Z)
+		{
+		  var geometry = new THREE.BoxGeometry(4.5, 4, 8);
+          var material = new THREE.MeshBasicMaterial({color: 0xfffff, wireframe: true});
+          var cube = new THREE.Mesh(geometry, material);
+          cube.position.set(X, Y, Z);
+          scene.add(cube);
+          return cube;
+		}
+		
         function addCube( X, Y, Z ){
-          var geometry = new THREE.BoxGeometry(.6, 1.5, .6, 1, 1, 1);
-          var material = new THREE.MeshBasicMaterial({color: 0xfffff, wireframe: false});
+          var geometry = new THREE.BoxGeometry(.6, 1.5, .6, 3, 3, 3);
+          var material = new THREE.MeshBasicMaterial({color: 0xfffff, wireframe: true});
           var cube = new THREE.Mesh(geometry, material);
           cube.position.set(X, Y, Z);
           scene.add(cube);
@@ -164,8 +180,12 @@
         // }
         function render() {
           index.render(camera)
-
-          cube.position.set(pos.x, .75, pos.z-4);
+          index.rotatePlayer(cube);
+          cube.position.set(pos.x, .75, pos.z);
+          //var rot = index.pointAt;
+          console.log('camera: ' + camera.rotation.y);
+          console.log('cube: ' + cube.rotation.y);
+          //cube.rotation.set(0, rot.y, 0);
   			  //particleLight.position.x = Math.sin( timer * 4 ) * 3009;
   			  //particleLight.position.y = Math.cos( timer * 5 ) * 4000;
   			  //particleLight.position.z = Math.cos( timer * 4 ) * 3009;

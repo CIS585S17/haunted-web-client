@@ -1,8 +1,6 @@
 'use strict'
-const {ipcRenderer} = require('electron')
 
-
-let index
+let radians = Math.PI/180
 let rotationX = 0
 let rotationZ = 0
 let pointAt = {
@@ -15,6 +13,13 @@ let playerAt = {
   y: 1,
   z: 0
 }
+let cameraAt = {
+  x: 0,
+  y: 0,
+  z: 0
+}
+//let cameraView = 'firstPerson'
+let cameraView = 'thirdPerson'
 let speed = 0.05
 let movementInput = {
   up: false,
@@ -24,25 +29,20 @@ let movementInput = {
 }
 let hudMode = false
 
-ipcRenderer.on('load', (event, i) => {
-  index = i
-  console.log('index', index)
-})
-
 window.onmousemove = function (event) {
   // Only move the camera if the player is not navigating the hud
   if (!hudMode) {
     let movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0
     let movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0
-    rotationX -= movementX * -0.002
-    if ((rotationZ - movementY * 0.002) >= -1 && (rotationZ - movementY * 0.002) <= 1) {
-      rotationZ -= movementY * 0.002
+    rotationX -= movementX * -0.02
+    if ((rotationZ - movementY * 0.02) >= -90 && (rotationZ - movementY * 0.02) <= 90) {
+      rotationZ -= movementY * 0.02
     }
-    rotationZ = Math.max(-Math.PI, Math.min(Math.PI, rotationZ))
+    rotationZ = Math.max(-90, Math.min(90, rotationZ))
   }
 }
 window.onmousedown = function (event) {
-  document.body.requestPointerLock()
+  document.body.requestPointerLock();
 }
 window.onkeydown = function (event) {
           // Only move the player if the player is not navigating the hud
@@ -79,13 +79,11 @@ window.onkeydown = function (event) {
       case ' ':
         event.preventDefault()
         break
+
       case 'h':
         event.preventDefault()
         if (UI.style.visibility == 'hidden') { UI.style.visibility = 'visible' } else { UI.style.visibility = 'hidden' }
         break
-      case 'Tab':
-        event.preventDefault()
-        ipcRenderer.send('pause-game', 0)
     }
   } else {
               // Enter
@@ -129,33 +127,60 @@ window.onkeyup = function (event) {
   }
 }
 
+function 
+
 function render (camera) {
   if (movementInput.left) {
-    playerAt.x -= Math.cos(rotationX + Math.PI / 2) * speed
-    playerAt.z -= Math.sin(rotationX + Math.PI / 2) * speed
+    playerAt.x -= Math.cos((rotationX*radians) + Math.PI / 2) * speed
+    playerAt.z -= Math.sin((rotationX*radians) + Math.PI / 2) * speed
   }
   if (movementInput.right) {
-    playerAt.x += Math.cos(rotationX + Math.PI / 2) * speed
-    playerAt.z += Math.sin(rotationX + Math.PI / 2) * speed
+    playerAt.x += Math.cos((rotationX*radians) + Math.PI / 2) * speed
+    playerAt.z += Math.sin((rotationX*radians) + Math.PI / 2) * speed
   }
   if (movementInput.up) {
-    playerAt.x += Math.cos(rotationX) * speed
-    playerAt.z += Math.sin(rotationX) * speed
+    playerAt.x += Math.cos((rotationX*radians)) * speed
+    playerAt.z += Math.sin((rotationX*radians)) * speed
   }
   if (movementInput.down) {
-    playerAt.x -= Math.cos(rotationX) * speed
-    playerAt.z -= Math.sin(rotationX) * speed
+    playerAt.x -= Math.cos((rotationX*radians)) * speed
+    playerAt.z -= Math.sin((rotationX*radians)) * speed
   }
-  camera.position.x = playerAt.x
-  camera.position.y = playerAt.y
-  camera.position.z = playerAt.z
-  pointAt.x = Math.cos(rotationX) + playerAt.x
-  pointAt.y = Math.sin(rotationZ) + playerAt.y
-  pointAt.z = Math.sin(rotationX) + playerAt.z
-  camera.lookAt(pointAt)
+
+
+  if(cameraView == 'firstPerson')
+  {
+    pointAt.x = Math.cos(rotationX*radians) + playerAt.x
+    pointAt.y = Math.sin(rotationZ*radians) + playerAt.y
+    pointAt.z = Math.sin(rotationX*radians) + playerAt.z
+
+    camera.position.x = playerAt.x
+    camera.position.y = playerAt.y
+    camera.position.z = playerAt.z
+
+    camera.lookAt(pointAt)
+  }
+  else if(cameraView == 'thirdPerson')
+  {
+    pointAt.x = Math.cos(rotationX*radians)
+    pointAt.y = Math.sin(rotationZ*radians)
+    pointAt.z = Math.sin(rotationX*radians)
+
+    camera.position.x = -pointAt.x*2 + playerAt.x
+    camera.position.y = -pointAt.y*2 + playerAt.y
+    camera.position.z = -pointAt.z*2 + playerAt.z
+
+    camera.lookAt(playerAt)
+  }
+}
+
+function rotatePlayer(player) {
+  player.rotation.set(0, -rotationX*radians, 0)
 }
 
 module.exports = {
   render: render,
-  playerAt: playerAt
+  rotatePlayer: rotatePlayer,
+  playerAt: playerAt,
+  pointAt: pointAt
 }
