@@ -60,20 +60,18 @@ ipcMain.on('host-game', (event, index) => {
   windowForm.hostGameWindow(index)
 })
 
-ipcMain.on('host', (event, message) => {
+ipcMain.on('host', (event, msg) => {
   connect = new Connect()
-  connect.connect(message)
-  // connect.getGames()
-  // connect.work(msg)
+  connect.host(msg.name)
+  win[msg.index.childIndex].close()
+  windowForm.gameQueueWindow(msg.index.parentIndex)
 })
 
 ipcMain.on('join-game', (event, index) => {
-  // connect.getGames()
   let c = new Connect()
   c.getGames((games) => {
     windowForm.joinGameWindow({index: index, games: games})
   })
-  // connect.work()
   // windowForm.gameWindow()
   // win[index].close()
 })

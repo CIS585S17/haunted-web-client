@@ -6,23 +6,20 @@ const io = require('socket.io-client')
 
 class Connect {
   constructor () {
-    // this.socket = io('ws://cslinux.cs.ksu.edu:5000')
-    this.socket = io('http://localhost:5000')
+    // this.socket = io('ws://cslinux.cs.ksu.edu:5454')
+    this.socket = io('http://localhost:5454')
     this.message = 'i work'
   }
 
-  connect (gameName) {
+  host (gameName) {
     // this.socket.on('connect', () => {
     //   console.log('connected in class')
     // })
     this.socket.emit('host-game', gameName)
   }
 
-  work (msg) {
-    // this.socket.on('connect', () => {
-    //   console.log('work function')
-    // })
-    this.socket.emit('join', msg)
+  join (id) {
+    this.socket.emit('join', id)
   }
 
   getGames (callback) {
