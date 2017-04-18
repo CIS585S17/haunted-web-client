@@ -8,8 +8,10 @@ const {Player} = require('./server/player')
 // var express = require('express')
 // var app = express()
 // var server = require('http').createServer(app)
-var server = require('http').createServer()
-var io = require('socket.io').listen(server)
+var server = require('http').createServer((req, res)=>{
+  res.end('hello');
+});
+var io = require('socket.io')(server)
 
 let playerSockets = []
 let games = []
@@ -22,7 +24,7 @@ server.listen('5000', (err) => {
   if (err) {
     console.log(err)
   }
-  // console.log('Listening at http://localhost:5000')
+  console.log('Listening at http://localhost:5000')
 })
 
 // app.use(express.static('public'))

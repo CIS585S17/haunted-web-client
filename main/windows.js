@@ -31,7 +31,9 @@ class WindowForms {
       hostGameWin.show()
     })
     hostGameWin.webContents.on('did-finish-load', () => {
-      hostGameWin.webContents.send('load', {parentIndex: index, childIndex: i})
+      hostGameWin.webContents.send('load', {
+        index: {parentIndex: index, childIndex: i}
+      })
     })
     if (this.debug) {
       hostGameWin.webContents.openDevTools()
@@ -58,7 +60,9 @@ class WindowForms {
       ingameWin.show()
     })
     ingameWin.webContents.on('did-finish-load', () => {
-      ingameWin.webContents.send('load', {parentIndex: index, childIndex: i})
+      ingameWin.webContents.send('load', {
+        index: {parentIndex: index, childIndex: i}
+      })
     })
     if (this.debug) {
       ingameWin.webContents.openDevTools()
@@ -69,8 +73,9 @@ class WindowForms {
     })
   }
 
-  joinGameWindow (index) {
-    this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false}))
+  joinGameWindow (data) {
+    console.log(data)
+    this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[data.index], modal: true, show: false}))
     let i = this.windows.length - 1
     let joinWin = this.windows[i]
     joinWin.loadURL(`file://${this.dirname}/public/join/join.html`)
@@ -78,7 +83,10 @@ class WindowForms {
       joinWin.show()
     })
     joinWin.webContents.on('did-finish-load', () => {
-      joinWin.webContents.send('load', {parentIndex: index, childIndex: i})
+      joinWin.webContents.send('load', {
+        index: {parentIndex: data.index, childIndex: i},
+        games: data.games
+      })
     })
     if (this.debug) {
       joinWin.webContents.openDevTools()

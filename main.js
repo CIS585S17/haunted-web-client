@@ -2,8 +2,22 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 const {WindowForms} = require('./main/windows')
 // const {Player} = require('./server/player')
-const io = require('socket.io-client')
-let socket = io('cislinux.cs.ksu.edu:5000')
+// const io = (require('socket.io-client')).io
+const {Connect} = require('./main/connect')
+// let socket = require('socket.io-client')('ws://cslinux.cs.ksu.edu:5000')
+// socket.on('connect', () => {
+//   console.log('connected')
+// })
+
+// console.log(socket)
+// const io = require('socket.io-client')
+// let socket = io('ws://cslinux.cs.ksu.edu:5000')
+// socket.on('connect', () => {
+//   console.log('connected')
+// })
+
+let connect
+// let connect = new Connect()
 
 let debug = true
 let win = []
@@ -46,61 +60,22 @@ ipcMain.on('host-game', (event, index) => {
   windowForm.hostGameWindow(index)
 })
 
-ipcMain.on('host', (event, msg) => {
-  // socket.emit('host', msg)
-
-  console.log(socket)
-  // let s = socket.io.open()
-  // console.log(s)
-  // s.on('join', (data) => {
-  //   console.log(data)
-  // })
-  // socket.on('connection', (error, data) => {
-  //   if (error) {
-  //     console.log(error)
-  //   } else {
-  //     console.log(data)
-  //     console.log(msg)
-  //   }
-  // })
-  // socket.io.connect((err, data) => {
-  //   if (err) {
-  //     console.log(err)
-  //   }
-  //   console.log('data', data)
-  // })
-  // console.log(socket)
-  // socket.io.on('connect', () => {
-  //   console.log(socket.id)
-  // })
-  // let connect = socket.connect('/')
-  // console.log(msg)
-  // io.emit('host', msg)
-  // io.on('join', (m) => {
-  //   console.log(m)
-  // })
-  // let connect = io.connect('/')
-  // connect.emit('host', msg)
-  // connect.on('join', (m) => {
-  //   console.log(m)
-  // })
-  // console.log(socket)
-  // socket.on('connection')
-//   io.on('connection', (err, socket) => {
-//     if (err) {
-//       console.log(err)
-//     }
-//     socket.on('join', (m) => {
-//       console.log(m)
-//     })
-//     socket.emit('host', msg)
-//   })
+ipcMain.on('host', (event, message) => {
+  connect = new Connect()
+  connect.connect(message)
+  // connect.getGames()
+  // connect.work(msg)
 })
 
 ipcMain.on('join-game', (event, index) => {
-  // windowForm.joinGameWindow(index)
-  windowForm.gameWindow()
-  win[index].close()
+  // connect.getGames()
+  let c = new Connect()
+  c.getGames((games) => {
+    windowForm.joinGameWindow({index: index, games: games})
+  })
+  // connect.work()
+  // windowForm.gameWindow()
+  // win[index].close()
 })
 
 ipcMain.on('join', (event, data) => {
