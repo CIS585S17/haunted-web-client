@@ -22,20 +22,20 @@ class Character {
     this.chatPointer = 0
   }
 
-  changeHp (amount) {
-    this.currentHp += amount
+  setHp (amount) {
+    this.currentHp = amount
   }
 
-  changePower (amount) {
-    this.power += amount
+  setPower (amount) {
+    this.power = amount
   }
 
-  changeSpeed (amount) {
-    this.speed += amount
+  setSpeed (amount) {
+    this.speed = amount
   }
 
-  changeSanity (amount) {
-    this.sanity += amount
+  setSanity (amount) {
+    this.sanity = amount
   }
 
   /**
