@@ -16,8 +16,9 @@ const {Connect} = require('./main/connect')
 //   console.log('connected')
 // })
 
-let connect
-// let connect = new Connect()
+// let connect
+let c
+let connect = new Connect()
 
 let debug = true
 let win = []
@@ -27,6 +28,16 @@ let windowForm = new WindowForms(BrowserWindow, debug, __dirname, win)
 function createWindow () {
   windowForm.startWindow()
 }
+
+connect.startGame((start) => {
+  if (start) {
+    windowForm.gameWindow()
+    for (let i = 0; i < win.length - 1; i++) {
+      win[i].close()
+    }
+  }
+})
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -61,14 +72,14 @@ ipcMain.on('host-game', (event, index) => {
 })
 
 ipcMain.on('host', (event, msg) => {
-  connect = new Connect()
+  // connect = new Connect()
   connect.host(msg.name)
   win[msg.index.childIndex].close()
   windowForm.gameQueueWindow(msg.index.parentIndex)
 })
 
 ipcMain.on('join-game', (event, index) => {
-  let c = new Connect()
+  c = new Connect()
   c.getGames((games) => {
     windowForm.joinGameWindow({index: index, games: games})
   })
@@ -77,7 +88,7 @@ ipcMain.on('join-game', (event, index) => {
 })
 
 ipcMain.on('join', (event, data) => {
-
+  c.join(data.game.id)
 })
 
 ipcMain.on('pause-game', (event, index) => {

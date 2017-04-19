@@ -29,6 +29,13 @@ class Connect {
       callback(games)
     })
   }
+
+  startGame (callback) {
+    this.socket.on('start-game', (start) => {
+      console.log(start)
+      callback(start)
+    })
+  }
 }
 
 module.exports = {
