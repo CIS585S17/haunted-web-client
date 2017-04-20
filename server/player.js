@@ -19,10 +19,11 @@
 // }
 
 class Player {
-  constructor (id, socket) {
+  constructor (id, socket, charID) {
     this.id = id
     this.socket = socket
     this.tag = `<span style="color: royalblue">Player ${this.id}</span>`
+    this.charID = charID
   }
 
   joinGame () {
