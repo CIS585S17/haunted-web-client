@@ -22,6 +22,28 @@ class WindowForms {
     this.windows = windows
   }
 
+  gameQueueWindow (index) {
+    this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false}))
+    let i = this.windows.length - 1
+    let win = this.windows[i]
+    win.loadURL(`file://${this.dirname}/public/game_queue/game_queue.html`)
+    win.once('ready-to-show', () => {
+      win.show()
+    })
+    win.webContents.on('did-finish-load', () => {
+      win.webContents.send('load', {
+        index: {parentIndex: index, childIndex: i}
+      })
+    })
+    if (this.debug) {
+      win.webContents.openDevTools()
+    }
+
+    win.on('closed', () => {
+      this.windows.splice(i, 1)
+    })
+  }
+
   hostGameWindow (index) {
     this.windows.push(new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false}))
     let i = this.windows.length - 1
