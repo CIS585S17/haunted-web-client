@@ -80,7 +80,9 @@ ipcMain.on('host', (event, msg) => {
 
 ipcMain.on('join-game', (event, index) => {
   // c = new Connect()
+  console.log('i am here')
   connect.getGames((games) => {
+    console.log('then here')
     windowForm.joinGameWindow({index: index, games: games})
   })
   // windowForm.gameWindow()
