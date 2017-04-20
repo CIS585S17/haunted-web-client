@@ -1,32 +1,16 @@
 'use strict'
 
-let radians = Math.PI/180
-let rotationX = 0
-let rotationZ = 0
-let pointAt = {
-  x: 1,
-  y: 1,
-  z: 0
-}
-let playerAt = {
-  x: 0,
-  y: 1,
-  z: 0
-}
-let cameraAt = {
-  x: 0,
-  y: 0,
-  z: 0
-}
-//let cameraView = 'firstPerson'
-let cameraView = 'thirdPerson'
-let speed = 0.05
+var rotationY = 0;
+
+var rotationZ = 0;
+
 let movementInput = {
   up: false,
   down: false,
   left: false,
-  right: false
+  right: false,
 }
+
 let hudMode = false
 
 window.onmousemove = function (event) {
@@ -34,7 +18,7 @@ window.onmousemove = function (event) {
   if (!hudMode) {
     let movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0
     let movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0
-    rotationX -= movementX * -0.02
+    rotationY -= movementX * -0.02
     if ((rotationZ - movementY * 0.02) >= -90 && (rotationZ - movementY * 0.02) <= 90) {
       rotationZ -= movementY * 0.02
     }
@@ -127,60 +111,43 @@ window.onkeyup = function (event) {
   }
 }
 
-function 
+function update(myPlayer, myCamera) {
 
-function render (camera) {
-  if (movementInput.left) {
-    playerAt.x -= Math.cos((rotationX*radians) + Math.PI / 2) * speed
-    playerAt.z -= Math.sin((rotationX*radians) + Math.PI / 2) * speed
+  let model = myPlayer.GetModel();
+  let position = model.position;
+  let x = position.x;
+  let y = position.y;
+  let z = position.z;
+
+  if(movementInput.up) {
+    //move player
+    myPlayer.MoveUp(rotationY);
+    myCamera.move(x, z, rotationY, rotationZ);
   }
-  if (movementInput.right) {
-    playerAt.x += Math.cos((rotationX*radians) + Math.PI / 2) * speed
-    playerAt.z += Math.sin((rotationX*radians) + Math.PI / 2) * speed
+  if(movementInput.down) {
+    //move player
+    myPlayer.MoveDown(rotationY);
+    myCamera.move(x, z, rotationY, rotationZ);
   }
-  if (movementInput.up) {
-    playerAt.x += Math.cos((rotationX*radians)) * speed
-    playerAt.z += Math.sin((rotationX*radians)) * speed
+  if(movementInput.left) {
+    //move player
+    myPlayer.MoveLeft(rotationY);
+    myCamera.move(x, z, rotationY, rotationZ);
   }
-  if (movementInput.down) {
-    playerAt.x -= Math.cos((rotationX*radians)) * speed
-    playerAt.z -= Math.sin((rotationX*radians)) * speed
+  if(movementInput.right) {
+    //move player
+    myPlayer.MoveRight(rotationY);
+    myCamera.move(x, z, rotationY, rotationZ);
   }
-
-
-  if(cameraView == 'firstPerson')
-  {
-    pointAt.x = Math.cos(rotationX*radians) + playerAt.x
-    pointAt.y = Math.sin(rotationZ*radians) + playerAt.y
-    pointAt.z = Math.sin(rotationX*radians) + playerAt.z
-
-    camera.position.x = playerAt.x
-    camera.position.y = playerAt.y
-    camera.position.z = playerAt.z
-
-    camera.lookAt(pointAt)
-  }
-  else if(cameraView == 'thirdPerson')
-  {
-    pointAt.x = Math.cos(rotationX*radians)
-    pointAt.y = Math.sin(rotationZ*radians)
-    pointAt.z = Math.sin(rotationX*radians)
-
-    camera.position.x = -pointAt.x*2 + playerAt.x
-    camera.position.y = -pointAt.y*2 + playerAt.y
-    camera.position.z = -pointAt.z*2 + playerAt.z
-
-    camera.lookAt(playerAt)
-  }
-}
-
-function rotatePlayer(player) {
-  player.rotation.set(0, -rotationX*radians, 0)
+  //move camera
+  myCamera.move(x, z, rotationY, rotationZ);
+  //rotate player
+  myPlayer.Rotate(rotationY);
+  //rotate camera
+  myCamera.rotate(x, y, z, rotationY, rotationZ);
+  return 'a';
 }
 
 module.exports = {
-  render: render,
-  rotatePlayer: rotatePlayer,
-  playerAt: playerAt,
-  pointAt: pointAt
+  update: update
 }

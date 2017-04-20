@@ -1,17 +1,13 @@
-'use strict'
-
 const {RoomGraph} = require('./server/room')
-const {Game} = require('./server/game')
-const {Player} = require('./server/player')
 
 var express = require('express')
 var app = express()
 var server = require('http').createServer(app)
 var io = require('socket.io').listen(server)
 
-let playerSockets = []
-let games = []
-// let games = 0
+var players = []
+var games = 0
+const Game = require('./server/game')
 
 // let graph = new RoomGraph(`${__dirname}/public/models`);
 
@@ -29,31 +25,13 @@ app.use('/static', express.static('node_modules'))
 
 // Handles a player connection
 io.on('connection', function (socket) {
-  // console.log('A user connected')
-  // players.push(socket)
+  console.log('A user connected')
+  players.push(socket)
 
-  //   // If we have two players, Launch a game instance
-  // if (players.length == 2) {
-  //   new Game(io, players, games)
-  //   players = []
-  //   games++
-  // }
-
-  // field for game name, each game can be named by host
-  socket.on('host-game', (data) => {
-    games.push(new Game((games.length - 1), io, data.name, new RoomGraph(`${__dirname}/public/models`)))
-    games[games.length - 1].addPlayer(new Player(1, socket))
-  })
-
-  socket.on('join', (data) => {
-    games[data.gameIndex].addPlayer(new Player(2, socket))
-  })
-
-  socket.on('start-game', () => {
-
-  })
-
-  socket.on('host', (msg) => {
-    console.log(msg)
-  })
+    // If we have two players, Launch a game instance
+  if (players.length == 2) {
+    new Game(io, players, games)
+    players = []
+    games++
+  }
 })

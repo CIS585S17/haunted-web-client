@@ -1,16 +1,20 @@
 'use strict'
 const {app, BrowserWindow, ipcMain} = require('electron')
-const {WindowForms} = require('./main/windows')
-// const {Player} = require('./server/player')
-const socket = require('socket.io')
 
 let debug = true
 let win = []
-let windowForm = new WindowForms(BrowserWindow, debug, __dirname, win)
-// let player = new Player()
+let gameWin
 
 function createWindow () {
-  windowForm.startWindow()
+  win.push(new BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false}))
+  let index = win.length - 1
+  win[index].loadURL(`file://${__dirname}/public/menu/menu.html`)
+  win[index].webContents.on('did-finish-load', () => {
+    win[index].webContents.send('load', index)
+  })
+  if (debug) {
+    win[index].webContents.openDevTools()
+  }
 }
 
 // This method will be called when Electron has finished
@@ -38,46 +42,35 @@ app.on('browser-window-created', (event, window) => {
 })
 
 ipcMain.on('options', (event, index) => {
-  windowForm.optionsWindow(index)
+  win.push(new BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: win[index], modal: true, show: false}))
+  let i = win.length - 1
+  win[i].loadURL(`file://${__dirname}/public/options/options.html`)
+  win[i].once('ready-to-show', () => {
+    win[i].show()
+  })
+  win[i].webContents.on('did-finish-load', () => {
+    win[i].webContents.send('load', index)
+  })
+  if (debug) {
+    win[i].webContents.openDevTools()
+  }
+
+  win[i].on('closed', () => {
+    win.splice(i, 1)
+  })
 })
 
-ipcMain.on('host-game', (event, index) => {
-  windowForm.hostGameWindow(index)
-})
+ipcMain.on('host-game', (evnet) => {
 
-ipcMain.on('host', (event, msg) => {
-  // let connect = socket.connect('/')
-  console.log(msg)
-  // console.log(socket)
-  // socket.on('connection')
-  // connect.emit('host', msg)
 })
 
 ipcMain.on('join-game', (event, index) => {
-  windowForm.joinGameWindow(index)
-  // windowFrom.gameWindow()
-  // win[index].close()
-})
-
-ipcMain.on('join', (event, data) => {
-
-})
-
-ipcMain.on('pause-game', (event, index) => {
-  windowForm.ingameWindow(index)
-})
-
-ipcMain.on('resume-game', (event, index) => {
-  win[index].close()
-})
-
-ipcMain.on('quit-to-main-window', (event, index) => {
-  windowForm.startWindow()
-  for (let i in index) {
-    if (index[i] !== 0) {
-      win[index[i]].close()
-    }
+  gameWin = new BrowserWindow({ width: 1800, height: 1000, experimentalCanvasFeatures: true, fullscreen: true })
+  gameWin.loadURL(`file://${__dirname}/public/index.html`)
+  if (debug) {
+    gameWin.webContents.openDevTools()
   }
+  win[index].close()
 })
 
 ipcMain.on('quit-game', (event) => {
