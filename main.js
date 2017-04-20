@@ -79,8 +79,8 @@ ipcMain.on('host', (event, msg) => {
 })
 
 ipcMain.on('join-game', (event, index) => {
-  c = new Connect()
-  c.getGames((games) => {
+  // c = new Connect()
+  connect.getGames((games) => {
     windowForm.joinGameWindow({index: index, games: games})
   })
   // windowForm.gameWindow()
@@ -88,7 +88,7 @@ ipcMain.on('join-game', (event, index) => {
 })
 
 ipcMain.on('join', (event, data) => {
-  c.join(data.game.id)
+  connect.join(data.game.id)
 })
 
 ipcMain.on('pause-game', (event, index) => {

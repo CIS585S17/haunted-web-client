@@ -8,6 +8,7 @@ class Connect {
   constructor () {
     // this.socket = io('ws://cslinux.cs.ksu.edu:5454')
     this.socket = io('http://localhost:5454')
+    // this.socket = io('ws://70.179.169.131:5454')
     this.message = 'i work'
   }
 
@@ -23,7 +24,7 @@ class Connect {
   }
 
   getGames (callback) {
-    // this.socket.emit('get-games', 'get the game')
+    this.socket.emit('get', 'get the game')
     this.socket.on('get-games', (games) => {
       console.log(games)
       callback(games)
