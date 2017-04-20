@@ -17,7 +17,6 @@ const {Connect} = require('./main/connect')
 // })
 
 // let connect
-let c
 let connect = new Connect()
 
 let debug = true
@@ -32,9 +31,12 @@ function createWindow () {
 connect.startGame((start) => {
   if (start) {
     windowForm.gameWindow()
-    for (let i = 0; i < win.length - 1; i++) {
+    for (let i = 1; i < win.length; i++) {
       win[i].close()
     }
+    // for (let i = 0; i < win.length - 1; i++) {
+    //   win[i].close()
+    // }
   }
 })
 
@@ -72,7 +74,6 @@ ipcMain.on('host-game', (event, index) => {
 })
 
 ipcMain.on('host', (event, msg) => {
-  // connect = new Connect()
   connect.host(msg.name)
   win[msg.index.childIndex].close()
   windowForm.gameQueueWindow(msg.index.parentIndex)
@@ -80,9 +81,8 @@ ipcMain.on('host', (event, msg) => {
 
 ipcMain.on('join-game', (event, index) => {
   // c = new Connect()
-  console.log('i am here')
+  // console.log('i am here')
   connect.getGames((games) => {
-    console.log('then here')
     windowForm.joinGameWindow({index: index, games: games})
   })
   // windowForm.gameWindow()
@@ -111,6 +111,7 @@ ipcMain.on('quit-to-main-window', (event, index) => {
 })
 
 ipcMain.on('quit-game', (event) => {
+  console.log(win)
   for (let w of win) {
     w.close()
   }
