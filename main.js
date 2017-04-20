@@ -111,7 +111,6 @@ ipcMain.on('quit-to-main-window', (event, index) => {
 })
 
 ipcMain.on('quit-game', (event) => {
-  console.log(win)
   for (let w of win) {
     w.close()
   }
