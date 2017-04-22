@@ -1,5 +1,153 @@
 'use strict'
 
+class GameWindow {
+  constructor (id, debug, dirname, file, window) {
+    this.id = id
+    this.debug = debug
+    this.dirname = dirname
+    this.file = file
+    this.window = window
+    this.loadWindow()
+  }
+
+  close () {
+    // this.window.on('closed', () => {
+    //   this.windows.splice(this.id, 1)
+    // })
+  }
+
+  loadWindow () {
+    this.window.loadURL(`file://${this.dirname}/public/${this.file}`)
+    this.window.webContents.on('did-finish-load', () => {
+      this.window.webContents.send('load', {
+        // index: {parentIndex: index, childIndex: i}
+        index: this.id
+      })
+    })
+    if (this.debug) {
+      this.window.webContents.openDevTools()
+    }
+  }
+
+  show () {
+    this.window.once('ready-to-show', () => {
+      this.window.show()
+    })
+  }
+}
+
+class WindowGraph {
+  /**
+   * Creates an instance of WindowForms.
+   * @param {object} BrowserWindow
+   * @param {boolean} debug
+   * @param {string} dirname Path
+   * @param {array} windows Stores open windows
+   *
+   * @memberOf WindowForms
+   */
+  constructor (BrowserWindow, debug, dirname) {
+    this.BrowserWindow = BrowserWindow
+    this.debug = debug
+    this.dirname = dirname
+    this.windows = []
+  }
+
+  gameQueueWindow (index) {
+    this.windows.push(new GameWindow(
+      this.windows.length,
+      this.debug,
+      this.dirname,
+      'game_queue/game_queue.html',
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false})
+    ))
+  }
+
+  hostGameWindow (index) {
+    this.windows.push(new GameWindow(
+      this.windows.length,
+      this.debug,
+      this.dirname,
+      'host/host.html',
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false})
+    ))
+  }
+
+  /**
+   * Creates in game menu modal window
+   *
+   * @param {integer} index Position of the parent BrowserWindow in windows array
+   *
+   * @memberOf WindowForms
+   */
+  ingameWindow (index) {
+    this.windows.push(new GameWindow(
+      this.windows.length,
+      this.debug,
+      this.dirname,
+      'menu/ingame_menu.html',
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false})
+    ))
+  }
+
+  joinGameWindow (data) {
+    this.windows.push(new GameWindow(
+      this.windows.length,
+      this.debug,
+      this.dirname,
+      'join/join.html',
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[data.index], modal: true, show: false})
+    ))
+  }
+
+  /**
+   * Creates options modal window.
+   *
+   * @param {integer} index Position of the parent BrowserWindow in windows array
+   *
+   * @memberOf WindowForms
+   */
+  optionsWindow (index) {
+    this.windows.push(new GameWindow(
+      this.windows.length,
+      this.debug,
+      this.dirname,
+      'options/options.html',
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false})
+    ))
+  }
+
+  /**
+   * Creates the main game window
+   *
+   *
+   * @memberOf WindowForms
+   */
+  gameWindow () {
+    this.windows.push(new GameWindow(
+      this.windows.length,
+      this.debug,
+      this.dirname,
+      'public/index.html',
+      new this.BrowserWindow({ width: 1800, height: 1000, experimentalCanvasFeatures: true, fullscreen: true })
+    ))
+  }
+
+  startWindow () {
+    this.windows.push(new GameWindow(
+      this.windows.length,
+      this.debug,
+      this.dirname,
+      'menu/menu.html',
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false})
+    ))
+  }
+
+  close () {
+
+  }
+}
+
 /**
  * A class to create windows for the game
  *
@@ -195,5 +343,6 @@ class WindowForms {
 }
 
 module.exports = {
-  WindowForms: WindowForms
+  WindowForms: WindowForms,
+  WindowGraph: WindowGraph
 }

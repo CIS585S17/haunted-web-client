@@ -1,44 +1,50 @@
 'use strict'
 const {app, BrowserWindow, ipcMain} = require('electron')
-const {WindowForms} = require('./main/windows')
+const {WindowForms, WindowGraph} = require('./main/windows')
 // const {Player} = require('./server/player')
-// const io = (require('socket.io-client')).io
-const {Connect} = require('./main/connect')
-// let socket = require('socket.io-client')('ws://cslinux.cs.ksu.edu:5000')
-// socket.on('connect', () => {
-//   console.log('connected')
-// })
-
-// console.log(socket)
-// const io = require('socket.io-client')
-// let socket = io('ws://cslinux.cs.ksu.edu:5000')
-// socket.on('connect', () => {
-//   console.log('connected')
-// })
-
-// let connect
-let connect = new Connect()
+// const {Connect} = require('./main/connect')
+// let socket = require('socket.io-client')('ws://cslinux.cs.ksu.edu:5444')
+let socket = require('socket.io-client')('http://localhost:5333')
 
 let debug = true
 let win = []
 let windowForm = new WindowForms(BrowserWindow, debug, __dirname, win)
+// let windowGraph = new WindowGraph(BrowserWindow, debug, __dirname)
 // let player = new Player()
 
 function createWindow () {
   windowForm.startWindow()
+  // windowGraph.startWindow()
 }
 
-connect.startGame((start) => {
-  if (start) {
-    windowForm.gameWindow()
-    for (let i = 1; i < win.length; i++) {
-      win[i].close()
-    }
-    // for (let i = 0; i < win.length - 1; i++) {
-    //   win[i].close()
-    // }
+socket.on('start-game', (start) => {
+  windowForm.gameWindow()
+  for (let i = 0; i < win.length - 1; i++) {
+    win[i].close()
   }
 })
+
+
+socket.on('get-games', (games) => {
+  windowForm.joinGameWindow({index: 0, games: games})
+})
+  // connect.getGames((games) => {
+  //   windowForm.joinGameWindow({index: index, games: games})
+  // })
+  // windowForm.gameWindow()
+  // win[index].close()
+
+// connect.startGame((start) => {
+//   if (start) {
+//     windowForm.gameWindow()
+//     // for (let i = 1; i < win.length; i++) {
+//     //   win[i].close()
+//     // }
+//     for (let i = 0; i < win.length - 1; i++) {
+//       win[i].close()
+//     }
+//   }
+// })
 
 
 // This method will be called when Electron has finished
@@ -74,23 +80,19 @@ ipcMain.on('host-game', (event, index) => {
 })
 
 ipcMain.on('host', (event, msg) => {
-  connect.host(msg.name)
+  // connect.host(msg.name)
+  socket.emit('host-game', msg.name)
   win[msg.index.childIndex].close()
   windowForm.gameQueueWindow(msg.index.parentIndex)
 })
 
 ipcMain.on('join-game', (event, index) => {
-  // c = new Connect()
-  // console.log('i am here')
-  connect.getGames((games) => {
-    windowForm.joinGameWindow({index: index, games: games})
-  })
-  // windowForm.gameWindow()
-  // win[index].close()
+  socket.emit('get', 'get the game')
 })
 
 ipcMain.on('join', (event, data) => {
-  connect.join(data.game.id)
+  // connect.join(data.game.id)
+  socket.emit('join', data.game.id)
 })
 
 ipcMain.on('pause-game', (event, index) => {

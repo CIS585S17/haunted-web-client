@@ -6,8 +6,9 @@ const io = require('socket.io-client')
 
 class Connect {
   constructor () {
-    // this.socket = io('ws://cslinux.cs.ksu.edu:5454')
-    this.socket = io('http://localhost:5454')
+    this.socket = io('ws://cslinux.cs.ksu.edu:5444')
+    // this.socket = io('http://cslinux.cs.ksu.edu:5454')
+    // this.socket = io('http://localhost:5454')
     // this.socket = io('http://192.168.0.21:5454')
     this.message = 'i work'
   }
@@ -25,9 +26,9 @@ class Connect {
 
   getGames (callback) {
     this.socket.emit('get', 'get the game')
-    console.log('works')
+    // console.log('works')
     this.socket.on('get-games', (games) => {
-      console.log(games)
+      // console.log(games)
       callback(games)
     })
   }
