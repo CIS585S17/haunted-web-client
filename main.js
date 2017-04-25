@@ -1,6 +1,6 @@
 'use strict'
 const {app, BrowserWindow, ipcMain} = require('electron')
-const {WindowForms} = require('./main/windows')
+const {WindowForms, WindowGraph} = require('./main/windows')
 // const {Player} = require('./server/player')
 // let socket = require('socket.io-client')('ws://cslinux.cs.ksu.edu:5444')
 let socket = require('socket.io-client')('http://localhost:5333')
@@ -8,17 +8,21 @@ let socket = require('socket.io-client')('http://localhost:5333')
 let debug = true
 let win = []
 let windowForm = new WindowForms(BrowserWindow, debug, __dirname, win)
+let windowGraph = new WindowGraph(BrowserWindow, debug, __dirname)
 // let player = new Player()
 let chatLog
 
 function createWindow () {
-  windowForm.startWindow()
+  // windowForm.startWindow()
+  windowGraph.startWindow()
 }
 
 socket.on('start-game', (start) => {
-  windowForm.gameWindow()
+  // windowForm.gameWindow()
+  windowGraph.gameWindow()
   for (let i = 0; i < win.length - 1; i++) {
-    win[i].close()
+    // win[i].close()
+    windowGraph.windows[i].close()
   }
 })
 
@@ -27,20 +31,24 @@ socket.on('updateChatLog', (msg) => {
 })
 
 socket.on('get-games', (games) => {
-  windowForm.joinGameWindow({index: 0, games: games})
+  // windowForm.joinGameWindow({index: 0, games: games})
+  let win = windowGraph.windows.find((element) => {
+    return element.id === 0
+  })
+  windowGraph.joinGameWindow(win, {parentWinId: 0, games: games})
 })
 
-socket.on('start-game', (start) => {
-  if (start) {
-    windowForm.gameWindow()
-//     // for (let i = 1; i < win.length; i++) {
-//     //   win[i].close()
-//     // }
-    for (let i = 0; i < win.length - 1; i++) {
-      win[i].close()
-    }
-  }
-})
+// socket.on('start-game', (start) => {
+//   if (start) {
+//     windowForm.gameWindow()
+// //     // for (let i = 1; i < win.length; i++) {
+// //     //   win[i].close()
+// //     // }
+//     for (let i = 0; i < win.length - 1; i++) {
+//       win[i].close()
+//     }
+//   }
+// })
 
 
 // This method will be called when Electron has finished
@@ -68,17 +76,32 @@ app.on('browser-window-created', (event, window) => {
 })
 
 ipcMain.on('options', (event, index) => {
-  windowForm.optionsWindow(index)
+  // windowForm.optionsWindow(index)
+  let win = windowGraph.windows.find((element) => {
+    return element.id === 0
+  })
+  console.log('parent', win)
+  windowGraph.optionsWindow(win, {parentWinId: index})
+  console.log('windows', windowGraph.windows)
 })
 
 ipcMain.on('host-game', (event, index) => {
-  windowForm.hostGameWindow(index)
+  // windowForm.hostGameWindow(index)
+  let win = windowGraph.windows.find((element) => {
+    return element.id === index
+  })
+  windowGraph.hostGameWindow(win, {parentWinId: index})
 })
 
 ipcMain.on('host', (event, msg) => {
   socket.emit('host-game', msg.name)
-  win[msg.index.childIndex].close()
-  windowForm.gameQueueWindow(msg.index.parentIndex)
+  // win[msg.index.childIndex].close()
+  // windowForm.gameQueueWindow(msg.index.parentIndex)
+  let win = windowGraph.windows.find((element) => {
+    return element.id === msg.index.childIndex
+  })
+  windowGraph.windows[win.id].close()
+  windowGraph.gameQueueWindow(win, {parentWinId: msg.index.parentIndex})
 })
 
 ipcMain.on('join-game', (event, index) => {
@@ -90,11 +113,16 @@ ipcMain.on('join', (event, data) => {
 })
 
 ipcMain.on('pause-game', (event, index) => {
-  windowForm.ingameWindow(index)
+  // windowForm.ingameWindow(index)
+  let win = windowGraph.windows.find((element) => {
+    return element.id === index
+  })
+  windowGraph.ingameWindow(win, {parentWinId: index})
 })
 
 ipcMain.on('resume-game', (event, index) => {
-  win[index].close()
+  // win[index].close()
+  // windowGraph.windows[].close()
 })
 
 ipcMain.on('quit-to-main-window', (event, index) => {

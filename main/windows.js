@@ -1,31 +1,30 @@
 'use strict'
 
 class GameWindow {
-  constructor (id, debug, dirname, file, window) {
+  constructor (id, debug, dirname, file, modal, options, window) {
     this.id = id
     this.debug = debug
     this.dirname = dirname
     this.file = file
+    this.modal = modal
+    this.options = options
     this.window = window
     this.loadWindow()
-  }
-
-  close () {
-    // this.window.on('closed', () => {
-    //   this.windows.splice(this.id, 1)
-    // })
   }
 
   loadWindow () {
     this.window.loadURL(`file://${this.dirname}/public/${this.file}`)
     this.window.webContents.on('did-finish-load', () => {
       this.window.webContents.send('load', {
-        // index: {parentIndex: index, childIndex: i}
-        index: this.id
+        options: this.options,
+        id: this.id
       })
     })
     if (this.debug) {
       this.window.webContents.openDevTools()
+    }
+    if (this.modal) {
+      this.show()
     }
   }
 
@@ -53,24 +52,36 @@ class WindowGraph {
     this.windows = []
   }
 
-  gameQueueWindow (index) {
+  gameQueueWindow (parentWin, options) {
     this.windows.push(new GameWindow(
       this.windows.length,
       this.debug,
       this.dirname,
       'game_queue/game_queue.html',
-      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false})
+      true,
+      options,
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
     ))
+    let win = this.windows[this.windows.length - 1]
+    win.window.on('closed', () => {
+      this.windows.splice(this.windows.indexOf(win), 1)
+    })
   }
 
-  hostGameWindow (index) {
+  hostGameWindow (parentWin, options) {
     this.windows.push(new GameWindow(
       this.windows.length,
       this.debug,
       this.dirname,
       'host/host.html',
-      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false})
+      true,
+      options,
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
     ))
+    let win = this.windows[this.windows.length - 1]
+    win.window.on('closed', () => {
+      this.windows.splice(this.windows.indexOf(win), 1)
+    })
   }
 
   /**
@@ -80,24 +91,36 @@ class WindowGraph {
    *
    * @memberOf WindowForms
    */
-  ingameWindow (index) {
+  ingameWindow (parentWin, options) {
     this.windows.push(new GameWindow(
       this.windows.length,
       this.debug,
       this.dirname,
       'menu/ingame_menu.html',
-      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false})
+      true,
+      options,
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
     ))
+    let win = this.windows[this.windows.length - 1]
+    win.window.on('closed', () => {
+      this.windows.splice(this.windows.indexOf(win), 1)
+    })
   }
 
-  joinGameWindow (data) {
+  joinGameWindow (parentWin, options) {
     this.windows.push(new GameWindow(
       this.windows.length,
       this.debug,
       this.dirname,
       'join/join.html',
-      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[data.index], modal: true, show: false})
+      true,
+      options,
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
     ))
+    let win = this.windows[this.windows.length - 1]
+    win.window.on('closed', () => {
+      this.windows.splice(this.windows.indexOf(win), 1)
+    })
   }
 
   /**
@@ -107,14 +130,20 @@ class WindowGraph {
    *
    * @memberOf WindowForms
    */
-  optionsWindow (index) {
+  optionsWindow (parentWin, options) {
     this.windows.push(new GameWindow(
       this.windows.length,
       this.debug,
       this.dirname,
       'options/options.html',
-      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: this.windows[index], modal: true, show: false})
+      true,
+      options,
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
     ))
+    let win = this.windows[this.windows.length - 1]
+    win.window.on('closed', () => {
+      this.windows.splice(this.windows.indexOf(win), 1)
+    })
   }
 
   /**
@@ -123,28 +152,36 @@ class WindowGraph {
    *
    * @memberOf WindowForms
    */
-  gameWindow () {
+  gameWindow (options) {
     this.windows.push(new GameWindow(
       this.windows.length,
       this.debug,
       this.dirname,
       'public/index.html',
+      false,
+      options,
       new this.BrowserWindow({ width: 1800, height: 1000, experimentalCanvasFeatures: true, fullscreen: true })
     ))
+    let win = this.windows[this.windows.length - 1]
+    win.window.on('closed', () => {
+      this.windows.splice(this.windows.indexOf(win), 1)
+    })
   }
 
-  startWindow () {
+  startWindow (options) {
     this.windows.push(new GameWindow(
       this.windows.length,
       this.debug,
       this.dirname,
       'menu/menu.html',
+      false,
+      options,
       new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false})
     ))
-  }
-
-  close () {
-
+    let win = this.windows[this.windows.length - 1]
+    win.window.on('closed', () => {
+      this.windows.splice(this.windows.indexOf(win), 1)
+    })
   }
 }
 
