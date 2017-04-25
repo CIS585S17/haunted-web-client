@@ -1,5 +1,7 @@
 'use strict'
 const {ipcRenderer} = require('electron')
+const $ = require('jquery')
+const {HUD} = require('./js/hud')
 
 
 let index
@@ -24,10 +26,14 @@ let movementInput = {
 }
 let hudMode = false
 
+
 ipcRenderer.on('load', (event, i) => {
   index = i
-  console.log('index', index)
+  let playerHUD = new HUD()
+
+  playerHUD.addChatMsg(ipcRenderer.sendSync('update-chat-log', 'get message'))
 })
+
 
 window.onmousemove = function (event) {
   // Only move the camera if the player is not navigating the hud
