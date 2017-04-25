@@ -24,6 +24,10 @@ function setView(viewType) {
   view = viewType;
 }
 
+function getView() {
+  return view;
+}
+
 function move(posX, posZ, rotY, rotZ) {
   if(view == 'firstPerson') {
     camera.position.set(posX, firstPersonHeight, posZ);
@@ -57,6 +61,7 @@ module.exports = {
   getCamera: getCamera,
   setCamera: setCamera,
   setView: setView,
+  getView: getView,
   move: move,
   rotate: rotate,
   windowResize: windowResize

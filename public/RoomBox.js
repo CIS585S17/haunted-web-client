@@ -1,4 +1,5 @@
 class RoomBox {
+	//          scene, 3.18, 1.5, -4.75, 3.96, 3, 8.1
 	constructor(scene, x, y, z, xScale, yScale, zScale) {
 		this.xBottom =  x - xScale/2,
 		this.xTop = x + xScale/2,

@@ -44,30 +44,40 @@ class CollisionEngine {
     return distance < sphere.radius;
   }
 
-  PlayerColliding(player) {
-    this.objects.forEach( function(obj) {
-
-
-
-      if((player.minX <= obj.maxX && player.maxX >= obj.minX) &&
-              (player.minY <= obj.maxY && player.maxY >= obj.minY) &&
-              (player.minZ <= obj.maxZ && player.maxZ >= obj.minZ)) {
-                console.log('collided');
-              }
-
-
-
-
-
-      //console.log(obj);
-      /*if( IntersectPlayerBoxVsBox(this.player, obj) ) {
-        //collided
-        console.log('collision');
-      }
-      else {
-        //no collision
-      }*/
-    });
+  PlayerColliding(player, view, model) {
+    if(view == 'firstPerson') {
+      this.objects.forEach( function(obj) {
+        if((player.minX - 1) <= obj.minX) {
+          model.position.x = obj.minX+1.5;
+          console.log('outside of box');
+        }
+        else if((player.maxX + 1) >= obj.maxX) {
+          console.log('outside of box');
+        }
+        else if((player.minZ - 1) <= obj.minZ) {
+          console.log('outside of box');
+        }
+        else if((player.maxZ + 1) >= obj.maxZ) {
+          console.log('outside of box');
+        }
+      });
+    }
+    else if(view == 'thirdPerson') {
+      this.objects.forEach( function(obj) {
+        if(!(player.minX <= obj.maxX && player.minX >= obj.minX)) {
+          console.log('outside of box');
+        }
+        else if(!(player.maxX <= obj.maxX && player.maxX >= obj.minX)) {
+          console.log('outside of box');
+        }
+        else if(!(player.minZ <= obj.maxZ && player.minZ >= obj.minZ)) {
+          console.log('outside of box');
+        }
+        else if(!(player.maxZ <= obj.maxZ && player.maxZ >= obj.minZ)) {
+          console.log('outside of box');
+        }
+      });
+    }
   }
 }
 

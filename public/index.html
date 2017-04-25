@@ -52,7 +52,7 @@
 
         //load models
         load( 'models/library_room.dae', 0, 0, 0 );
-        let boxPlayer = new Box(scene, 0, .75, 0);
+        let boxPlayer = new Box(scene, 3, .75, -3);
         let room1Box = new RoomBox(scene, 3.18, 1.5, -4.75, 3.96, 3, 8.1);
 
         //load CollisionEngine
@@ -76,8 +76,10 @@
   	    function init() {
   			  container = document.createElement( 'div' );
   			  document.body.appendChild( container );
+
           simpleCamera.setView('firstPerson');
           //simpleCamera.setView('thirdPerson');
+
           simpleCamera.setCamera(new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 ))
   			  scene = new THREE.Scene();
           tileFloor(scene);
@@ -127,7 +129,7 @@
 
         function render() {
           let x = movement.update(boxPlayer, simpleCamera);
-          collisionEngine.PlayerColliding(boxPlayer.GetCollisionModel());
+          collisionEngine.PlayerColliding(boxPlayer.GetCollisionModel(), simpleCamera.getView(), boxPlayer.GetModel());
           renderer.render(scene, simpleCamera.getCamera())
   		  }
       // }
