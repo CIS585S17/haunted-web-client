@@ -1,9 +1,3 @@
-//Box width = .6, width/2 = .3;
-//Box height = 1.5, height/2 = .75;
-//Box depth = .6, depth/2 = .3
-
-
-
 class Box {
 	constructor(scene, x, y, z) {
 		this.radians = Math.PI/180;
@@ -26,6 +20,18 @@ class Box {
 	}
 
 	GetCollisionModel() {
+		let modelWidth = 0.6;
+		let modelHeight = 1.5;
+		let modelDepth = 0.6;
+		let min_X = this.model.position.x - modelWidth/2;
+		let max_X = this.model.position.x + modelWidth/2;
+		let min_Y = this.model.position.y - modelHeight/2;
+		let max_Y = this.model.position.y + modelHeight/2;
+		let min_Z = this.model.position.z - modelDepth/2;
+		let max_Z = this.model.position.z + modelDepth/2;
+		return{	minX: min_X, maxX: max_X,
+					 	minY: min_Y, maxY: max_Y,
+						minZ: min_Z, maxZ: max_Z };
 
 	}
 

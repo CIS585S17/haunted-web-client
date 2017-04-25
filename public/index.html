@@ -15,37 +15,24 @@
 
 </head>
 <body>
-    <!--<p align="center">
-      <button id="startButton" type="button" onclick ="start();">Start Game</button>
-    </p>-->
     <link type="text/css" rel="stylesheet" href="index.css">
     <textarea id="chatTextArea" rows="1" cols="30"></textarea>
     <div id="chatLogDiv"></div>
     <meta charset="UTF8">
-    <!--<script src="/socket.io/socket.io.js"></script>-->
     <script src="js/three.js"></script>
     <script src="js/collada/Animation.js"></script>
     <script src="js/collada/AnimationHandler.js"></script>
     <script src="js/collada/KeyFrameAnimation.js"></script>
-
     <script src="js/ColladaLoader.js"></script>
-
-
     <script src="js/Detector.js"></script>
-    <!--<script src="js/stats.min.js"></script>-->
-    <!--<script src="js/hud.js"></script>-->
-	<!--<script src="js/character.js"></script>-->
-	<!--<script src="js/UI.js"></script>-->
 
     <script type="text/javascript">
       "use strict";
-      //const index = require('./index')
       const movement = require('./movement')
-      //const player = require('./player')
       const simpleCamera = require('./simpleCamera')
       const {Box} = require('./Box')
-      //let littleBox = new Box();
-      //console.log(littleBox.method1())
+      const {RoomBox} = require('./RoomBox')
+      const {CollisionEngine} = require('./CollisionEngine')
 
     	  function requestFullScreen(element) {
       	  // Supports most browsers and their versions.
@@ -66,6 +53,12 @@
         //load models
         load( 'models/library_room.dae', 0, 0, 0 );
         let boxPlayer = new Box(scene, 0, .75, 0);
+        let room1Box = new RoomBox(scene, 3.18, 1.5, -4.75, 3.96, 3, 8.1);
+
+        //load CollisionEngine
+        let collisionEngine = new CollisionEngine();
+        //collisionEngine.AddPlayerBox(boxPlayer.GetCollisionModel());
+        collisionEngine.AddRoom(room1Box.GetCollisionModel());
 
         function load( ObjectPath, X, Y, Z){
           var loader = new THREE.ColladaLoader();
@@ -78,15 +71,6 @@
             dae.updateMatrix();
             animate();
           });
-        }
-
-        function addCollisionBox(x, y, z, xs, ys, zs) {
-          var geometry = new THREE.BoxGeometry(xs, ys, zs);
-          var material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
-          var box2 = new THREE.Mesh(geometry, material);
-          box.position.set(x, y, z);
-          scene.add(box2);
-          return box2;
         }
 
   	    function init() {
@@ -143,6 +127,7 @@
 
         function render() {
           let x = movement.update(boxPlayer, simpleCamera);
+          collisionEngine.PlayerColliding(boxPlayer.GetCollisionModel());
           renderer.render(scene, simpleCamera.getCamera())
   		  }
       // }

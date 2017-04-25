@@ -24,12 +24,12 @@ class RoomBox {
 
 	GetCollisionModel() {
 		return {
-			xMin: this.xBottom,
-			xMax: this.xTop,
-			yMin: this.yBottom,
-			yMax: thix.yTop,
-			zMin: this.zBottom,
-			zMax: this.zTop
+			minX: this.xBottom,
+			maxX: this.xTop,
+			minY: this.yBottom,
+			maxY: this.yTop,
+			minZ: this.zBottom,
+			maxZ: this.zTop
 		};
 	}
 }
