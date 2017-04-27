@@ -1,18 +1,22 @@
 'use strict'
 
 /**
- * 
+ * A class to create windows for the game
+ *
+ * @class GameWindow
  */
 class GameWindow {
   /**
-   * 
-   * @param {*} id 
-   * @param {*} debug 
-   * @param {*} dirname 
-   * @param {*} file 
-   * @param {*} modal 
-   * @param {*} options 
-   * @param {*} window 
+   * Creates an instance of GameWindow
+   * @param {integer} id Integer that identifies which window it is in array
+   * @param {boolean} debug Show or hide dev tools
+   * @param {string} dirname The path of the directory of the parent
+   * @param {string} file The path of the html file from the renderer directory
+   * @param {boolean} modal Identifies the window as a modal if true
+   * @param {object} options Any additional properties to send renderer
+   * @param {BrowserWindow} window The window to be loaded and displayed
+   *
+   * @memberOf GameWindow
    */
   constructor (id, debug, dirname, file, modal, options, window) {
     this.id = id
@@ -26,7 +30,9 @@ class GameWindow {
   }
 
   /**
-   * 
+   * Load the url/path of the html file and display the window
+   *
+   * @memeberOf GameWindow
    */
   loadWindow () {
     this.window.loadURL(`file://${this.dirname}/renderer/${this.file}`)
@@ -45,7 +51,9 @@ class GameWindow {
   }
 
   /**
-   * 
+   * Show the modal window
+   *
+   * @memberOf GameWindow
    */
   show () {
     this.window.once('ready-to-show', () => {
@@ -55,15 +63,17 @@ class GameWindow {
 }
 
 /**
- * 
+ * A class to manage multiple GameWindows
+ *
+ * @class WindowGraph
  */
 class WindowGraph {
   /**
-   * Creates an instance of WindowForms.
-   * @param {object} BrowserWindow
-   * @param {boolean} debug
-   * @param {string} dirname Path
-   * @param {array} windows Stores open windows
+   * Creates an instance of WindowGraph.
+   * @param {BrowserWindow} BrowserWindow
+   * @param {boolean} debug Show or hide dev tools
+   * @param {string} dirname The path of the directory of the parent
+   * @param {array} windows Stores GameWindow instances
    *
    * @memberOf WindowGraph
    */
@@ -75,9 +85,12 @@ class WindowGraph {
   }
 
   /**
-   * 
-   * @param {*} parentWin 
-   * @param {*} options 
+   * Creates a game queue window with message telling player to wait
+   * for additional players to join the game.
+   * Handle close Event for the window when called, dereference the window
+   * and remove it from the windows array.
+   * @param {GameWindow} parentWin The parent of this modal window
+   * @param {object} options Any additional properties to send renderer
    *
    * @memberOf WindowGraph
    */
@@ -89,7 +102,7 @@ class WindowGraph {
       'game_queue/game_queue.html',
       true,
       options,
-      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
+      new this.BrowserWindow({width: 800, height: 200, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
     ))
     let win = this.windows[this.windows.length - 1]
     win.window.on('closed', () => {
@@ -98,9 +111,11 @@ class WindowGraph {
   }
 
   /**
-   * 
-   * @param {*} parentWin 
-   * @param {*} options 
+   * Create host game modal allowing player to create a new game with the server.
+   * Handle close Event for the window when called, dereference the window
+   * and remove it from the windows array.
+   * @param {GameWindow} parentWin The parent of this modal window
+   * @param {object} options Any additional properties to send renderer
    *
    * @memberOf WindowGraph
    */
@@ -121,9 +136,11 @@ class WindowGraph {
   }
 
   /**
-   * Creates in game menu modal window
-   *
-   * @param {integer} index Position of the parent BrowserWindow in windows array
+   * Creates in game menu modal window.
+   * Handle close Event for the window when called, dereference the window
+   * and remove it from the windows array.
+   * @param {GameWindow} parentWin The parent of this modal window
+   * @param {object} options Any additional properties to send renderer
    *
    * @memberOf WindowGraph
    */
@@ -144,9 +161,11 @@ class WindowGraph {
   }
 
   /**
-   * 
-   * @param {*} parentWin 
-   * @param {*} options 
+   * Creates a window to display the list of available games returned from the server.
+   * Handle close Event for the window when called, dereference the window
+   * and remove it from the windows array.
+   * @param {GameWindow} parentWin The parent of this modal window
+   * @param {object} options Any additional properties to send renderer
    *
    * @memberOf WindowGraph
    */
@@ -168,8 +187,10 @@ class WindowGraph {
 
   /**
    * Creates options modal window.
-   *
-   * @param {integer} index Position of the parent BrowserWindow in windows array
+   * Handle close Event for the window when called, dereference the window
+   * and remove it from the windows array.
+   * @param {GameWindow} parentWin The parent of this modal window
+   * @param {object} options Any additional properties to send renderer
    *
    * @memberOf WindowGraph
    */
@@ -190,8 +211,10 @@ class WindowGraph {
   }
 
   /**
-   * 
-   * @param {*} options 
+   * Cereate the game window allowing the player to play the game.
+   * Handle close Event for the window when called, dereference the window
+   * and remove it from the windows array.
+   * @param {object} options Any additional properties to send renderer
    *
    * @memberOf WindowGraph
    */
@@ -212,8 +235,10 @@ class WindowGraph {
   }
 
   /**
-   * 
-   * @param {*} options 
+   * Creates the start main menu window.
+   * Handle close Event for the window when called, dereference the window
+   * and remove it from the windows array.
+   * @param {object} options Any additional properties to send renderer
    *
    * @memberOf WindowGraph
    */
