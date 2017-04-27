@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Haunted</title>
+
+	<style>
+	  canvas {
+		position: absolute;
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+		left: 0;
+	  }
+	</style>
+
+</head>
+<body>
+    <!--<p align="center">
+      <button id="startButton" type="button" onclick ="start();">Start Game</button>
+    </p>-->
+    <link type="text/css" rel="stylesheet" href="index.css">
+    <textarea id="chatTextArea" rows="1" cols="30"></textarea>
+    <div id="chatLogDiv"></div>
+    <meta charset="UTF8">
+    <!--<script src="/socket.io/socket.io.js"></script>-->
+    <script src="js/three.js"></script>
+    <script src="js/collada/Animation.js"></script>
+    <script src="js/collada/AnimationHandler.js"></script>
+    <script src="js/collada/KeyFrameAnimation.js"></script>
+
+    <script src="js/ColladaLoader.js"></script>
+
+
+    <script src="js/Detector.js"></script>
+    <!--<script src="js/stats.min.js"></script>-->
+    <!--<script src="js/hud.js"></script>-->
+	<!--<script src="js/character.js"></script>-->
+	<!--<script src="js/UI.js"></script>-->
+
+    <script type="text/javascript">
+      "use strict";
+      const index = require('./index')
+      // function start() {
+        // document.getElementById('startButton').style.visibility = 'hidden';
+        // var socket = io.connect('/');
+        // var playerHUD = new HUD();
+        // var hudMode = false;
+	      // var UI = getCanvasElement();UI.style.visibility = 'hidden';
+    	  function requestFullScreen(element) {
+      	  // Supports most browsers and their versions.
+      	  var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+      	  if (requestMethod) { // Native full screen.
+          	requestMethod.call(element);
+      	  } // else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+          //   var wscript = new ActiveXObject("WScript.Shell");
+          //   if (wscript !== null) {
+          //     wscript.SendKeys("{F11}");
+          //   }
+      	  // }
+      	  //document.body.requestPointerLock();
+        }
+        //var elem = document.body; // Make the body go full screen.
+	      //requestFullScreen(elem);
+        // window.onmousedown = function (event) {
+        //     requestFullScreen(document.body);
+        // }
+        // Handle incoming chat messages
+        // socket.on('updateChatLog', function (msg) {
+          // playerHUD.addChatMsg(msg);
+        // });
+        if ( ! Detector.webgl ) {
+          Detector.addGetWebGLMessage();
+        }
+  		  var container, stats;
+  		  var camera, scene, renderer, objects;
+  		  var particleLight;
+  		  var dae;
+  		  init();
+        load( 'models/library_room.dae', 5, 0, 0 );
+        var pos = index.playerAt;
+        console.log(index);
+        var cube = addCube(pos.x, .75, pos.z+4);
+        roomBox = addCollisionBox(8.18, 1.5, -4.75, 3.96, 3, 8.1);
+        // load( 'models/room.dae', 0, 0, 0);
+        // load( 'models/cardroom.dae', 0, 0, 10);
+        function load( ObjectPath, X, Y, Z){
+          var loader = new THREE.ColladaLoader();
+          loader.options.convertUpAxis = true;
+          loader.load( ObjectPath, function( collada ) {
+            dae = collada.scene;
+            dae.position.set(X, Y, Z);
+            scene.add( dae );
+            dae.scale.x = dae.scale.y = dae.scale.z = 0.02;
+            dae.updateMatrix();
+            animate();
+          });
+        }
+
+        function addCube( X, Y, Z ){
+          var geometry = new THREE.BoxGeometry(.6, 1.5, .6, 1, 1, 1);
+          var material = new THREE.MeshBasicMaterial({color: 0xfffff, wireframe: false});
+          var cube = new THREE.Mesh(geometry, material);
+          cube.position.set(X, Y, Z);
+          scene.add(cube);
+          return cube;
+        }
+
+        function addCollisionBox(X, Y, Z, xScale, yScale, zScale) {
+          var geometry = new THREE.BoxGeometry(xScale, yScale, zScale);
+          var material = new THREE.MeshBasicMaterial({color: 0xfffff, wireframe: true});
+          var box = new THREE.Mesh(geometry, material);
+          box.position.set(X, Y, Z);
+          scene.add(box);
+          return {
+            xBottom: X - xScale/2,
+            xTop: X + xScale/2,
+            zBottom: Z - zScale/2,
+            zTop: Z + zScale/2
+          };
+        }
+
+  	    function init() {
+  			  container = document.createElement( 'div' );
+  			  document.body.appendChild( container );
+  			  camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+  			  camera.position.set(0,1,0);
+  			  scene = new THREE.Scene();
+  			  // Grid
+  			  var size = 14, step = 1;
+  			  var geometry = new THREE.Geometry();
+  			  var material = new THREE.LineBasicMaterial( { color: 0x303030 } );
+          for ( var i = - size; i <= size; i += step ) {
+  				  geometry.vertices.push( new THREE.Vector3( - size, - 0.04, i ) );
+  				  geometry.vertices.push( new THREE.Vector3(   size, - 0.04, i ) );
+  				  geometry.vertices.push( new THREE.Vector3( i, - 0.04, - size ) );
+  				  geometry.vertices.push( new THREE.Vector3( i, - 0.04,   size ) );
+  			  }
+          var line = new THREE.LineSegments( geometry, material );
+  			  scene.add( line );
+  			  // Add the COLLADA
+  			  //scene.add( dae );
+  			  //scene.add( dae2 );
+  			  //particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xffffff } ) );
+  			  //scene.add( particleLight );
+  			  // Lights
+  			  scene.add( new THREE.AmbientLight( 0xcccccc ) );
+  			  var directionalLight = new THREE.DirectionalLight(/*Math.random() * 0xffffff*/0xeeeeee );
+  			  directionalLight.position.x = Math.random() - 0.5;
+  			  directionalLight.position.y = Math.random() - 0.5;
+  			  directionalLight.position.z = Math.random() - 0.5;
+  			  directionalLight.position.normalize();
+  			  scene.add( directionalLight );
+  		    //	var pointLight = new THREE.PointLight( 0xffffff, 4 );
+  		    //	particleLight.add( pointLight );
+  			  renderer = new THREE.WebGLRenderer();
+  			  renderer.setPixelRatio( window.devicePixelRatio );
+  			  renderer.setSize( window.innerWidth, window.innerHeight );
+  			  container.appendChild( renderer.domElement );
+  			  // stats = new Stats();
+  			  // container.appendChild( stats.dom );
+			    // container.appendChild(UI);
+
+  			  window.addEventListener( 'resize', onWindowResize, false );
+  		  }
+  		  function onWindowResize() {
+  			  camera.aspect = window.innerWidth / window.innerHeight;
+  			  camera.updateProjectionMatrix();
+  			  renderer.setSize( window.innerWidth, window.innerHeight );
+  		  }
+  		  function animate() {
+  		    requestAnimationFrame(animate);
+  		    // update();
+  			  render();
+  			  // stats.update();
+  		  }
+        var clock = new THREE.Clock();
+        // function update() {
+          // playerHUD.update(hudMode);
+        // }
+        function render() {
+          index.render(camera)
+
+          cube.position.set(pos.x, .75, pos.z-4);
+  			  //particleLight.position.x = Math.sin( timer * 4 ) * 3009;
+  			  //particleLight.position.y = Math.cos( timer * 5 ) * 4000;
+  			  //particleLight.position.z = Math.cos( timer * 4 ) * 3009;
+  			  //THREE.AnimationHandler.update( clock.getDelta() );
+  			  renderer.render( scene, camera );
+  		  }
+      // }
+    </script>
+</body>
+</html>
