@@ -3,7 +3,6 @@ const {ipcRenderer} = require('electron')
 const $ = require('jquery')
 const {HUD} = require('./js/hud')
 
-
 let index
 let rotationX = 0
 let rotationZ = 0
