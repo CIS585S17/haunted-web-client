@@ -3,7 +3,8 @@ const {app, BrowserWindow, ipcMain} = require('electron')
 const {WindowForms, WindowGraph} = require('./main/windows')
 // const {Player} = require('./server/player')
 // let socket = require('socket.io-client')('ws://cslinux.cs.ksu.edu:5444')
-let socket = require('socket.io-client')('http://localhost:5333')
+// let socket = require('socket.io-client')('http://localhost:5333')
+let socket = require('socket.io-client')('https://haunted-server.herokuapp.com')
 
 let debug = true
 let win = []
@@ -35,6 +36,7 @@ socket.on('get-games', (games) => {
   let win = windowGraph.windows.find((element) => {
     return element.id === 0
   })
+  console.log(games)
   windowGraph.joinGameWindow(win, {parentWinId: 0, games: games})
 })
 
@@ -80,17 +82,15 @@ ipcMain.on('options', (event, index) => {
   let win = windowGraph.windows.find((element) => {
     return element.id === 0
   })
-  console.log('parent', win)
   windowGraph.optionsWindow(win, {parentWinId: index})
-  console.log('windows', windowGraph.windows)
 })
 
-ipcMain.on('host-game', (event, index) => {
+ipcMain.on('host-game', (event, id) => {
   // windowForm.hostGameWindow(index)
   let win = windowGraph.windows.find((element) => {
-    return element.id === index
+    return element.id === id
   })
-  windowGraph.hostGameWindow(win, {parentWinId: index})
+  windowGraph.hostGameWindow(win, {parentWinId: win})
 })
 
 ipcMain.on('host', (event, msg) => {
@@ -100,7 +100,8 @@ ipcMain.on('host', (event, msg) => {
   let win = windowGraph.windows.find((element) => {
     return element.id === msg.index.childIndex
   })
-  windowGraph.windows[win.id].close()
+  // windowGraph.windows[win.id].close()
+  // win.close()
   windowGraph.gameQueueWindow(win, {parentWinId: msg.index.parentIndex})
 })
 
