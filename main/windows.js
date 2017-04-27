@@ -13,7 +13,7 @@ class GameWindow {
   }
 
   loadWindow () {
-    this.window.loadURL(`file://${this.dirname}/public/${this.file}`)
+    this.window.loadURL(`file://${this.dirname}/renderer/${this.file}`)
     this.window.webContents.on('did-finish-load', () => {
       this.window.webContents.send('load', {
         options: this.options,

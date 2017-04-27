@@ -137,8 +137,8 @@ ipcMain.on('quit-to-main-window', (event, index) => {
 })
 
 ipcMain.on('quit-game', (event) => {
-  for (let w of win) {
-    w.close()
+  for (let win of windowGraph.windows) {
+    win.window.close()
   }
 })
 
