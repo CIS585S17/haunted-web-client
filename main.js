@@ -1,57 +1,21 @@
 'use strict'
 const {app, BrowserWindow, ipcMain} = require('electron')
-const {WindowForms, WindowGraph} = require('./main/windows')
+const {WindowGraph} = require('./main/windows')
 // const {Player} = require('./server/player')
-// let socket = require('socket.io-client')('ws://cslinux.cs.ksu.edu:5444')
-// let socket = require('socket.io-client')('http://localhost:5333')
-let socket = require('socket.io-client')('https://haunted-server.herokuapp.com')
+const socket = require('socket.io-client')('https://haunted-server.herokuapp.com')
 
-let debug = true
-let win = []
-let windowForm = new WindowForms(BrowserWindow, debug, __dirname, win)
-let windowGraph = new WindowGraph(BrowserWindow, debug, __dirname)
-// let player = new Player()
 let chatLog = ''
+let debug = true
+let paused = false
+// let player = new Player()
+let windowGraph = new WindowGraph(BrowserWindow, debug, __dirname)
 
+/**
+ * Function that opens the main menu window
+ */
 function createWindow () {
-  // windowForm.startWindow()
   windowGraph.startWindow()
 }
-
-socket.on('start-game', (start) => {
-  // windowForm.gameWindow()
-  windowGraph.gameWindow()
-  for (let i = 0; i < windowGraph.windows.length - 1; i++) {
-    // win[i].close()
-    windowGraph.windows[i].window.close()
-  }
-})
-
-socket.on('updateChatLog', (msg) => {
-  chatLog = msg
-})
-
-socket.on('get-games', (games) => {
-  // windowForm.joinGameWindow({index: 0, games: games})
-  let win = windowGraph.windows.find((element) => {
-    return element.id === 0
-  })
-  console.log(games)
-  windowGraph.joinGameWindow(win, {parentWinId: 0, games: games})
-})
-
-// socket.on('start-game', (start) => {
-//   if (start) {
-//     windowForm.gameWindow()
-// //     // for (let i = 1; i < win.length; i++) {
-// //     //   win[i].close()
-// //     // }
-//     for (let i = 0; i < win.length - 1; i++) {
-//       win[i].close()
-//     }
-//   }
-// })
-
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -73,32 +37,65 @@ app.on('activate', () => {
   createWindow()
 })
 
+/**
+ * Sets Electron's default menu to null
+ */
 app.on('browser-window-created', (event, window) => {
   window.setMenu(null)
 })
 
-ipcMain.on('options', (event, index) => {
-  // windowForm.optionsWindow(index)
-  let win = windowGraph.windows.find((element) => {
-    return element.id === 0
-  })
-  windowGraph.optionsWindow(win, {parentWinId: index})
+/**
+ * Begining of Socket Events
+ * Events should be listed in alphabetical order
+ */
+
+/**
+ * Socket event to handle incoming message to get the available
+ * games from the server and display them in a new window
+ */
+socket.on('get-games', (games) => {
+  // let win = windowGraph.windows.find((element) => {
+  //   return element.id === 0
+  // })
+  let win = windowGraph.windows[0]
+  windowGraph.joinGameWindow(win, {parentWinId: win.id, games: games})
 })
 
-ipcMain.on('host-game', (event, id) => {
-  // windowForm.hostGameWindow(index)
-  let win = windowGraph.windows.find((element) => {
-    return element.id === id
-  })
-  windowGraph.hostGameWindow(win, {parentWinId: win})
+/**
+ * Socket event to handle incoming message from the server
+ * to start the game one all players have filled up the game queue
+ */
+socket.on('start-game', (start) => {
+  windowGraph.gameWindow()
+  for (let i = 0; i < windowGraph.windows.length - 1; i++) {
+    windowGraph.windows[i].window.close()
+  }
 })
 
+/**
+ * Socket event to handle incoming message from the server
+ * to update the chat log
+ */
+socket.on('updateChatLog', (msg) => {
+  chatLog = msg
+})
+
+/**
+ * End of Socket Events and Begining of Main Events
+ * Main Events should be listed in alphabetical order
+ */
+
+/**
+ * Event that creates a window displaying a message
+ * telling the player to wait for another player to join
+ * the game. Also closes previous modal window
+ */
 ipcMain.on('host', (event, msg) => {
   socket.emit('host-game', msg.name)
-  // win[msg.index.childIndex].close()
-  let mainWin = windowGraph.windows.find((element) => {
-    return element.id === 0
-  })
+  // let mainWin = windowGraph.windows.find((element) => {
+  //   return element.id === 0
+  // })
+  let mainWin = windowGraph.windows[0]
   let hostWin = windowGraph.windows.find((element) => {
     return element.id === msg.id
   })
@@ -106,42 +103,99 @@ ipcMain.on('host', (event, msg) => {
   windowGraph.gameQueueWindow(mainWin, {parentWinId: mainWin.id})
 })
 
-ipcMain.on('join-game', (event, index) => {
-  socket.emit('get', 'get the game')
+/**
+ * Event to create a window that allows the player to
+ * create a new game
+ */
+ipcMain.on('host-game', (event, id) => {
+  let win = windowGraph.windows.find((element) => {
+    return element.id === id
+  })
+  windowGraph.hostGameWindow(win, {parentWinId: win})
 })
 
+/**
+ * Event that emits a Socket message telling the server
+ * which game instance you want to join
+ */
 ipcMain.on('join', (event, data) => {
   socket.emit('join', data.game.id)
 })
 
-ipcMain.on('pause-game', (event, index) => {
-  // windowForm.ingameWindow(index)
+/**
+ * Event that emits a Socket message to the server to get
+ * the available games to join
+ */
+ipcMain.on('join-game', (event, index) => {
+  socket.emit('get', 'get the game')
+})
+
+/**
+ * Event to create the options menu
+ */
+ipcMain.on('options', (event, index) => {
+  // let win = windowGraph.windows.find((element) => {
+  //   return element.id === 0
+  // })
+  let win = windowGraph.windows[0]
+  windowGraph.optionsWindow(win, {parentWinId: win.id})
+})
+
+/**
+ * Event that opens up a modal menu window.
+ * Called from the index/game window.
+ * Activated when player pauses the game
+ * Send message back telling game window to unpause
+ * the game when paused variable is set to false
+ * from resume-game Event.
+ */
+ipcMain.on('pause-game', (event, id) => {
+  paused = true
   let win = windowGraph.windows.find((element) => {
-    return element.id === index
+    return element.id === id
   })
-  windowGraph.ingameWindow(win, {parentWinId: index})
-})
-
-ipcMain.on('resume-game', (event, index) => {
-  // win[index].close()
-  // windowGraph.windows[].close()
-})
-
-ipcMain.on('quit-to-main-window', (event, index) => {
-  // windowForm.startWindow()
-  for (let i in index) {
-    if (index[i] !== 0) {
-      win[index[i]].close()
-    }
+  windowGraph.ingameWindow(win, {parentWinId: id})
+  if (!paused) {
+    event.sender.send('un-pause', paused)
   }
 })
 
+/**
+ * Event that closes all windows in the windows array in the WindowGraph
+ * class.
+ */
 ipcMain.on('quit-game', (event) => {
   for (let win of windowGraph.windows) {
     win.window.close()
   }
 })
 
+/**
+ * Event that closes all windows and reopens the main menu
+ * window.
+ */
+ipcMain.on('quit-to-main-window', (event, data) => {
+  windowGraph.startWindow()
+  for (let i = 0; i < windowGraph.windows.length - 1; i++) {
+    windowGraph.windows[i].window.close()
+  }
+})
+
+/**
+ * Event that closes modal menu window and resumes the
+ * game
+ */
+ipcMain.on('resume-game', (event, id) => {
+  paused = false
+  windowGraph.windows.find((element) => {
+    return element.id === id
+  }).window.close()
+})
+
+/**
+ * Event to send the updated chat log from the server
+ * to the Renderer at index.
+ */
 ipcMain.on('update-chat-log', (event) => {
   event.returnValue = chatLog
   // event.sender.send('updated-chat-log', chatLog)
