@@ -96,13 +96,14 @@ ipcMain.on('host-game', (event, id) => {
 ipcMain.on('host', (event, msg) => {
   socket.emit('host-game', msg.name)
   // win[msg.index.childIndex].close()
-  // windowForm.gameQueueWindow(msg.index.parentIndex)
-  let win = windowGraph.windows.find((element) => {
-    return element.id === msg.index.childIndex
+  let mainWin = windowGraph.windows.find((element) => {
+    return element.id === 0
   })
-  // windowGraph.windows[win.id].close()
-  // win.close()
-  windowGraph.gameQueueWindow(win, {parentWinId: msg.index.parentIndex})
+  let hostWin = windowGraph.windows.find((element) => {
+    return element.id === msg.id
+  })
+  hostWin.window.close()
+  windowGraph.gameQueueWindow(mainWin, {parentWinId: mainWin.id})
 })
 
 ipcMain.on('join-game', (event, index) => {
