@@ -13,6 +13,7 @@ ipcRenderer.on('load', (event, data) => {
   // })
 
   function loadTable (games) {
+    console.log(games)
     let table
     $('#tableBody').empty()
     for (let i = 0; i < games.length; i++) {
@@ -28,8 +29,8 @@ ipcRenderer.on('load', (event, data) => {
       })
     }
   }
-
-  loadTable(data.games)
+  console.log(data)
+  loadTable(data.options.games)
 
   // ipcRenderer.on('update-join-table', (event, games) => {
   //   loadTable(games)

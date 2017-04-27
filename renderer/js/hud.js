@@ -4,7 +4,9 @@ class HUD {
   constructor () {
     this.active = false
     this.chatTextArea = document.getElementById('chatTextArea')
+    // console.log(this.chatTextArea)
     this.chatLogDiv = document.getElementById('chatLogDiv')
+    // console.log(this.chatLogDiv)
     this.chatLog = []
   }
 
@@ -41,9 +43,9 @@ class HUD {
       this.chatLogDiv.innerHTML += ('<br>')
       chatDepth--
     }
-    this.chatLog.forEach(function (m) {
-      this.chatLogDiv.innerHTML += ('<br>' + m)
-    })
+    for (let m of this.chatLog) {
+      this.chatLogDiv.innerHTML += `<br>${m}`
+    }
   }
 }
 

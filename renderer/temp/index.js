@@ -1,8 +1,9 @@
 'use strict'
 const {ipcRenderer} = require('electron')
+const $ = require('jquery')
+const {HUD} = require('./js/hud')
 
-
-let index
+let windowId
 let rotationX = 0
 let rotationZ = 0
 let pointAt = {
@@ -24,10 +25,17 @@ let movementInput = {
 }
 let hudMode = false
 
-ipcRenderer.on('load', (event, i) => {
-  index = i
-  console.log('index', index)
+
+ipcRenderer.on('load', (event, data) => {
+  windowId = data.id
+  let playerHUD = new HUD()
+
+  playerHUD.addChatMsg(ipcRenderer.sendSync('update-chat-log', 'get message'))
+  ipcRenderer.on('un-pause', (paused) => {
+    // TODO: unpause the game when paused is false
+  })
 })
+
 
 window.onmousemove = function (event) {
   // Only move the camera if the player is not navigating the hud
@@ -85,7 +93,7 @@ window.onkeydown = function (event) {
         break
       case 'Tab':
         event.preventDefault()
-        ipcRenderer.send('pause-game', 0)
+        ipcRenderer.send('pause-game', windowId)
     }
   } else {
               // Enter

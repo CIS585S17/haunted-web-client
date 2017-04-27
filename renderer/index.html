@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Haunted</title>
+
+	<style>
+	  canvas {
+		position: absolute;
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+		left: 0;
+	  }
+	</style>
+
+</head>
+<body>
+    <link type="text/css" rel="stylesheet" href="index.css">
+    <textarea id="chatTextArea" rows="1" cols="30"></textarea>
+    <div id="chatLogDiv"></div>
+    <meta charset="UTF8">
+    <script src="js/three.js"></script>
+    <script src="js/collada/Animation.js"></script>
+    <script src="js/collada/AnimationHandler.js"></script>
+    <script src="js/collada/KeyFrameAnimation.js"></script>
+    <script src="js/ColladaLoader.js"></script>
+    <script src="js/Detector.js"></script>
+
+    <script type="text/javascript">
+      "use strict";
+      const movement = require('./movement')
+      const simpleCamera = require('./simpleCamera')
+      const {Box} = require('./Box')
+      const {RoomBox} = require('./RoomBox')
+      const {CollisionEngine} = require('./CollisionEngine')
+
+    	  function requestFullScreen(element) {
+      	  // Supports most browsers and their versions.
+      	  var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+      	  if (requestMethod) { // Native full screen.
+          	requestMethod.call(element);
+      	  }
+        }
+        if ( ! Detector.webgl ) {
+          Detector.addGetWebGLMessage();
+        }
+  		  var container, stats;
+  		  var camera, scene, renderer, objects;
+  		  var particleLight;
+  		  var dae;
+  		  init();
+
+        //load models
+        load( 'models/library_room.dae', 0, 0, 0 );
+        let boxPlayer = new Box(scene, 3, .75, -3);
+        let room1Box = new RoomBox(scene, 3.18, 1.5, -4.75, 3.96, 3, 8.1);
+
+        //load CollisionEngine
+        let collisionEngine = new CollisionEngine();
+        //collisionEngine.AddPlayerBox(boxPlayer.GetCollisionModel());
+        collisionEngine.AddRoom(room1Box.GetCollisionModel());
+
+        function load( ObjectPath, X, Y, Z){
+          var loader = new THREE.ColladaLoader();
+          loader.options.convertUpAxis = true;
+          loader.load( ObjectPath, function( collada ) {
+            dae = collada.scene;
+            dae.position.set(X, Y, Z);
+            scene.add( dae );
+            dae.scale.x = dae.scale.y = dae.scale.z = 0.02;
+            dae.updateMatrix();
+            animate();
+          });
+        }
+
+  	    function init() {
+  			  container = document.createElement( 'div' );
+  			  document.body.appendChild( container );
+
+          simpleCamera.setView('firstPerson');
+          //simpleCamera.setView('thirdPerson');
+
+          simpleCamera.setCamera(new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 ))
+  			  scene = new THREE.Scene();
+          tileFloor(scene);
+          lights(scene);
+  			  renderer = new THREE.WebGLRenderer();
+  			  renderer.setPixelRatio( window.devicePixelRatio );
+  			  renderer.setSize( window.innerWidth, window.innerHeight );
+  			  container.appendChild( renderer.domElement );
+  			  window.addEventListener( 'resize', onWindowResize, false );
+  		  }
+
+        function lights(scene) {
+          scene.add( new THREE.AmbientLight( 0xcccccc ) );
+  			  var directionalLight = new THREE.DirectionalLight(/*Math.random() * 0xffffff*/0xeeeeee );
+  			  directionalLight.position.x = Math.random() - 0.5;
+  			  directionalLight.position.y = Math.random() - 0.5;
+  			  directionalLight.position.z = Math.random() - 0.5;
+  			  directionalLight.position.normalize();
+  			  scene.add( directionalLight );
+        }
+
+        function tileFloor(scene) {
+          var size = 14, step = 1;
+  			  var geometry = new THREE.Geometry();
+  			  var material = new THREE.LineBasicMaterial( { color: 0xeb42f4 } );
+          for ( var i = - size; i <= size; i += step ) {
+  				  geometry.vertices.push( new THREE.Vector3( - size, - 0.04, i ) );
+  				  geometry.vertices.push( new THREE.Vector3(   size, - 0.04, i ) );
+  				  geometry.vertices.push( new THREE.Vector3( i, - 0.04, - size ) );
+  				  geometry.vertices.push( new THREE.Vector3( i, - 0.04,   size ) );
+  			  }
+          var line = new THREE.LineSegments( geometry, material );
+  			  scene.add( line );
+        }
+
+  		  function onWindowResize() {
+          simpleCamera.windowResize(window.innerWidth, window.innerHeight);
+  			  renderer.setSize( window.innerWidth, window.innerHeight );
+  		  }
+
+  		  function animate() {
+  		    requestAnimationFrame(animate);
+  			  render();
+  		  }
+
+        var clock = new THREE.Clock();
+
+        function render() {
+          let triangle1 = {
+            p1: {x:0, y:0, z:0},
+            p2: {x:0, y:0, z:0},
+            p3: {x:0, y:0, z:0}
+          }
+          let tri1 = collisionEngine.CalculateTriangleNormal(triangle1);
+          console.log(tri1);
+
+          let x = movement.update(boxPlayer, simpleCamera);
+          collisionEngine.PlayerColliding(boxPlayer.GetCollisionModel(), simpleCamera.getView(), boxPlayer.GetModel());
+          renderer.render(scene, simpleCamera.getCamera())
+  		  }
+      // }
+    </script>
+</body>
+</html>
