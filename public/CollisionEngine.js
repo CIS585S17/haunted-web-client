@@ -44,27 +44,57 @@ class CollisionEngine {
     return distance < sphere.radius;
   }
 
+  // triangle = {p1, p2, p3}
+  // p1, p2, p3 = {x, y, z}
+  CalculateTriangleNormal(triangle) {
+    let Ux = triangle.p2.x - triangle.p1.x;
+    let Uy = triangle.p2.y - triangle.p1.y;
+    let Uz = triangle.p2.z - triangle.p1.z;
+    let Vx = triangle.p3.x - triangle.p1.x;
+    let Vy = triangle.p3.y - triangle.p1.y;
+    let Vz = triangle.p3.z - triangle.p1.z;
+    let Nx = -(Uz*Vy - Uy*Vz);
+    let Ny = -(Ux*Vz - Uz*Vx);
+    let Nz = -(Uy*Vx - Ux*Vy);
+    let Nmag = Math.sqrt(Nx*Nx + Ny*Ny + Nz*Nz);
+    Nx = Nx/Nmag;
+    Ny = Ny/Nmag;
+    Nz = Nz/Nmag;
+    return {x:Nx, y:Ny, z:Nz};
+  }
+
   PlayerColliding(player, view, model) {
-    if(view == 'firstPerson') {
+    if(view === 'firstPerson') {
       this.objects.forEach( function(obj) {
-        if((player.minX - 1) <= obj.minX) {
-          model.position.x = obj.minX+1.5;
-          console.log('outside of box');
+        if((player.minX - .925) <= obj.minX) {
+          model.position.x = obj.minX+1.225;
         }
-        else if((player.maxX + 1) >= obj.maxX) {
-          console.log('outside of box');
+        if((player.maxX + .925) >= obj.maxX) {
+          model.position.x = obj.maxX-1.225;
         }
-        else if((player.minZ - 1) <= obj.minZ) {
-          console.log('outside of box');
+        if((player.minZ - .925) <= obj.minZ) {
+          model.position.z = obj.minZ+1.225;
         }
-        else if((player.maxZ + 1) >= obj.maxZ) {
-          console.log('outside of box');
+        if((player.maxZ + .925) >= obj.maxZ) {
+          model.position.z = obj.maxZ-1.225;
         }
       });
     }
-    else if(view == 'thirdPerson') {
+    else if(view === 'thirdPerson' || view === 'aboveDoor') {
       this.objects.forEach( function(obj) {
-        if(!(player.minX <= obj.maxX && player.minX >= obj.minX)) {
+        if((player.minX - .1) <= obj.minX) {
+          model.position.x = obj.minX+.4;
+        }
+        if((player.maxX + .1) >= obj.maxX) {
+          model.position.x = obj.maxX-.4;
+        }
+        if((player.minZ - .1) <= obj.minZ) {
+          model.position.z = obj.minZ+.4;
+        }
+        if((player.maxZ + .1) >= obj.maxZ) {
+          model.position.z = obj.maxZ-.4;
+        }
+        /*if(!(player.minX <= obj.maxX && player.minX >= obj.minX)) {
           console.log('outside of box');
         }
         else if(!(player.maxX <= obj.maxX && player.maxX >= obj.minX)) {
@@ -75,7 +105,7 @@ class CollisionEngine {
         }
         else if(!(player.maxZ <= obj.maxZ && player.maxZ >= obj.minZ)) {
           console.log('outside of box');
-        }
+        }*/
       });
     }
   }

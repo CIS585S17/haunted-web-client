@@ -38,6 +38,9 @@ function move(posX, posZ, rotY, rotZ) {
     let z = -(Math.sin(rotY*Math.PI/180)*depth)+posZ;
     camera.position.set(x,y,z);
   }
+  else if(view == 'aboveDoor') {
+    camera.position.set(3,4,-1.4);
+  }
 }
 
 function rotate(playerX, playerY, playerZ, rotY, rotZ) {
@@ -48,6 +51,9 @@ function rotate(playerX, playerY, playerZ, rotY, rotZ) {
     camera.lookAt(new THREE.Vector3(x,y,z));
   }
   else if(view == 'thirdPerson') {
+    camera.lookAt(new THREE.Vector3(playerX,playerY+0.5,playerZ));
+  }
+  else if(view == 'aboveDoor') {
     camera.lookAt(new THREE.Vector3(playerX,playerY+0.5,playerZ));
   }
 }

@@ -15,7 +15,7 @@ class RoomBox {
 		var material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
 		var box = new THREE.Mesh(geometry, material);
 		box.position.set(x, y, z);
-		scene.add(box);
+		//scene.add(box);
 		return box;
 	}
 

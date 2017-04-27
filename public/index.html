@@ -77,8 +77,9 @@
   			  container = document.createElement( 'div' );
   			  document.body.appendChild( container );
 
-          simpleCamera.setView('firstPerson');
-          //simpleCamera.setView('thirdPerson');
+          //simpleCamera.setView('firstPerson');
+          simpleCamera.setView('thirdPerson');
+          //simpleCamera.setView('aboveDoor');
 
           simpleCamera.setCamera(new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 ))
   			  scene = new THREE.Scene();
@@ -128,6 +129,14 @@
         var clock = new THREE.Clock();
 
         function render() {
+          let triangle1 = {
+            p1: {x:1, y:1, z:0},
+            p2: {x:4, y:2, z:1},
+            p3: {x:5, y:3, z:0}
+          }
+          let tri1 = collisionEngine.CalculateTriangleNormal(triangle1);
+          //console.log(tri1);
+
           let x = movement.update(boxPlayer, simpleCamera);
           collisionEngine.PlayerColliding(boxPlayer.GetCollisionModel(), simpleCamera.getView(), boxPlayer.GetModel());
           renderer.render(scene, simpleCamera.getCamera())

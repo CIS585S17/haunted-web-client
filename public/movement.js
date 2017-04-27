@@ -130,14 +130,24 @@ function update(myPlayer, myCamera) {
     myCamera.move(x, z, rotationY, rotationZ);
   }
   if(movementInput.left) {
-    //move player
-    myPlayer.MoveLeft(rotationY);
-    myCamera.move(x, z, rotationY, rotationZ);
+    if(myCamera.getView() === 'aboveDoor') {
+      rotationY -= 1.5;
+    }
+    else {
+      //move player
+      myPlayer.MoveLeft(rotationY);
+      myCamera.move(x, z, rotationY, rotationZ);
+    }
   }
   if(movementInput.right) {
-    //move player
-    myPlayer.MoveRight(rotationY);
-    myCamera.move(x, z, rotationY, rotationZ);
+    if(myCamera.getView() === 'aboveDoor') {
+      rotationY += 1.5;
+    }
+    else {
+      //move player
+      myPlayer.MoveRight(rotationY);
+      myCamera.move(x, z, rotationY, rotationZ);
+    }
   }
   //move camera
   myCamera.move(x, z, rotationY, rotationZ);
