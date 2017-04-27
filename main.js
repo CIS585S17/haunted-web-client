@@ -3,6 +3,8 @@ const {app, BrowserWindow, ipcMain} = require('electron')
 const {WindowGraph} = require('./main/windows')
 // const {Player} = require('./server/player')
 const socket = require('socket.io-client')('https://haunted-server.herokuapp.com')
+// const socket = require('socket.io-client')('http://localhost:5000')
+
 
 let chatLog = ''
 let debug = true
@@ -91,16 +93,21 @@ socket.on('updateChatLog', (msg) => {
  * the game. Also closes previous modal window
  */
 ipcMain.on('host', (event, msg) => {
-  socket.emit('host-game', msg.name)
-  // let mainWin = windowGraph.windows.find((element) => {
-  //   return element.id === 0
-  // })
-  let mainWin = windowGraph.windows[0]
-  let hostWin = windowGraph.windows.find((element) => {
-    return element.id === msg.id
+  socket.emit('host-game', msg.name, (error) => {
+    if (error) {
+      event.sender.send('error', error)
+    } else {
+      // let mainWin = windowGraph.windows.find((element) => {
+      //   return element.id === 0
+      // })
+      let mainWin = windowGraph.windows[0]
+      let hostWin = windowGraph.windows.find((element) => {
+        return element.id === msg.id
+      })
+      hostWin.window.close()
+      windowGraph.gameQueueWindow(mainWin, {parentWinId: mainWin.id})
+    }
   })
-  hostWin.window.close()
-  windowGraph.gameQueueWindow(mainWin, {parentWinId: mainWin.id})
 })
 
 /**
