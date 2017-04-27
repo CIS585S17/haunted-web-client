@@ -157,7 +157,7 @@ class WindowGraph {
       this.windows.length,
       this.debug,
       this.dirname,
-      'public/index.html',
+      'index.html',
       false,
       options,
       new this.BrowserWindow({ width: 1800, height: 1000, experimentalCanvasFeatures: true, fullscreen: true })

@@ -11,7 +11,7 @@ let win = []
 let windowForm = new WindowForms(BrowserWindow, debug, __dirname, win)
 let windowGraph = new WindowGraph(BrowserWindow, debug, __dirname)
 // let player = new Player()
-let chatLog
+let chatLog = ''
 
 function createWindow () {
   // windowForm.startWindow()
@@ -21,9 +21,9 @@ function createWindow () {
 socket.on('start-game', (start) => {
   // windowForm.gameWindow()
   windowGraph.gameWindow()
-  for (let i = 0; i < win.length - 1; i++) {
+  for (let i = 0; i < windowGraph.windows.length - 1; i++) {
     // win[i].close()
-    windowGraph.windows[i].close()
+    windowGraph.windows[i].window.close()
   }
 })
 
@@ -128,7 +128,7 @@ ipcMain.on('resume-game', (event, index) => {
 })
 
 ipcMain.on('quit-to-main-window', (event, index) => {
-  windowForm.startWindow()
+  // windowForm.startWindow()
   for (let i in index) {
     if (index[i] !== 0) {
       win[index[i]].close()
