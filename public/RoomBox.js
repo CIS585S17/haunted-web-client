@@ -1,4 +1,5 @@
 class RoomBox {
+	//          scene, 3.18, 1.5, -4.75, 3.96, 3, 8.1
 	constructor(scene, x, y, z, xScale, yScale, zScale) {
 		this.xBottom =  x - xScale/2,
 		this.xTop = x + xScale/2,
@@ -14,7 +15,7 @@ class RoomBox {
 		var material = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
 		var box = new THREE.Mesh(geometry, material);
 		box.position.set(x, y, z);
-		scene.add(box);
+		//scene.add(box);
 		return box;
 	}
 
@@ -24,12 +25,12 @@ class RoomBox {
 
 	GetCollisionModel() {
 		return {
-			xMin: this.xBottom,
-			xMax: this.xTop,
-			yMin: this.yBottom,
-			yMax: thix.yTop,
-			zMin: this.zBottom,
-			zMax: this.zTop
+			minX: this.xBottom,
+			maxX: this.xTop,
+			minY: this.yBottom,
+			maxY: this.yTop,
+			minZ: this.zBottom,
+			maxZ: this.zTop
 		};
 	}
 }

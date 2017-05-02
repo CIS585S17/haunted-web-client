@@ -9,6 +9,7 @@ let movementInput = {
   down: false,
   left: false,
   right: false,
+  space: false
 }
 
 let hudMode = false
@@ -48,6 +49,10 @@ window.onkeydown = function (event) {
         movementInput.right = true
         event.preventDefault()
         break
+	  case ' ':
+		movementInput.jump = true
+		event.preventDefault();
+		break;
       case 'ArrowUp':
         event.preventDefault()
         break
@@ -60,10 +65,6 @@ window.onkeydown = function (event) {
       case 'ArrowRight':
         event.preventDefault()
         break
-      case ' ':
-        event.preventDefault()
-        break
-
       case 'h':
         event.preventDefault()
         if (UI.style.visibility == 'hidden') { UI.style.visibility = 'visible' } else { UI.style.visibility = 'hidden' }
@@ -95,6 +96,9 @@ window.onkeyup = function (event) {
         movementInput.right = false
         event.preventDefault()
         break
+	  case ' ':
+		event.preventDefault()
+		break;
     }
   } else {
     // Enter
@@ -129,15 +133,41 @@ function update(myPlayer, myCamera) {
     myPlayer.MoveDown(rotationY);
     myCamera.move(x, z, rotationY, rotationZ);
   }
+  
+  if(movementInput.jump) {
+	  myPlayer.MoveJumpUp();
+	  if (position.y >= 1.5)
+	  {
+		  movementInput.jump = false
+	  }
+  }
+  
+  if(!movementInput.jump){
+	  myPlayer.MoveJumpDown();
+  }
+  
+  
   if(movementInput.left) {
-    //move player
-    myPlayer.MoveLeft(rotationY);
-    myCamera.move(x, z, rotationY, rotationZ);
+    if(myCamera.getView() === 'aboveDoor') {
+      rotationY -= 1.5;
+    }
+    else {
+      //move player
+      myPlayer.MoveLeft(rotationY);
+      myCamera.move(x, z, rotationY, rotationZ);
+    }
   }
   if(movementInput.right) {
-    //move player
-    myPlayer.MoveRight(rotationY);
-    myCamera.move(x, z, rotationY, rotationZ);
+    if(myCamera.getView() === 'aboveDoor') {
+      rotationY += 1.5;
+    }
+    else {
+      //move player
+      myPlayer.MoveRight(rotationY);
+      myCamera.move(x, z, rotationY, rotationZ);
+    }
+
+  
   }
   //move camera
   myCamera.move(x, z, rotationY, rotationZ);
