@@ -39,10 +39,10 @@ window.onmousemove = function (event) {
   }
 }
 window.onmousedown = function (event) {
-  document.body.requestPointerLock();
+  document.body.requestPointerLock()
 }
 window.onkeydown = function (event) {
-          // Only move the player if the player is not navigating the hud
+  // Only move the player if the player is not navigating the hud
   if (!hudMode) {
     switch (event.key) {
       case 'w':
@@ -79,7 +79,11 @@ window.onkeydown = function (event) {
 
       case 'h':
         event.preventDefault()
-        if (UI.style.visibility == 'hidden') { UI.style.visibility = 'visible' } else { UI.style.visibility = 'hidden' }
+        if (UI.style.visibility === 'hidden') {
+          UI.style.visibility = 'visible'
+        } else {
+          UI.style.visibility = 'hidden'
+        }
         break
       case 'Tab':
         event.preventDefault()
@@ -88,7 +92,7 @@ window.onkeydown = function (event) {
     }
   } else {
               // Enter
-    if (event.keyCode == 13 && document.activeElement == chatTextArea) {
+    if (event.keyCode === 13 && document.activeElement === chatTextArea) {
       event.preventDefault()
     }
   }
@@ -115,54 +119,53 @@ window.onkeyup = function (event) {
     }
   } else {
     // Enter
-    if (event.keyCode == 13 && chatTextArea.value != '') {
+    if (event.keyCode === 13 && chatTextArea.value !== '') {
       // socket.emit('newChatMsg', chatTextArea.value);
       chatTextArea.value = ''
       event.preventDefault()
     }
   }
   // Ctrl
-  if (event.keyCode == 17) {
+  if (event.keyCode === 17) {
     // Turn HUD mode on/off
     hudMode = !hudMode
   }
 }
 
-function update(myPlayer, myCamera) {
+function update (myPlayer, myCamera) {
+  let model = myPlayer.GetModel()
+  let position = model.position
+  let x = position.x
+  let y = position.y
+  let z = position.z
 
-  let model = myPlayer.GetModel();
-  let position = model.position;
-  let x = position.x;
-  let y = position.y;
-  let z = position.z;
-
-  if(movementInput.up) {
-    //move player
-    myPlayer.MoveUp(rotationY);
-    myCamera.move(x, z, rotationY, rotationZ);
+  if (movementInput.up) {
+    // move player
+    myPlayer.MoveUp(rotationY)
+    myCamera.move(x, z, rotationY, rotationZ)
   }
-  if(movementInput.down) {
-    //move player
-    myPlayer.MoveDown(rotationY);
-    myCamera.move(x, z, rotationY, rotationZ);
+  if (movementInput.down) {
+    // move player
+    myPlayer.MoveDown(rotationY)
+    myCamera.move(x, z, rotationY, rotationZ)
   }
-  if(movementInput.left) {
-    //move player
-    myPlayer.MoveLeft(rotationY);
-    myCamera.move(x, z, rotationY, rotationZ);
+  if (movementInput.left) {
+    // move player
+    myPlayer.MoveLeft(rotationY)
+    myCamera.move(x, z, rotationY, rotationZ)
   }
-  if(movementInput.right) {
-    //move player
-    myPlayer.MoveRight(rotationY);
-    myCamera.move(x, z, rotationY, rotationZ);
+  if (movementInput.right) {
+    // move player
+    myPlayer.MoveRight(rotationY)
+    myCamera.move(x, z, rotationY, rotationZ)
   }
-  //move camera
-  myCamera.move(x, z, rotationY, rotationZ);
-  //rotate player
-  myPlayer.Rotate(rotationY);
-  //rotate camera
-  myCamera.rotate(x, y, z, rotationY, rotationZ);
-  return 'a';
+  // move camera
+  myCamera.move(x, z, rotationY, rotationZ)
+  // rotate player
+  myPlayer.Rotate(rotationY)
+  // rotate camera
+  myCamera.rotate(x, y, z, rotationY, rotationZ)
+  return 'a'
 }
 
 module.exports = {

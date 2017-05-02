@@ -1,4 +1,15 @@
+'use strict'
 const {Character} = require('./character')
+
+// class UserInterface {
+//   constructor () {
+
+//   }
+// }
+
+
+
+
 module.exports = {
   getCanvasElement: getCanvasElement,
   changeStat: changeStat
