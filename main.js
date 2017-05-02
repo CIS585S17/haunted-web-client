@@ -1,15 +1,13 @@
 'use strict'
 const {app, BrowserWindow, ipcMain} = require('electron')
+const {Game} = require('./main/game')
 const {WindowGraph} = require('./main/windows')
-// const {Player} = require('./server/player')
 const socket = require('socket.io-client')('https://haunted-server.herokuapp.com')
 // const socket = require('socket.io-client')('http://localhost:5000')
 
 
-let chatLog = ''
 let debug = true
-let paused = false
-// let player = new Player()
+let game = new Game()
 let windowGraph = new WindowGraph(BrowserWindow, debug, __dirname)
 
 /**
@@ -53,6 +51,15 @@ app.on('browser-window-created', (event, window) => {
 
 /**
  * Socket event to handle incoming message to get the available
+ * characters for the selected game instance.
+ * @param {array} characters Array of characters that are available to use.
+ */
+socket.on('get-characters', (characters) => {
+
+})
+
+/**
+ * Socket event to handle incoming message to get the available
  * games from the server and display them in a new window
  */
 socket.on('get-games', (games) => {
@@ -79,7 +86,7 @@ socket.on('start-game', (start) => {
  * to update the chat log
  */
 socket.on('updateChatLog', (msg) => {
-  chatLog = msg
+  game.chatLog = msg
 })
 
 /**
@@ -157,13 +164,13 @@ ipcMain.on('options', (event, index) => {
  * from resume-game Event.
  */
 ipcMain.on('pause-game', (event, id) => {
-  paused = true
+  game.paused = true
   let win = windowGraph.windows.find((element) => {
     return element.id === id
   })
   windowGraph.ingameWindow(win, {parentWinId: id})
-  if (!paused) {
-    event.sender.send('un-pause', paused)
+  if (!game.paused) {
+    event.sender.send('un-pause', game.paused)
   }
 })
 
@@ -193,7 +200,7 @@ ipcMain.on('quit-to-main-window', (event, data) => {
  * game
  */
 ipcMain.on('resume-game', (event, id) => {
-  paused = false
+  game.paused = false
   windowGraph.windows.find((element) => {
     return element.id === id
   }).window.close()
@@ -204,6 +211,6 @@ ipcMain.on('resume-game', (event, id) => {
  * to the Renderer at index.
  */
 ipcMain.on('update-chat-log', (event) => {
-  event.returnValue = chatLog
+  event.returnValue = game.chatLog
   // event.sender.send('updated-chat-log', chatLog)
 })

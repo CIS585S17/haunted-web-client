@@ -84,6 +84,46 @@ class WindowGraph {
     this.windows = []
   }
 
+  characterWindow (options, parentWin) {
+    this.windows.push(new GameWindow(
+      this.windows.length,
+      this.debug,
+      this.dirname,
+      'character/character.html',
+      true,
+      options,
+      new this.BrowserWindow({width: 800, height: 200, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
+    ))
+    let win = this.windows[this.windows.length - 1]
+    win.window.on('closed', () => {
+      this.windows.splice(this.windows.indexOf(win), 1)
+    })
+  }
+
+    /**
+   * Cereate the game window allowing the player to play the game.
+   * Handle close Event for the window when called, dereference the window
+   * and remove it from the windows array.
+   * @param {object} options Any additional properties to send renderer
+   *
+   * @memberOf WindowGraph
+   */
+  gameWindow (options) {
+    this.windows.push(new GameWindow(
+      this.windows.length,
+      this.debug,
+      this.dirname,
+      'index.html',
+      false,
+      options,
+      new this.BrowserWindow({ width: 1800, height: 1000, experimentalCanvasFeatures: true, fullscreen: true })
+    ))
+    let win = this.windows[this.windows.length - 1]
+    win.window.on('closed', () => {
+      this.windows.splice(this.windows.indexOf(win), 1)
+    })
+  }
+
   /**
    * Creates a game queue window with message telling player to wait
    * for additional players to join the game.
@@ -203,30 +243,6 @@ class WindowGraph {
       true,
       options,
       new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
-    ))
-    let win = this.windows[this.windows.length - 1]
-    win.window.on('closed', () => {
-      this.windows.splice(this.windows.indexOf(win), 1)
-    })
-  }
-
-  /**
-   * Cereate the game window allowing the player to play the game.
-   * Handle close Event for the window when called, dereference the window
-   * and remove it from the windows array.
-   * @param {object} options Any additional properties to send renderer
-   *
-   * @memberOf WindowGraph
-   */
-  gameWindow (options) {
-    this.windows.push(new GameWindow(
-      this.windows.length,
-      this.debug,
-      this.dirname,
-      'index.html',
-      false,
-      options,
-      new this.BrowserWindow({ width: 1800, height: 1000, experimentalCanvasFeatures: true, fullscreen: true })
     ))
     let win = this.windows[this.windows.length - 1]
     win.window.on('closed', () => {
