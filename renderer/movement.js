@@ -16,13 +16,14 @@ let movementInput = {
 
 let hudMode = false
 
+
 ipcRenderer.on('load', (event, data) => {
   windowId = data.id
   let playerHUD = new HUD()
 
   playerHUD.addChatMsg(ipcRenderer.sendSync('update-chat-log', 'get message'))
   ipcRenderer.on('un-pause', (paused) => {
-    // TODO: unpause the game when paused is false
+      // TODO: unpause the game when paused is false
   })
 })
 
@@ -45,50 +46,56 @@ window.onkeydown = function (event) {
   // Only move the player if the player is not navigating the hud
   if (!hudMode) {
     switch (event.key) {
-      case 'w':
-        movementInput.up = true
-        event.preventDefault()
+        case 'w':
+        case 'W':
+          movementInput.up = true
         break
-      case 's':
-        movementInput.down = true
-        event.preventDefault()
+        case 's':
+        case 'S':
+          movementInput.down = true
         break
-      case 'a':
-        movementInput.left = true
-        event.preventDefault()
+        case 'a':
+        case 'A':
+          movementInput.left = true
         break
-      case 'd':
-        movementInput.right = true
-        event.preventDefault()
-        break
+        case 'd':
+        case 'D':
+          movementInput.right = true
+
+        break 
       case 'ArrowUp':
-        event.preventDefault()
+          movementInput.up = true
+          //event.preventDefault()
         break
       case 'ArrowDown':
-        event.preventDefault()
+          movementInput.down = true
+         // event.preventDefault()
         break
       case 'ArrowLeft':
-        event.preventDefault()
+          movementInput.left = true
+         // event.preventDefault()
         break
       case 'ArrowRight':
-        event.preventDefault()
-        break
+          movementInput.right = true
+         // event.preventDefault()
+        break     
       case ' ':
         event.preventDefault()
         break
-
       case 'h':
-        event.preventDefault()
         if (UI.style.visibility === 'hidden') {
           UI.style.visibility = 'visible'
         } else {
           UI.style.visibility = 'hidden'
         }
         break
-      case 'Tab':
-        event.preventDefault()
-        ipcRenderer.send('pause-game', windowId)
+        case 'Tab':
+        case 'Escape':
+          ipcRenderer.send('pause-game', windowId)
+          paused()
         break
+       default:
+            break
     }
   } else {
               // Enter
@@ -97,25 +104,46 @@ window.onkeydown = function (event) {
     }
   }
 }
+
+function paused () {
+    movementInput.up = false
+    movementInput.down = false
+    movementInput.left = false
+    movementInput.right = false
+}
 window.onkeyup = function (event) {
   if (!hudMode) {
     switch (event.key) {
-      case 'w':
-        movementInput.up = false
-        event.preventDefault()
-        break
-      case 's':
-        movementInput.down = false
-        event.preventDefault()
-        break
-      case 'a':
-        movementInput.left = false
-        event.preventDefault()
-        break
-      case 'd':
-        movementInput.right = false
-        event.preventDefault()
-        break
+        case 'w':
+        case 'W':
+            movementInput.up = false
+            break
+        case 's':
+        case 'S':
+            movementInput.down = false
+            break
+        case 'a':
+        case 'A':
+            movementInput.left = false
+            break
+        case 'd':
+        case 'D':
+            movementInput.right = false
+            break
+        case 'ArrowUp':
+            movementInput.up = false
+            break
+        case 'ArrowDown':
+            movementInput.down = false
+            break
+        case 'ArrowLeft':
+            movementInput.left = false
+            break
+        case 'ArrowRight':
+            movementInput.right = false
+            break
+        default:
+            break
     }
   } else {
     // Enter

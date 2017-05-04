@@ -25,7 +25,7 @@ ipcRenderer.on('load', (event, data) => {
     $('#tableBody').append(table)
     for (let i = 0; i < games.length; i++) {
       $(`#join_${i}`).on('click', () => {
-        ipcRenderer.send('join', {game: games[i], index: data.index})
+        ipcRenderer.send('join', {game: games[i], id: data.id})
       })
     }
   }

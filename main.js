@@ -17,6 +17,14 @@ function createWindow () {
   windowGraph.startWindow()
 }
 
+function loadGameQueueWindow (id) {
+  let mainWin = windowGraph.windows[0]
+  windowGraph.gameQueueWindow(mainWin, {
+    parentWinId: mainWin.id,
+    characters: game.availableCharacters
+  })
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -54,8 +62,9 @@ app.on('browser-window-created', (event, window) => {
  * characters for the selected game instance.
  * @param {array} characters Array of characters that are available to use.
  */
-socket.on('get-characters', (characters) => {
-
+socket.on('available-characters', (characters) => {
+  game.availableCharacters = characters
+  // loadGameQueueWindow()
 })
 
 /**
@@ -107,12 +116,12 @@ ipcMain.on('host', (event, msg) => {
       // let mainWin = windowGraph.windows.find((element) => {
       //   return element.id === 0
       // })
-      let mainWin = windowGraph.windows[0]
       let hostWin = windowGraph.windows.find((element) => {
         return element.id === msg.id
       })
       hostWin.window.close()
-      windowGraph.gameQueueWindow(mainWin, {parentWinId: mainWin.id})
+      socket.emit('get-characters')
+      loadGameQueueWindow()
     }
   })
 })
@@ -134,6 +143,12 @@ ipcMain.on('host-game', (event, id) => {
  */
 ipcMain.on('join', (event, data) => {
   socket.emit('join', data.game.id)
+  console.log('data', data)
+  let joinWin = windowGraph.windows.find((element) => {
+    return element.id === data.id
+  })
+  joinWin.window.close()
+  loadGameQueueWindow()
 })
 
 /**
