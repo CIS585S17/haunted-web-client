@@ -142,7 +142,7 @@ class WindowGraph {
       'game_queue/game_queue.html',
       true,
       options,
-      new this.BrowserWindow({width: 800, height: 200, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
     ))
     let win = this.windows[this.windows.length - 1]
     win.window.on('closed', () => {
