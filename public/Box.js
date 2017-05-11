@@ -52,6 +52,23 @@ class Box {
 		return this.vec;
 	}
 
+	GetPosVec() {
+		let p = {
+			x: this.model.position.x,
+			y: this.model.position.y,
+			z: this.model.position.z
+		};
+		let v = {
+			x: Math.cos(this.model.rotation.y),
+			y: 0,
+			z: Math.sin(this.model.rotation.y)
+		};
+		return {
+			position: p,
+			vector: v
+		};
+	}
+
 	GetCollisionModel() {
 		let modelWidth = 0.6;
 		let modelHeight = 1.5;

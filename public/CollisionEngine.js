@@ -9,41 +9,12 @@ class CollisionEngine {
     this.player = obj;
   }
 
-  AddPlayerSphere(obj) {
-    //get players dimensions
-    //return {x: 0, y: 0, z: 0, radius: 0}
-
-  }
-
   AddRoom(obj) {
     this.rooms.push(obj);
   }
 
   AddRoomObject(obj) {
     this.objects.push(obj);
-    //get object dimensions
-  }
-
-
-
-  IntersectPlayerBoxVsBox(box, obj) {
-
-    return  (box.minX <= obj.maxX && box.maxX >= obj.minX) &&
-            (box.minY <= obj.maxY && box.maxY >= obj.minY) &&
-            (box.minZ <= obj.maxZ && box.maxZ >= obj.minZ);
-
-  }
-
-  IntersectPlayerSphereVsBox(sphere, box) {
-    var x = Math.max(box.minX, Math.min(sphere.x, box.maxX));
-    var y = Math.max(box.minY, Math.min(sphere.y, box.maxY));
-    var z = Math.max(box.minZ, Math.min(sphere.z, box.maxZ));
-
-    var distance = Math.sqrt((x - sphere.x) * (x - sphere.x) +
-                             (y - sphere.y) * (y - sphere.y) +
-                             (z - sphere.z) * (z - sphere.z));
-
-    return distance < sphere.radius;
   }
 
   // triangle = {p1, p2, p3}
@@ -65,59 +36,57 @@ class CollisionEngine {
     return {x:Nx, y:Ny, z:Nz};
   }
 
-  DistanceFrom(obj1, obj2) {
-    let x = obj1.position.x - obj2.position.x;
-    let y = obj1.position.z - obj2.position.z;
-    let x2 = Math.abs(x) * Math.abs(x);
-    let y2 = Math.abs(y) * Math.abs(y);
-    return Math.sqrt(x2+y2);
-  }
+  IsLookingAt(player, item, angle, distance_till_start) {
+    // set variables
+    let player_position = player.position;
+    let player_vector = player.vector;
+    let item_position = item.position;
 
-  //will produce a vector with item1 looking at item2
-  LookAt(item1, item2) {
-    let xv = item2.position.x - item1.position.x;
-    let yv = item2.position.y - item1.position.y;
-    let zv = item2.position.z - item1.position.z;
-    return {
+    // calculate the distance the player is from the item
+    let dist_x = player_position.x - item_position.x;
+    let dist_y = player_position.z - item_position.z;
+    let dist_x2 = Math.abs(dist_x) * Math.abs(dist_x);
+    let dist_y2 = Math.abs(dist_y) * Math.abs(dist_y);
+    let distance_apart = Math.sqrt(dist_x2+dist_y2);
+
+    // calculate items vector (always looking at the player)
+    let xv = player_position.x - item_position.x;
+    let yv = player_position.y - item_position.y;
+    let zv = player_position.z - item_position.z;
+    let item_vector = {
       x: xv,
       y: yv,
       z: zv
     };
-    //return the proper vector
-  }
 
-  Normal(vec) {
-    let n = Math.sqrt(vec.x*vec.x + vec.y*vec.y + vec.z*vec.z);
-    return {
-      x: vec.x/n,
-      y: vec.y/n,
-      z: vec.z/n
-    }
-  }
+    // normalize the vectors
+    let item_magnitude = Math.sqrt( item_vector.x*item_vector.x +
+                                    item_vector.y*item_vector.y +
+                                    item_vector.z*item_vector.z);
+    item_vector.x = item_vector.x/item_magnitude;
+    item_vector.y = item_vector.y/item_magnitude;
+    item_vector.z = item_vector.z/item_magnitude;
+    let player_magnitude = Math.sqrt( player_vector.x*player_vector.x +
+                                      player_vector.x*player_vector.x +
+                                      player_vector.x*player_vector.x);
+    player_vector.x = player_vector.x/item_magnitude;
+    player_vector.y = player_vector.y/item_magnitude;
+    player_vector.z = player_vector.z/item_magnitude;
 
-  LookingAt(obj_one_vector, obj_two_vector, difference, distance, close) {
-    //Make Item Vector Pointing At Player!!!!!!!!
-    if (distance <= close) {
-      //item
-      let u = obj_one_vector;
-      //player
-      let v = obj_two_vector;
-      let dot_product = u.x*-v.x + u.y*v.y + u.z*v.z;
-      let u_mag = Math.sqrt(u.x*u.x + u.y*u.y + u.z*u.z);
-      let v_mag = Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
-      let cos_angle = dot_product/(u_mag*v_mag);
-      //cos_angle is 0 perpendicular
-      //console.log(cos_angle);
-      if (cos_angle > .9){
+    //check to see if player is looking at item.
+    if (distance_apart <= distance_till_start) {
+      let dot_product = item_vector.x*-player_vector.x +
+                        item_vector.y*player_vector.y +
+                        item_vector.z*player_vector.z;
+      let cos_angle = dot_product/(item_magnitude*player_magnitude);
+      if (cos_angle > angle) {
         return true;
       }
       else {
         return false;
       }
     }
-    else {
-      return false;
-    }
+    return false;
   }
 
   PlayerColliding(player, view, model) {
@@ -205,42 +174,6 @@ class CollisionEngine {
     });
   }
 }
-
-  /*PlayerColliding(player, view, model) {
-    if(view === 'firstPerson') {
-      this.objects.forEach( function(obj) {
-        if((player.minX - .925) <= obj.minX) {
-          model.position.x = obj.minX+1.225;
-        }
-        if((player.maxX + .925) >= obj.maxX) {
-          model.position.x = obj.maxX-1.225;
-        }
-        if((player.minZ - .925) <= obj.minZ) {
-          model.position.z = obj.minZ+1.225;
-        }
-        if((player.maxZ + .925) >= obj.maxZ) {
-          model.position.z = obj.maxZ-1.225;
-        }
-      });
-    }
-    else if(view === 'thirdPerson' || view === 'aboveDoor') {
-      this.objects.forEach( function(obj) {
-        if((player.minX - .25) <= obj.minX) {
-          model.position.x = obj.minX+.55;
-        }
-        if((player.maxX + .25) >= obj.maxX) {
-          model.position.x = obj.maxX-.55;
-        }
-        if((player.minZ - .25) <= obj.minZ) {
-          model.position.z = obj.minZ+.55;
-        }
-        if((player.maxZ + .25) >= obj.maxZ) {
-          model.position.z = obj.maxZ-.55;
-        }
-      });
-    }
-  }*/
-
 
 module.exports = {
 	CollisionEngine: CollisionEngine

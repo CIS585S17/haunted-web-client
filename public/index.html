@@ -80,6 +80,8 @@
         collisionEngine.AddRoomObject(desk2Box.GetCollisionModel());
         collisionEngine.AddRoomObject(desk3Box.GetCollisionModel());
 
+        let varAngle = Math.cos(Math.PI/4);
+
         var fps = 60;
         var fpsInterval = 1000 / fps;
         var then = Date.now();
@@ -161,23 +163,10 @@
         var clock = new THREE.Clock();
 
         function render() {
-          let triangle1 = {
-            p1: {x:1, y:1, z:0},
-            p2: {x:4, y:2, z:1},
-            p3: {x:5, y:3, z:0}
-          }
-          let tri1 = collisionEngine.CalculateTriangleNormal(triangle1);
-          //console.log(tri1);
-
           let x = movement.update(boxPlayer, simpleCamera);
-          //boxPlayer.Update();
           collisionEngine.PlayerColliding(boxPlayer.GetCollisionModel(), simpleCamera.getView(), boxPlayer.GetModel());
-          let dist = collisionEngine.DistanceFrom(boxPlayer.GetModel(), door.GetModel());
-          let vec = collisionEngine.LookAt(door.GetModel(), boxPlayer.GetModel());
-          let item1 = collisionEngine.Normal(vec);
-          let item2 = collisionEngine.Normal(boxPlayer.GetVector());
-          let look = collisionEngine.LookingAt(item1, item2, -Math.cos(Math.PI/2.5), dist, 2);
-          console.log(look);
+          let can_leave_room = collisionEngine.IsLookingAt(boxPlayer.GetPosVec(), door.GetPos(), varAngle, 2.5);
+          console.log(can_leave_room);
           renderer.render(scene, simpleCamera.getCamera());
   		  }
       // }

@@ -30,6 +30,17 @@ class Item {
 		return this.vec;
 	}
 
+	GetPos() {
+		let p = {
+			x: this.model.position.x,
+			y: this.model.position.y,
+			z: this.model.position.z
+		}
+		return {
+			position: p
+		};
+	}
+
 	GetCollisionModel() {
 		let modelWidth = 0.25;
 		let modelHeight = 0.25;
