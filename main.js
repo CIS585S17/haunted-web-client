@@ -2,8 +2,8 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 const {Game} = require('./main/game')
 const {WindowGraph} = require('./main/windows')
-const socket = require('socket.io-client')('https://haunted-server.herokuapp.com')
-// const socket = require('socket.io-client')('http://localhost:5000')
+// const socket = require('socket.io-client')('https://haunted-server.herokuapp.com')
+const socket = require('socket.io-client')('http://localhost:5000')
 
 let debug = true
 let game = new Game()
@@ -16,11 +16,19 @@ function createWindow () {
   windowGraph.startWindow()
 }
 
+/**
+ * Loads the game queue window after emiting and getting
+ * a callback of the avaiable players.
+ * @param {integer} id The id of the current window
+ */
 function loadGameQueueWindow (id) {
-  let mainWin = windowGraph.windows[0]
-  windowGraph.gameQueueWindow(mainWin, {
-    parentWinId: mainWin.id,
-    characters: game.availableCharacters
+  socket.emit('get-characters', (characters) => {
+    // game.availableCharacters = characters
+    let mainWin = windowGraph.windows[0]
+    windowGraph.gameQueueWindow(mainWin, {
+      parentWinId: mainWin.id,
+      characters: characters
+    })
   })
 }
 
@@ -119,8 +127,11 @@ ipcMain.on('host', (event, msg) => {
         return element.id === msg.id
       })
       hostWin.window.close()
-      socket.emit('get-characters')
       loadGameQueueWindow()
+      // socket.emit('get-characters', (characters) => {
+      //   game.availableCharacters = characters
+      //   loadGameQueueWindow()
+      // })
     }
   })
 })
