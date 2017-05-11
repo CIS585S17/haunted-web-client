@@ -11,6 +11,10 @@ let movementInput = {
   right: false,
 }
 
+let noMovementXZ = true;
+
+let jump = false;
+
 let hudMode = false
 
 window.onmousemove = function (event) {
@@ -33,18 +37,22 @@ window.onkeydown = function (event) {
   if (!hudMode) {
     switch (event.key) {
       case 'w':
+        noMovementXZ = false
         movementInput.up = true
         event.preventDefault()
         break
       case 's':
+        noMovementXZ = false
         movementInput.down = true
         event.preventDefault()
         break
       case 'a':
+        noMovementXZ = false
         movementInput.left = true
         event.preventDefault()
         break
       case 'd':
+        noMovementXZ = false
         movementInput.right = true
         event.preventDefault()
         break
@@ -61,6 +69,7 @@ window.onkeydown = function (event) {
         event.preventDefault()
         break
       case ' ':
+        jump = true;
         event.preventDefault()
         break
 
@@ -68,6 +77,11 @@ window.onkeydown = function (event) {
         event.preventDefault()
         if (UI.style.visibility == 'hidden') { UI.style.visibility = 'visible' } else { UI.style.visibility = 'hidden' }
         break
+
+      default:
+        noMovementXZ = false
+        break
+
     }
   } else {
               // Enter
@@ -80,21 +94,32 @@ window.onkeyup = function (event) {
   if (!hudMode) {
     switch (event.key) {
       case 'w':
+        noMovementXZ = true
         movementInput.up = false
         event.preventDefault()
         break
       case 's':
+        noMovementXZ = true
         movementInput.down = false
         event.preventDefault()
         break
       case 'a':
+        noMovementXZ = true
         movementInput.left = false
         event.preventDefault()
         break
       case 'd':
+        noMovementXZ = true
         movementInput.right = false
         event.preventDefault()
         break
+      case ' ':
+        jump = false
+        event.preventDefault()
+        break
+      /*default:
+        noMovementXZ = false
+        break*/
     }
   } else {
     // Enter
@@ -118,7 +143,9 @@ function update(myPlayer, myCamera) {
   let x = position.x;
   let y = position.y;
   let z = position.z;
-
+  if(noMovementXZ) {
+    myPlayer.NoMoveXZ();
+  }
   if(movementInput.up) {
     //move player
     myPlayer.MoveUp(rotationY);
@@ -149,13 +176,18 @@ function update(myPlayer, myCamera) {
       myCamera.move(x, z, rotationY, rotationZ);
     }
   }
+  if(jump) {
+    myPlayer.Jump();
+  }
   //move camera
   myCamera.move(x, z, rotationY, rotationZ);
   //rotate player
   myPlayer.Rotate(rotationY);
   //rotate camera
   myCamera.rotate(x, y, z, rotationY, rotationZ);
-  return 'a';
+  //return 'a';
+  //update player
+  myPlayer.Update();
 }
 
 module.exports = {

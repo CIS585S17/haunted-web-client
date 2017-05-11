@@ -39,7 +39,7 @@ function move(posX, posZ, rotY, rotZ) {
     camera.position.set(x,y,z);
   }
   else if(view == 'aboveDoor') {
-    camera.position.set(3,4,-1.4);
+    camera.position.set(3,4,-2);
   }
 }
 

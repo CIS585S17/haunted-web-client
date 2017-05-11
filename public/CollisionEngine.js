@@ -2,6 +2,7 @@ class CollisionEngine {
   constructor(obj) {
     this.player;
     this.objects = [];
+    this.rooms = [];
   }
 
   AddPlayerBox(obj) {
@@ -15,10 +16,11 @@ class CollisionEngine {
   }
 
   AddRoom(obj) {
-    this.objects.push(obj);
+    this.rooms.push(obj);
   }
 
   AddRoomObject(obj) {
+    this.objects.push(obj);
     //get object dimensions
   }
 
@@ -63,7 +65,148 @@ class CollisionEngine {
     return {x:Nx, y:Ny, z:Nz};
   }
 
+  DistanceFrom(obj1, obj2) {
+    let x = obj1.position.x - obj2.position.x;
+    let y = obj1.position.z - obj2.position.z;
+    let x2 = Math.abs(x) * Math.abs(x);
+    let y2 = Math.abs(y) * Math.abs(y);
+    return Math.sqrt(x2+y2);
+  }
+
+  //will produce a vector with item1 looking at item2
+  LookAt(item1, item2) {
+    let xv = item2.position.x - item1.position.x;
+    let yv = item2.position.y - item1.position.y;
+    let zv = item2.position.z - item1.position.z;
+    return {
+      x: xv,
+      y: yv,
+      z: zv
+    };
+    //return the proper vector
+  }
+
+  Normal(vec) {
+    let n = Math.sqrt(vec.x*vec.x + vec.y*vec.y + vec.z*vec.z);
+    return {
+      x: vec.x/n,
+      y: vec.y/n,
+      z: vec.z/n
+    }
+  }
+
+  LookingAt(obj_one_vector, obj_two_vector, difference, distance, close) {
+    //Make Item Vector Pointing At Player!!!!!!!!
+    if (distance <= close) {
+      //item
+      let u = obj_one_vector;
+      //player
+      let v = obj_two_vector;
+      let dot_product = u.x*-v.x + u.y*v.y + u.z*v.z;
+      let u_mag = Math.sqrt(u.x*u.x + u.y*u.y + u.z*u.z);
+      let v_mag = Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+      let cos_angle = dot_product/(u_mag*v_mag);
+      //cos_angle is 0 perpendicular
+      //console.log(cos_angle);
+      if (cos_angle > .9){
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    else {
+      return false;
+    }
+  }
+
   PlayerColliding(player, view, model) {
+    this.objects.forEach(function(obj) {
+      if(view === 'firstPerson') {
+
+      }
+      else if(view === 'thirdPerson' || view === 'aboveDoor') {
+        if(player.minX <= obj.maxX && player.minX >= obj.minX) { //and moving to the left
+          if (player.maxZ >= obj.minZ && player.maxZ <= obj.maxZ) {
+            model.position.x = obj.maxX + 0.3;
+          }
+          else if (player.minZ >= obj.minZ && player.minZ <= obj.maxZ) {
+            model.position.x = obj.maxX + 0.3;
+          }
+          else if (model.position.z >= obj.minZ && model.position.z <= obj.maxZ) {
+            model.position.x = obj.maxX + 0.3;
+          }
+        }
+        else if(player.maxX >= obj.minX && player.maxX <= obj.maxX) { //and moving to the right
+          if (player.maxZ >= obj.minZ && player.maxZ <= obj.maxZ) {
+            model.position.x = obj.minX - 0.3;
+          }
+          else if (player.minZ >= obj.minZ && player.minZ <= obj.maxZ) {
+            model.position.x = obj.minX - 0.3;
+          }
+          else if (model.position.z >= obj.minZ && model.position.z <= obj.maxZ) {
+            model.position.x = obj.minX - 0.3;
+          }
+        }
+        else if(player.minZ <= obj.maxZ && player.minZ >= obj.minZ) { //and moving up
+          if (player.maxX >= obj.minX && player.maxX <= obj.maxX) {
+            model.position.z = obj.maxZ + 0.3;
+          }
+          else if (player.minX >= obj.minX && player.minX <= obj.maxX) {
+            model.position.z = obj.maxZ + 0.3;
+          }
+          else if (model.position.x >= obj.minX && model.position.x <= obj.maxX) {
+            model.position.z = obj.maxZ + 0.3;
+          }
+        }
+        else if(player.maxZ >= obj.minZ && player.maxZ <= obj.maxZ) { //and moving down
+          if (player.maxX >= obj.minX && player.maxX <= obj.maxX) {
+            model.position.z = obj.minZ - 0.3;
+          }
+          else if (player.minX >= obj.minX && player.minX <= obj.maxX) {
+            model.position.z = obj.minZ - 0.3;
+          }
+          else if (model.position.x >= obj.minX && model.position.x <= obj.maxX) {
+            model.position.z = obj.minZ - 0.3;
+          }
+        }
+      }
+    });
+
+    this.rooms.forEach(function(room) {
+      if(view === 'firstPerson') {
+        if((player.minX - .925) <= room.minX) {
+          model.position.x = room.minX+1.225;
+        }
+        if((player.maxX + .925) >= room.maxX) {
+          model.position.x = room.maxX-1.225;
+        }
+        if((player.minZ - .925) <= room.minZ) {
+          model.position.z = room.minZ+1.225;
+        }
+        if((player.maxZ + .925) >= room.maxZ) {
+          model.position.z = room.maxZ-1.225;
+        }
+      }
+      else if(view === 'thirdPerson' || view === 'aboveDoor') {
+        if((player.minX - .1) <= room.minX) {
+          model.position.x = room.minX+.4;
+        }
+        if((player.maxX + .1) >= room.maxX) {
+          model.position.x = room.maxX-.4;
+        }
+        if((player.minZ - .1) <= room.minZ) {
+          model.position.z = room.minZ+.4;
+        }
+        if((player.maxZ + .1) >= room.maxZ) {
+          model.position.z = room.maxZ-.4;
+        }
+      }
+    });
+  }
+}
+
+  /*PlayerColliding(player, view, model) {
     if(view === 'firstPerson') {
       this.objects.forEach( function(obj) {
         if((player.minX - .925) <= obj.minX) {
@@ -82,34 +225,22 @@ class CollisionEngine {
     }
     else if(view === 'thirdPerson' || view === 'aboveDoor') {
       this.objects.forEach( function(obj) {
-        if((player.minX - .1) <= obj.minX) {
-          model.position.x = obj.minX+.4;
+        if((player.minX - .25) <= obj.minX) {
+          model.position.x = obj.minX+.55;
         }
-        if((player.maxX + .1) >= obj.maxX) {
-          model.position.x = obj.maxX-.4;
+        if((player.maxX + .25) >= obj.maxX) {
+          model.position.x = obj.maxX-.55;
         }
-        if((player.minZ - .1) <= obj.minZ) {
-          model.position.z = obj.minZ+.4;
+        if((player.minZ - .25) <= obj.minZ) {
+          model.position.z = obj.minZ+.55;
         }
-        if((player.maxZ + .1) >= obj.maxZ) {
-          model.position.z = obj.maxZ-.4;
+        if((player.maxZ + .25) >= obj.maxZ) {
+          model.position.z = obj.maxZ-.55;
         }
-        /*if(!(player.minX <= obj.maxX && player.minX >= obj.minX)) {
-          console.log('outside of box');
-        }
-        else if(!(player.maxX <= obj.maxX && player.maxX >= obj.minX)) {
-          console.log('outside of box');
-        }
-        else if(!(player.minZ <= obj.maxZ && player.minZ >= obj.minZ)) {
-          console.log('outside of box');
-        }
-        else if(!(player.maxZ <= obj.maxZ && player.maxZ >= obj.minZ)) {
-          console.log('outside of box');
-        }*/
       });
     }
-  }
-}
+  }*/
+
 
 module.exports = {
 	CollisionEngine: CollisionEngine

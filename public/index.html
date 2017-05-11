@@ -32,6 +32,7 @@
       const simpleCamera = require('./simpleCamera')
       const {Box} = require('./Box')
       const {RoomBox} = require('./RoomBox')
+      const {Item} = require('./Item')
       const {CollisionEngine} = require('./CollisionEngine')
 
     	  function requestFullScreen(element) {
@@ -51,14 +52,39 @@
   		  init();
 
         //load models
+        /*load( 'models/library_room.dae', 0, 0, 0 );
+        var boxPlayer = new Box(scene, 3, .75, -3);
+        var room1Box = new RoomBox(scene, 3.18, 1.5, -4.75, 3.96, 3, 8.1);
+        //var door = new Item(scene, 3.4, .75, -0.7, 0, 0, 0, .65, 1.5, .05);
+        var door = new Item(scene, 3.4, .75, -0.7, 0, Math.PI/2, 0, .05, 1.5, .65);
+
+        //load CollisionEngine
+        var collisionEngine = new CollisionEngine();
+        //collisionEngine.AddPlayerBox(boxPlayer.GetCollisionModel());
+        collisionEngine.AddRoom(room1Box.GetCollisionModel());*/
+
+        //load models
         load( 'models/library_room.dae', 0, 0, 0 );
         let boxPlayer = new Box(scene, 3, .75, -3);
         let room1Box = new RoomBox(scene, 3.18, 1.5, -4.75, 3.96, 3, 8.1);
+        let desk1Box = new RoomBox(scene, 3.2, .4, -6.3, 1, .5, .5);
+        let desk2Box = new RoomBox(scene, 4.05, .4, -6.78, .7, .5, 1.45);
+        let desk3Box = new RoomBox(scene, 2.5, .4, -6.78, .5, .5, 1.45);
+        let door = new Item(scene, 3.4, .75, -0.7, 0, Math.PI/2, 0, .05, 1.5, .65);
 
         //load CollisionEngine
         let collisionEngine = new CollisionEngine();
         //collisionEngine.AddPlayerBox(boxPlayer.GetCollisionModel());
         collisionEngine.AddRoom(room1Box.GetCollisionModel());
+        collisionEngine.AddRoomObject(desk1Box.GetCollisionModel());
+        collisionEngine.AddRoomObject(desk2Box.GetCollisionModel());
+        collisionEngine.AddRoomObject(desk3Box.GetCollisionModel());
+
+        var fps = 60;
+        var fpsInterval = 1000 / fps;
+        var then = Date.now();
+        var startTime = then;
+        animate();
 
         function load( ObjectPath, X, Y, Z){
           var loader = new THREE.ColladaLoader();
@@ -69,7 +95,7 @@
             scene.add( dae );
             dae.scale.x = dae.scale.y = dae.scale.z = 0.02;
             dae.updateMatrix();
-            animate();
+            //animate();
           });
         }
 
@@ -78,8 +104,8 @@
   			  document.body.appendChild( container );
 
           //simpleCamera.setView('firstPerson');
-          simpleCamera.setView('thirdPerson');
-          //simpleCamera.setView('aboveDoor');
+          //simpleCamera.setView('thirdPerson');
+          simpleCamera.setView('aboveDoor');
 
           simpleCamera.setCamera(new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 ))
   			  scene = new THREE.Scene();
@@ -123,6 +149,12 @@
 
   		  function animate() {
   		    requestAnimationFrame(animate);
+          var now = Date.now();
+          var elapsed = now - then;
+          if (elapsed > fpsInterval) {
+            then = now - (elapsed % fpsInterval);
+            //draw something
+          }
   			  render();
   		  }
 
@@ -138,8 +170,15 @@
           //console.log(tri1);
 
           let x = movement.update(boxPlayer, simpleCamera);
+          //boxPlayer.Update();
           collisionEngine.PlayerColliding(boxPlayer.GetCollisionModel(), simpleCamera.getView(), boxPlayer.GetModel());
-          renderer.render(scene, simpleCamera.getCamera())
+          let dist = collisionEngine.DistanceFrom(boxPlayer.GetModel(), door.GetModel());
+          let vec = collisionEngine.LookAt(door.GetModel(), boxPlayer.GetModel());
+          let item1 = collisionEngine.Normal(vec);
+          let item2 = collisionEngine.Normal(boxPlayer.GetVector());
+          let look = collisionEngine.LookingAt(item1, item2, -Math.cos(Math.PI/2.5), dist, 2);
+          console.log(look);
+          renderer.render(scene, simpleCamera.getCamera());
   		  }
       // }
     </script>
