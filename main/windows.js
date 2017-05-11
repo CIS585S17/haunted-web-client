@@ -84,22 +84,6 @@ class WindowGraph {
     this.windows = []
   }
 
-  characterWindow (options, parentWin) {
-    this.windows.push(new GameWindow(
-      this.windows.length,
-      this.debug,
-      this.dirname,
-      'character/character.html',
-      true,
-      options,
-      new this.BrowserWindow({width: 800, height: 200, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
-    ))
-    let win = this.windows[this.windows.length - 1]
-    win.window.on('closed', () => {
-      this.windows.splice(this.windows.indexOf(win), 1)
-    })
-  }
-
     /**
    * Cereate the game window allowing the player to play the game.
    * Handle close Event for the window when called, dereference the window
@@ -142,7 +126,7 @@ class WindowGraph {
       'game_queue/game_queue.html',
       true,
       options,
-      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
+      new this.BrowserWindow({width: 1800, height: 1000, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
     ))
     let win = this.windows[this.windows.length - 1]
     win.window.on('closed', () => {
