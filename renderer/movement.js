@@ -2,6 +2,7 @@
 const {ipcRenderer} = require('electron')
 const $ = require('jquery')
 const {HUD} = require('./js/hud')
+const simpleCamera = require('./simpleCamera')
 
 let windowId
 var rotationY = 0
@@ -61,33 +62,25 @@ window.onkeydown = function (event) {
         case 'd':
         case 'D':
           movementInput.right = true
-
         break 
       case 'ArrowUp':
           movementInput.up = true
-          //event.preventDefault()
         break
       case 'ArrowDown':
           movementInput.down = true
-         // event.preventDefault()
         break
       case 'ArrowLeft':
           movementInput.left = true
-         // event.preventDefault()
         break
       case 'ArrowRight':
           movementInput.right = true
-         // event.preventDefault()
         break     
       case ' ':
         event.preventDefault()
         break
-      case 'h':
-        if (UI.style.visibility === 'hidden') {
-          UI.style.visibility = 'visible'
-        } else {
-          UI.style.visibility = 'hidden'
-        }
+        case 'h':
+            hudMode = !hudMode
+            paused()
         break
         case 'Tab':
         case 'Escape':
@@ -98,10 +91,10 @@ window.onkeydown = function (event) {
             break
     }
   } else {
-              // Enter
-    if (event.keyCode === 13 && document.activeElement === chatTextArea) {
-      event.preventDefault()
-    }
+      if(event.key == 'Enter')
+      {
+          hudMode = !hudMode;
+      }
   }
 }
 
@@ -189,10 +182,12 @@ function update (myPlayer, myCamera) {
   }
   // move camera
   myCamera.move(x, z, rotationY, rotationZ)
-  // rotate player
-  myPlayer.Rotate(rotationY)
-  // rotate camera
-  myCamera.rotate(x, y, z, rotationY, rotationZ)
+  if(!hudMode){
+      // rotate player
+      myPlayer.Rotate(rotationY)
+      // rotate camera
+      myCamera.rotate(x, y, z, rotationY, rotationZ)
+  }
   return 'a'
 }
 
