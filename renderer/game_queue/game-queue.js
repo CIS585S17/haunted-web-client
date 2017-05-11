@@ -11,14 +11,14 @@ ipcRenderer.on('load', (event, data) => {
       $('#character_0').append(`<li class="list-group-item">Power Stats: ${chars[i].powerStats}</li>`)
       $('#character_0').append(`<li class="list-group-item">Speed Stats: ${chars[i].speedStats}</li>`)
       $('#character_0').append(`<li class="list-group-item">Sanity Stats: ${chars[i].sanityStats}</li>`)
-      $('#character_0').append(`<li class="list-group-item"></li>`)
+      $('#character_0').append(`<li class="list-group-item"><button class="btn btn-primary" id="view_${i}">Select Character ${i}</button></li>`)
     }
     if (i === 1) {
       $('#character_1').append(`<li class="list-group-item">Character ID: ${chars[i].id}</li>`)
       $('#character_1').append(`<li class="list-group-item">Power Stats: ${chars[i].powerStats}</li>`)
       $('#character_1').append(`<li class="list-group-item">Speed Stats: ${chars[i].speedStats}</li>`)
       $('#character_1').append(`<li class="list-group-item">Sanity Stats: ${chars[i].sanityStats}</li>`)
-      $('#character_1').append(`<li class="list-group-item"></li>`)
+      $('#character_1').append(`<li class="list-group-item"><button class="btn btn-primary" id="view_${i}">Select Character ${i}</button></li>`)
     }
   }
 })
