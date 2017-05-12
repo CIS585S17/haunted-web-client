@@ -52,94 +52,91 @@ window.onmousedown = function (event) {
 }
 window.onkeydown = function (event) {
           // Only move the player if the player is not navigating the hud
+          // Only move the player if the player is not navigating the hud
   if (!hudMode) {
     switch (event.key) {
       case 'w':
+	  case 'W':
+	  case 'ArrowUp':
         noMovementXZ = false
         movementInput.up = true
-        event.preventDefault()
         break
       case 's':
+	  case 'S':
+	  case 'ArrowDown':
         noMovementXZ = false
         movementInput.down = true
-        event.preventDefault()
         break
       case 'a':
+	  case 'A':
+	  case 'ArrowLeft':
         noMovementXZ = false
         movementInput.left = true
-        event.preventDefault()
         break
       case 'd':
+	  case 'D':
+	  case 'ArrowRight':
         noMovementXZ = false
         movementInput.right = true
-        event.preventDefault()
-        break
-      case 'ArrowUp':
-        event.preventDefault()
-        break
-      case 'ArrowDown':
-        event.preventDefault()
-        break
-      case 'ArrowLeft':
-        event.preventDefault()
-        break
-      case 'ArrowRight':
-        event.preventDefault()
         break
       case ' ':
         jump = true
-        event.preventDefault()
         break
-
       case 'h':
-        event.preventDefault()
+	  case 'H':
+	  //Throws a non-fatal error
         if (UI.style.visibility === 'hidden') { UI.style.visibility = 'visible' } else { UI.style.visibility = 'hidden' }
         break
       case 'Tab':
+	  case 'Escape':
         ipcRenderer.send('pause-game', windowId)
         paused()
         break
       default:
         noMovementXZ = false
         break
-    }
-  } else {
-              // Enter
-    if (event.keyCode == 13 && document.activeElement === chatTextArea) {
-      event.preventDefault()
-    }
+	}
+  }
+	else {
+			  // Enter
+	if (event.keyCode == 13 && document.activeElement === chatTextArea) {
+	  event.preventDefault()
+	}
   }
 }
 window.onkeyup = function (event) {
   if (!hudMode) {
     switch (event.key) {
       case 'w':
+	  case 'W':
+	  case 'ArrowUp':
         noMovementXZ = true
         movementInput.up = false
-        event.preventDefault()
         break
       case 's':
+	  case 'S':
+	  case 'ArrowDown':
         noMovementXZ = true
         movementInput.down = false
-        event.preventDefault()
         break
       case 'a':
+	  case 'A':
+	  case 'ArrowLeft':
         noMovementXZ = true
         movementInput.left = false
-        event.preventDefault()
         break
       case 'd':
+	  case 'D':
+	  case 'ArrowRight':
         noMovementXZ = true
         movementInput.right = false
-        event.preventDefault()
         break
       case ' ':
         jump = false
-        event.preventDefault()
         break
-      /* default:
-        noMovementXZ = false
-        break */
+	default:
+        //noMovementXZ = false
+        break 
     }
   } else {
     // Enter
@@ -152,6 +149,7 @@ window.onkeyup = function (event) {
   // Ctrl
   if (event.keyCode === 17) {
     // Turn HUD mode on/off
+	//Cursor is still hidden
     hudMode = !hudMode
   }
 }
