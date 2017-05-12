@@ -160,6 +160,7 @@ ipcMain.on('host-game', (event, id) => {
  */
 ipcMain.on('join', (event, data) => {
   socket.emit('join', data.game.id)
+  game.gameId = data.game.id
   let joinWin = windowGraph.windows.find((element) => {
     return element.id === data.id
   })
@@ -245,6 +246,10 @@ ipcMain.on('select-character', (event, charID) => {
       selectedCharacter: selectedCharacter
     })
   })
+})
+
+ipcMain.on('start', (event) => {
+  socket.emit('start', game.gameId)
 })
 
 /**

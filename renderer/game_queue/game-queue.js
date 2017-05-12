@@ -8,8 +8,10 @@ ipcRenderer.on('load', (event, data) => {
   loadCharacters(data.options.characters)
 
   ipcRenderer.on('selected-characters', (event, data) => {
-    console.log(data.characters)
     loadCharacters(data.characters, data.selectedCharacter)
+    if (data.characters.length === 0) {
+      event.sender.send('start')
+    }
   })
 })
 
