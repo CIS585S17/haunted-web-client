@@ -8,6 +8,7 @@ const socket = require('socket.io-client')('http://localhost:5000')
 let debug = true
 let game = new Game()
 let windowGraph = new WindowGraph(BrowserWindow, debug, __dirname)
+let queueWindow
 
 /**
  * Function that opens the main menu window
@@ -25,7 +26,7 @@ function loadGameQueueWindow (id) {
   socket.emit('get-characters', (characters) => {
     // game.availableCharacters = characters
     let mainWin = windowGraph.windows[0]
-    windowGraph.gameQueueWindow(mainWin, {
+    queueWindow = windowGraph.gameQueueWindow(mainWin, {
       parentWinId: mainWin.id,
       characters: characters
     })
@@ -85,6 +86,10 @@ socket.on('get-games', (games) => {
   let win = windowGraph.windows[0]
   windowGraph.joinGameWindow(win, {parentWinId: win.id, games: games})
 })
+
+// socket.on('selected-characters', (characters) => {
+//   queueWindow.window.webContents.send('selected-characters', characters)
+// })
 
 /**
  * Socket event to handle incoming message from the server
@@ -153,7 +158,6 @@ ipcMain.on('host-game', (event, id) => {
  */
 ipcMain.on('join', (event, data) => {
   socket.emit('join', data.game.id)
-  console.log('data', data)
   let joinWin = windowGraph.windows.find((element) => {
     return element.id === data.id
   })
@@ -229,6 +233,14 @@ ipcMain.on('resume-game', (event, id) => {
   windowGraph.windows.find((element) => {
     return element.id === id
   }).window.close()
+})
+
+ipcMain.on('select-character', (event, charID) => {
+  socket.emit('select-character', charID)
+  // socket.emit('select-character', charID, (characters) => {
+  //   console.log(characters)
+  //   event.sender.send('selected-characters', characters)
+  // })
 })
 
 /**

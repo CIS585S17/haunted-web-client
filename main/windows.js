@@ -132,6 +132,7 @@ class WindowGraph {
     win.window.on('closed', () => {
       this.windows.splice(this.windows.indexOf(win), 1)
     })
+    return win
   }
 
   /**
