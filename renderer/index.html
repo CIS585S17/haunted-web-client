@@ -33,6 +33,7 @@
       const {Box} = require('./Box')
       const {RoomBox} = require('./RoomBox')
       const {CollisionEngine} = require('./CollisionEngine')
+        const {ipcRenderer} = require('electron')
 
     	  function requestFullScreen(element) {
       	  // Supports most browsers and their versions.
@@ -71,6 +72,11 @@
             dae.updateMatrix();
             animate();
           });
+        }
+
+        function loadNewRoom(newRoom) 
+        {
+            load(newRoom, 0, 0, 0 );
         }
 
   	    function init() {
@@ -134,7 +140,7 @@
             p3: {x:0, y:0, z:0}
           }
           let tri1 = collisionEngine.CalculateTriangleNormal(triangle1);
-          console.log(tri1);
+          //console.log(tri1);
 
           let x = movement.update(boxPlayer, simpleCamera);
           collisionEngine.PlayerColliding(boxPlayer.GetCollisionModel(), simpleCamera.getView(), boxPlayer.GetModel());

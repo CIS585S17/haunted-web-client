@@ -93,7 +93,10 @@ window.onkeydown = function (event) {
         case 'Escape':
           ipcRenderer.send('pause-game', windowId)
           paused()
-        break
+          break
+        case 'x':
+            ipcRenderer.send('door-collision', 'forward')
+            break
        default:
             break
     }
