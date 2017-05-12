@@ -71,10 +71,12 @@
         let desk2Box = new RoomBox(scene, 4.05, .4, -6.78, .7, .5, 1.45);
         let desk3Box = new RoomBox(scene, 2.5, .4, -6.78, .5, .5, 1.45);
         let door = new Item(scene, 3.4, .75, -0.7, 0, Math.PI/2, 0, .05, 1.5, .65, simpleCamera.getCamera());
-        let model1;
+        //let model1;
         load1( './envy/envy.dae', 3,0,-3);
         let boxPlayer = new Box(scene, 3, .75, -3);
-        console.log(model1);
+        let model1;
+        console.log(scene.children);
+        console.log(scene.children[5]);
         //boxPlayer.SetModel(model1);
         //load CollisionEngine
         let collisionEngine = new CollisionEngine();
@@ -127,12 +129,12 @@
           //loader1.options.convertUpAxis = true;
           loader1.load(ObjectPath, function(collada) {
             let dae2 = collada.scene;
-            dae2.traverse( function ( child ){
+            /*dae2.traverse( function ( child ){
               if( child instanceof THREE.SkinnedMesh ){
                 var animation = new THREE.Animation( child, child.geometry.animation );
                 animation.play();
               }
-            });
+            });*/
             dae2.scale.x = dae2.scale.y = dae2.scale.z = 0.5;
             dae2.position.x = x;
             dae2.position.y = y;
@@ -140,8 +142,10 @@
             dae2.updateMatrix();
             scene.add(dae2);
             //console.log(dae2);
-            model1 = dae2;
+            //model1 = dae2;
+
           });
+          console.log(loader1);
         }
 
   	    function init() {
