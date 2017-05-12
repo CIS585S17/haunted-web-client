@@ -7,17 +7,19 @@ ipcRenderer.on('load', (event, data) => {
   // let chars = data.options.characters
   loadCharacters(data.options.characters)
 
-  ipcRenderer.on('selected-characters', (event, characters) => {
-    console.log(characters)
-    loadCharacters(characters)
+  ipcRenderer.on('selected-characters', (event, data) => {
+    console.log(data.characters)
+    loadCharacters(data.characters, data.selectedCharacter)
   })
 })
 
-function loadCharacters (characters) {
+function loadCharacters (characters, selectChar) {
   let character0 = $('#character_0')
   let character1 = $('#character_1')
+  let selectedCharacter = $('#selectedCharacter')
   character0.empty()
   character1.empty()
+  selectedCharacter.empty()
 
   for (let i = 0; i < characters.length; i++) {
     if (i === 0) {
@@ -53,4 +55,8 @@ function loadCharacters (characters) {
       })
     }
   }
+  selectedCharacter.append(`<li class="list-group-item">Character ID: ${selectChar.id}</li>`)
+  selectedCharacter.append(`<li class="list-group-item">Power Stats: ${selectChar.powerStats}</li>`)
+  selectedCharacter.append(`<li class="list-group-item">Speed Stats: ${selectChar.speedStats}</li>`)
+  selectedCharacter.append(`<li class="list-group-item">Sanity Stats: ${selectChar.sanityStats}</li>`)
 }

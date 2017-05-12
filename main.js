@@ -239,8 +239,11 @@ ipcMain.on('resume-game', (event, id) => {
 
 ipcMain.on('select-character', (event, charID) => {
   // socket.emit('select-character', charID)
-  socket.emit('select-character', charID, (characters) => {
-    event.sender.send('selected-characters', characters)
+  socket.emit('select-character', charID, (characters, selectedCharacter) => {
+    event.sender.send('selected-characters', {
+      characters: characters,
+      selectedCharacter: selectedCharacter
+    })
   })
 })
 
