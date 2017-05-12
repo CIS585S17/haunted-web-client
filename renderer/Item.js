@@ -7,6 +7,7 @@ class Item {
 			y:0,
 			z:Math.sin(ry)
 		};
+		this.glow = this.Glow(scene, this.model);
 	}
 
 	LoadModel(scene, x, y, z, rx, ry, rz, sx, sy, sz) {
@@ -20,6 +21,32 @@ class Item {
 		box.rotation.set(rx, ry, rz);
 		scene.add(box);
 		return box;
+	}
+
+	Glow(scene, model){
+	  var shadowGlow = new THREE.ShaderMaterial({
+	    uniforms:
+			{
+				"c":   { type: "f", value: 1.0 },
+				"p":   { type: "f", value: 6.0 },
+				glowColor: { type: "c", value: new THREE.Color(0x020b50) },
+				viewVector: { type: "v3", value: camera.position }
+			},
+			vertexShader:   vertexShader,
+			fragmentShader: fragmentShader,
+			side: THREE.BackSide,
+			blending: THREE.AdditiveBlending,
+			transparent: true
+	  });
+
+	  var shadowbox = model.clone();
+	  var modifier = new THREE.SubdivisionModifier( 2 );
+		modifier.modify(shadowbox);
+	  var shadow = new THREE.Mesh(shadowbox, shadowGlow.clone());
+	  shadow.position = model.position;
+		shadow.scale.multiplyScalar(1.5);
+		scene.add(shadow);
+		return shadow;
 	}
 
 	GetModel() {
@@ -55,6 +82,32 @@ class Item {
 					 	minY: min_Y, maxY: max_Y,
 						minZ: min_Z, maxZ: max_Z };
 
+	}
+
+	lookGlowRatio (var lookAtAngle, var objToPlayerAngle, var threshold){
+	  var dotProduct = (lookAtAngle.x*objToPlayerAngle.x) + (lookAtAngle.y*objToPlayerAngle.y);
+	  var angle = Math.abs(Math.acos(dotProduct));
+	  if(angle <= threshold){
+			if(angle == 0){
+				return .6;
+			}
+			else if(angle <= (threshold/5))){
+				return .5;
+			}
+			else if(angle <= (threshold*(2/5))){
+				return .4;
+			}
+			else if(angle <= (threshold*(3/5))){
+				return .3;
+			}
+			else if(angle <= (threshold*(4/5))){
+				return .2;
+			}
+			else if(angle == threshold){
+				return .1;
+			}
+	  }
+	  return null;
 	}
 }
 
