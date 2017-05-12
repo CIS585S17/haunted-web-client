@@ -20,9 +20,9 @@ let windowId
 
 ipcRenderer.on('load', (event, data) => {
   windowId = data.id
-  let playerHUD = new HUD()
+  //let playerHUD = new HUD()
 
-  playerHUD.addChatMsg(ipcRenderer.sendSync('update-chat-log', 'get message'))
+  //playerHUD.addChatMsg(ipcRenderer.sendSync('update-chat-log', 'get message'))
   ipcRenderer.on('un-pause', (paused) => {
       // TODO: unpause the game when paused is false
   })

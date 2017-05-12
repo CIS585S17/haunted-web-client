@@ -34,6 +34,7 @@
       const {RoomBox} = require('./RoomBox')
       const {Item} = require('./Item')
       const {CollisionEngine} = require('./CollisionEngine')
+        const {ipcRenderer} = require('electron')
 
     	  function requestFullScreen(element) {
       	  // Supports most browsers and their versions.
@@ -99,6 +100,11 @@
             dae.updateMatrix();
             //animate();
           });
+        }
+
+        function loadNewRoom(newRoom) 
+        {
+            load(newRoom, 0, 0, 0 );
         }
 
   	    function init() {
