@@ -5,7 +5,7 @@ const {WindowGraph} = require('./main/windows')
 const socket = require('socket.io-client')('https://haunted-server.herokuapp.com')
 // const socket = require('socket.io-client')('http://localhost:5000')
 
-let debug = true
+let debug = false
 let game = new Game()
 let windowGraph = new WindowGraph(BrowserWindow, debug, __dirname)
 let queueWindow
