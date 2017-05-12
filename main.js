@@ -87,11 +87,11 @@ socket.on('get-games', (games) => {
   windowGraph.joinGameWindow(win, {parentWinId: win.id, games: games})
 })
 
-socket.on('selected-characters', (characters) => {
-  if (queueWindow) {
-    queueWindow.window.webContents.send('selected-characters', characters)
-  }
-})
+// socket.on('selected-characters', (characters) => {
+//   if (queueWindow) {
+//     queueWindow.window.webContents.send('selected-characters', characters)
+//   }
+// })
 
 /**
  * Socket event to handle incoming message from the server
@@ -238,11 +238,10 @@ ipcMain.on('resume-game', (event, id) => {
 })
 
 ipcMain.on('select-character', (event, charID) => {
-  socket.emit('select-character', charID)
-  // socket.emit('select-character', charID, (characters) => {
-  //   console.log(characters)
-  //   event.sender.send('selected-characters', characters)
-  // })
+  // socket.emit('select-character', charID)
+  socket.emit('select-character', charID, (characters) => {
+    event.sender.send('selected-characters', characters)
+  })
 })
 
 /**
