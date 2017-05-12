@@ -2,8 +2,8 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 const {Game} = require('./main/game')
 const {WindowGraph} = require('./main/windows')
-//const socket = require('socket.io-client')('https://haunted-server.herokuapp.com')
-const socket = require('socket.io-client')('http://localhost:5000')
+const socket = require('socket.io-client')('https://haunted-server.herokuapp.com')
+// const socket = require('socket.io-client')('http://localhost:5000')
 
 let debug = true
 let game = new Game()
@@ -14,8 +14,8 @@ let queueWindow
  * Function that opens the main menu window
  */
 function createWindow () {
-//  windowGraph.startWindow()
-   windowGraph.gameWindow()
+  windowGraph.startWindow()
+//    windowGraph.gameWindow()
 }
 
 /**
@@ -113,7 +113,6 @@ socket.on('updateChatLog', (msg) => {
   game.chatLog = msg
 })
 
-
 /**
  * End of Socket Events and Begining of Main Events
  * Main Events should be listed in alphabetical order
@@ -183,12 +182,11 @@ ipcMain.on('join-game', (event, index) => {
  * collision with a door.
  */
 ipcMain.on('door-collision', (event, direction) => {
-    console.log('before socket emit')
-    socket.emit('room-request', 'request')
-  //  socket.emit('room-request', direction, (room) => {
-  //      console.log('before event sender')
-  //  event.sender.send('the-room', room)
-  //})
+  console.log('before socket emit')
+  socket.emit('room-request', direction, (room) => {
+    console.log('before event sender')
+    event.sender.send('the-room', room)
+  })
 })
 
 /**
