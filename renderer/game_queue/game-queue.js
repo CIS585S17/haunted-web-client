@@ -55,8 +55,10 @@ function loadCharacters (characters, selectChar) {
       })
     }
   }
-  selectedCharacter.append(`<li class="list-group-item">Character ID: ${selectChar.id}</li>`)
-  selectedCharacter.append(`<li class="list-group-item">Power Stats: ${selectChar.powerStats}</li>`)
-  selectedCharacter.append(`<li class="list-group-item">Speed Stats: ${selectChar.speedStats}</li>`)
-  selectedCharacter.append(`<li class="list-group-item">Sanity Stats: ${selectChar.sanityStats}</li>`)
+  if (selectChar) {
+    selectedCharacter.append(`<li class="list-group-item">Character ID: ${selectChar.id}</li>`)
+    selectedCharacter.append(`<li class="list-group-item">Power Stats: ${selectChar.powerStats}</li>`)
+    selectedCharacter.append(`<li class="list-group-item">Speed Stats: ${selectChar.speedStats}</li>`)
+    selectedCharacter.append(`<li class="list-group-item">Sanity Stats: ${selectChar.sanityStats}</li>`)
+  }
 }
