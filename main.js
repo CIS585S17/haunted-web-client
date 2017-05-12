@@ -87,9 +87,11 @@ socket.on('get-games', (games) => {
   windowGraph.joinGameWindow(win, {parentWinId: win.id, games: games})
 })
 
-// socket.on('selected-characters', (characters) => {
-//   queueWindow.window.webContents.send('selected-characters', characters)
-// })
+socket.on('selected-characters', (characters) => {
+  if (queueWindow) {
+    queueWindow.window.webContents.send('selected-characters', characters)
+  }
+})
 
 /**
  * Socket event to handle incoming message from the server
