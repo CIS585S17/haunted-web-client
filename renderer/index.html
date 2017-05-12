@@ -104,7 +104,7 @@
 
         function loadNewRoom(newRoom) 
         {
-            load(newRoom, 0, 0, 0 );
+            load(newRoom.path, 0, 0, 0 );
         }
 
   	    function init() {
@@ -172,9 +172,18 @@
           let x = movement.update(boxPlayer, simpleCamera);
           collisionEngine.PlayerColliding(boxPlayer.GetCollisionModel(), simpleCamera.getView(), boxPlayer.GetModel());
           let can_leave_room = collisionEngine.IsLookingAt(boxPlayer.GetPosVec(), door.GetPos(), varAngle, 2.5);
+
+          if(can_leave_room)
+          {
+              ipcRenderer.send('door-collision', 'forward')
+          }
+
           console.log(can_leave_room);
           renderer.render(scene, simpleCamera.getCamera());
-  		  }
+        }
+        ipcRenderer.on('the-room', (event, room) => {
+            loadNewRoom(room)
+        })
       // }
     </script>
 </body>
