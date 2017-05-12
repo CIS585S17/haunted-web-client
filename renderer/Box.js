@@ -41,6 +41,10 @@ class Box {
 		return box;
 	}
 
+	SetModel(m) {
+		this.model = m
+	}
+
 	GetModel() {
 	  return this.model;
 	}

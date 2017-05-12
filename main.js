@@ -14,7 +14,8 @@ let queueWindow
  * Function that opens the main menu window
  */
 function createWindow () {
-  windowGraph.startWindow()
+  //windowGraph.startWindow()
+  windowGraph.gameWindow();
 }
 
 /**

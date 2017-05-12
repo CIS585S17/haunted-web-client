@@ -64,14 +64,18 @@
         collisionEngine.AddRoom(room1Box.GetCollisionModel());*/
 
         //load models
-        load( 'models/library_room.dae', 0, 0, 0 );
-        let boxPlayer = new Box(scene, 3, .75, -3);
+        //load( 'models/library_room.dae', 0, 0, 0 );
+        //let boxPlayer = new Box(scene, 3, .75, -3);
         let room1Box = new RoomBox(scene, 3.18, 1.5, -4.75, 3.96, 3, 8.1);
         let desk1Box = new RoomBox(scene, 3.2, .4, -6.3, 1, .5, .5);
         let desk2Box = new RoomBox(scene, 4.05, .4, -6.78, .7, .5, 1.45);
         let desk3Box = new RoomBox(scene, 2.5, .4, -6.78, .5, .5, 1.45);
-        let door = new Item(scene, 3.4, .75, -0.7, 0, Math.PI/2, 0, .05, 1.5, .65);
-
+        let door = new Item(scene, 3.4, .75, -0.7, 0, Math.PI/2, 0, .05, 1.5, .65, simpleCamera.getCamera());
+        let model1;
+        load1( './envy/envy.dae', 3,0,-3);
+        let boxPlayer = new Box(scene, 3, .75, -3);
+        console.log(model1);
+        //boxPlayer.SetModel(model1);
         //load CollisionEngine
         let collisionEngine = new CollisionEngine();
         //collisionEngine.AddPlayerBox(boxPlayer.GetCollisionModel());
@@ -101,13 +105,52 @@
           });
         }
 
+        /*var dae2;
+        var loader2 = new THREE.ColladaLoader();
+        //loader2.options.convertUpAxis = true;
+        loader2.load( './envy/envy.dae', function ( collada ){
+          dae2 = collada.scene;
+          dae2.traverse( function ( child ){
+            if( child instanceof THREE.SkinnedMesh ){
+              var animation = new THREE.Animation( child, child.geometry.animation );
+              animation.play();
+            }
+          });
+          dae2.scale.x = dae2.scale.y = dae2.scale.z = 2.0;
+          dae2.updateMatrix();
+          scene.add(dae2);
+        });*/
+
+
+        function load1( ObjectPath, x, y, z) {
+          let loader1 = new THREE.ColladaLoader();
+          //loader1.options.convertUpAxis = true;
+          loader1.load(ObjectPath, function(collada) {
+            let dae2 = collada.scene;
+            dae2.traverse( function ( child ){
+              if( child instanceof THREE.SkinnedMesh ){
+                var animation = new THREE.Animation( child, child.geometry.animation );
+                animation.play();
+              }
+            });
+            dae2.scale.x = dae2.scale.y = dae2.scale.z = 0.5;
+            dae2.position.x = x;
+            dae2.position.y = y;
+            dae2.position.z = z;
+            dae2.updateMatrix();
+            scene.add(dae2);
+            //console.log(dae2);
+            model1 = dae2;
+          });
+        }
+
   	    function init() {
   			  container = document.createElement( 'div' );
   			  document.body.appendChild( container );
 
           //simpleCamera.setView('firstPerson');
-          //simpleCamera.setView('thirdPerson');
-          simpleCamera.setView('aboveDoor');
+          simpleCamera.setView('thirdPerson');
+          //simpleCamera.setView('aboveDoor');
 
           simpleCamera.setCamera(new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 ))
   			  scene = new THREE.Scene();
@@ -166,7 +209,7 @@
           let x = movement.update(boxPlayer, simpleCamera);
           collisionEngine.PlayerColliding(boxPlayer.GetCollisionModel(), simpleCamera.getView(), boxPlayer.GetModel());
           let can_leave_room = collisionEngine.IsLookingAt(boxPlayer.GetPosVec(), door.GetPos(), varAngle, 2.5);
-          console.log(can_leave_room);
+          //console.log(can_leave_room);
           renderer.render(scene, simpleCamera.getCamera());
   		  }
       // }

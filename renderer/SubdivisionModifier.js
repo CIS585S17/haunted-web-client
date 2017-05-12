@@ -138,7 +138,7 @@ THREE.GeometryUtils.computeEdgeFaces = function ( geometry ) {
 /////////////////////////////
 
 // Performs an iteration of Catmull-Clark Subdivision
-THREE.SubdivisionModifier.prototype.smooth = function ( oldGeometry ) {
+export smooth = function ( oldGeometry ) {
 
 	//debug( 'running smooth' );
 

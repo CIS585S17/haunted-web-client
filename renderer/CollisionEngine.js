@@ -67,8 +67,8 @@ class CollisionEngine {
     item_vector.y = item_vector.y/item_magnitude;
     item_vector.z = item_vector.z/item_magnitude;
     let player_magnitude = Math.sqrt( player_vector.x*player_vector.x +
-                                      player_vector.x*player_vector.x +
-                                      player_vector.x*player_vector.x);
+                                      player_vector.y*player_vector.y +
+                                      player_vector.z*player_vector.z);
     player_vector.x = player_vector.x/item_magnitude;
     player_vector.y = player_vector.y/item_magnitude;
     player_vector.z = player_vector.z/item_magnitude;
