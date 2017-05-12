@@ -174,7 +174,7 @@ ipcMain.on('join-game', (event, index) => {
 ipcMain.on('door-collision', (event, direction) => {
     socket.emit('room-request', (direction, room) => {
         event.sender.send('the-room', room)
-    }
+    })
 })
 
 /**
