@@ -1,10 +1,7 @@
 'use strict'
 const {ipcRenderer} = require('electron')
-const $ = require('jquery')
-const {HUD} = require('./js/hud')
-
-let windowId
 var rotationY = 0
+
 var rotationZ = 0
 
 let movementInput = {
@@ -14,8 +11,12 @@ let movementInput = {
   right: false
 }
 
-let hudMode = false
+let noMovementXZ = true
 
+let jump = false
+
+let hudMode = false
+let windowId
 
 ipcRenderer.on('load', (event, data) => {
   windowId = data.id
@@ -26,6 +27,13 @@ ipcRenderer.on('load', (event, data) => {
       // TODO: unpause the game when paused is false
   })
 })
+
+function paused () {
+  movementInput.up = false
+  movementInput.down = false
+  movementInput.left = false
+  movementInput.right = false
+}
 
 window.onmousemove = function (event) {
   // Only move the camera if the player is not navigating the hud
@@ -43,110 +51,95 @@ window.onmousedown = function (event) {
   document.body.requestPointerLock()
 }
 window.onkeydown = function (event) {
-  // Only move the player if the player is not navigating the hud
+          // Only move the player if the player is not navigating the hud
   if (!hudMode) {
     switch (event.key) {
-        case 'w':
-        case 'W':
-          movementInput.up = true
-        break
-        case 's':
-        case 'S':
-          movementInput.down = true
-        break
-        case 'a':
-        case 'A':
-          movementInput.left = true
-        break
-        case 'd':
-        case 'D':
-          movementInput.right = true
-
-        break 
-      case 'ArrowUp':
-          movementInput.up = true
-          //event.preventDefault()
-        break
-      case 'ArrowDown':
-          movementInput.down = true
-         // event.preventDefault()
-        break
-      case 'ArrowLeft':
-          movementInput.left = true
-         // event.preventDefault()
-        break
-      case 'ArrowRight':
-          movementInput.right = true
-         // event.preventDefault()
-        break     
-      case ' ':
+      case 'w':
+        noMovementXZ = false
+        movementInput.up = true
         event.preventDefault()
         break
-      case 'h':
-        if (UI.style.visibility === 'hidden') {
-          UI.style.visibility = 'visible'
-        } else {
-          UI.style.visibility = 'hidden'
-        }
+      case 's':
+        noMovementXZ = false
+        movementInput.down = true
+        event.preventDefault()
         break
-        case 'Tab':
-        case 'Escape':
-          ipcRenderer.send('pause-game', windowId)
-          paused()
-          break
-        case 'x':
-            ipcRenderer.send('door-collision', 'forward')
-            break
-       default:
-            break
+      case 'a':
+        noMovementXZ = false
+        movementInput.left = true
+        event.preventDefault()
+        break
+      case 'd':
+        noMovementXZ = false
+        movementInput.right = true
+        event.preventDefault()
+        break
+      case 'ArrowUp':
+        event.preventDefault()
+        break
+      case 'ArrowDown':
+        event.preventDefault()
+        break
+      case 'ArrowLeft':
+        event.preventDefault()
+        break
+      case 'ArrowRight':
+        event.preventDefault()
+        break
+      case ' ':
+        jump = true
+        event.preventDefault()
+        break
+
+      case 'h':
+        event.preventDefault()
+        if (UI.style.visibility === 'hidden') { UI.style.visibility = 'visible' } else { UI.style.visibility = 'hidden' }
+        break
+      case 'Tab':
+        ipcRenderer.send('pause-game', windowId)
+        paused()
+        break
+      default:
+        noMovementXZ = false
+        break
     }
   } else {
               // Enter
-    if (event.keyCode === 13 && document.activeElement === chatTextArea) {
+    if (event.keyCode == 13 && document.activeElement === chatTextArea) {
       event.preventDefault()
     }
   }
 }
-
-function paused () {
-    movementInput.up = false
-    movementInput.down = false
-    movementInput.left = false
-    movementInput.right = false
-}
 window.onkeyup = function (event) {
   if (!hudMode) {
     switch (event.key) {
-        case 'w':
-        case 'W':
-            movementInput.up = false
-            break
-        case 's':
-        case 'S':
-            movementInput.down = false
-            break
-        case 'a':
-        case 'A':
-            movementInput.left = false
-            break
-        case 'd':
-        case 'D':
-            movementInput.right = false
-            break
-        case 'ArrowUp':
-            movementInput.up = false
-            break
-        case 'ArrowDown':
-            movementInput.down = false
-            break
-        case 'ArrowLeft':
-            movementInput.left = false
-            break
-        case 'ArrowRight':
-            movementInput.right = false
-            break
-        default:
-            break
+      case 'w':
+        noMovementXZ = true
+        movementInput.up = false
+        event.preventDefault()
+        break
+      case 's':
+        noMovementXZ = true
+        movementInput.down = false
+        event.preventDefault()
+        break
+      case 'a':
+        noMovementXZ = true
+        movementInput.left = false
+        event.preventDefault()
+        break
+      case 'd':
+        noMovementXZ = true
+        movementInput.right = false
+        event.preventDefault()
+        break
+      case ' ':
+        jump = false
+        event.preventDefault()
+        break
+      /* default:
+        noMovementXZ = false
+        break */
     }
   } else {
     // Enter
@@ -169,7 +162,9 @@ function update (myPlayer, myCamera) {
   let x = position.x
   let y = position.y
   let z = position.z
-
+  if (noMovementXZ) {
+    myPlayer.NoMoveXZ()
+  }
   if (movementInput.up) {
     // move player
     myPlayer.MoveUp(rotationY)
@@ -181,14 +176,25 @@ function update (myPlayer, myCamera) {
     myCamera.move(x, z, rotationY, rotationZ)
   }
   if (movementInput.left) {
-    // move player
-    myPlayer.MoveLeft(rotationY)
-    myCamera.move(x, z, rotationY, rotationZ)
+    if (myCamera.getView() === 'aboveDoor') {
+      rotationY -= 1.5
+    } else {
+      // move player
+      myPlayer.MoveLeft(rotationY)
+      myCamera.move(x, z, rotationY, rotationZ)
+    }
   }
   if (movementInput.right) {
-    // move player
-    myPlayer.MoveRight(rotationY)
-    myCamera.move(x, z, rotationY, rotationZ)
+    if (myCamera.getView() === 'aboveDoor') {
+      rotationY += 1.5
+    } else {
+      // move player
+      myPlayer.MoveRight(rotationY)
+      myCamera.move(x, z, rotationY, rotationZ)
+    }
+  }
+  if (jump) {
+    myPlayer.Jump()
   }
   // move camera
   myCamera.move(x, z, rotationY, rotationZ)
@@ -196,7 +202,9 @@ function update (myPlayer, myCamera) {
   myPlayer.Rotate(rotationY)
   // rotate camera
   myCamera.rotate(x, y, z, rotationY, rotationZ)
-  return 'a'
+  // return 'a';
+  // update player
+  myPlayer.Update()
 }
 
 module.exports = {

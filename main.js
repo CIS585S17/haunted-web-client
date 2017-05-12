@@ -8,6 +8,7 @@ const {WindowGraph} = require('./main/windows')
 let debug = true
 let game = new Game()
 let windowGraph = new WindowGraph(BrowserWindow, debug, __dirname)
+let queueWindow
 
 /**
  * Function that opens the main menu window
@@ -17,11 +18,19 @@ function createWindow () {
   windowGraph.gameWindow()
 }
 
+/**
+ * Loads the game queue window after emiting and getting
+ * a callback of the avaiable players.
+ * @param {integer} id The id of the current window
+ */
 function loadGameQueueWindow (id) {
-  let mainWin = windowGraph.windows[0]
-  windowGraph.gameQueueWindow(mainWin, {
-    parentWinId: mainWin.id,
-    characters: game.availableCharacters
+  socket.emit('get-characters', (characters) => {
+    // game.availableCharacters = characters
+    let mainWin = windowGraph.windows[0]
+    queueWindow = windowGraph.gameQueueWindow(mainWin, {
+      parentWinId: mainWin.id,
+      characters: characters
+    })
   })
 }
 
@@ -79,6 +88,12 @@ socket.on('get-games', (games) => {
   windowGraph.joinGameWindow(win, {parentWinId: win.id, games: games})
 })
 
+socket.on('selected-characters', (characters) => {
+  if (queueWindow) {
+    queueWindow.window.webContents.send('selected-characters', {characters: characters})
+  }
+})
+
 /**
  * Socket event to handle incoming message from the server
  * to start the game one all players have filled up the game queue
@@ -128,8 +143,11 @@ ipcMain.on('host', (event, msg) => {
         return element.id === msg.id
       })
       hostWin.window.close()
-      socket.emit('get-characters')
       loadGameQueueWindow()
+      // socket.emit('get-characters', (characters) => {
+      //   game.availableCharacters = characters
+      //   loadGameQueueWindow()
+      // })
     }
   })
 })
@@ -151,7 +169,6 @@ ipcMain.on('host-game', (event, id) => {
  */
 ipcMain.on('join', (event, data) => {
   socket.emit('join', data.game.id)
-  console.log('data', data)
   let joinWin = windowGraph.windows.find((element) => {
     return element.id === data.id
   })
@@ -237,6 +254,16 @@ ipcMain.on('resume-game', (event, id) => {
   windowGraph.windows.find((element) => {
     return element.id === id
   }).window.close()
+})
+
+ipcMain.on('select-character', (event, charID) => {
+  // socket.emit('select-character', charID)
+  socket.emit('select-character', charID, (characters, selectedCharacter) => {
+    event.sender.send('selected-characters', {
+      characters: characters,
+      selectedCharacter: selectedCharacter
+    })
+  })
 })
 
 /**
