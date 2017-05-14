@@ -1,6 +1,7 @@
 'use strict'
 const {app, BrowserWindow, ipcMain} = require('electron')
 const {Game} = require('./main/game')
+const {Player} = require('./main/player')
 const {WindowGraph} = require('./main/windows')
 const socket = require('socket.io-client')('https://haunted-server.herokuapp.com')
 // const socket = require('socket.io-client')('http://localhost:5000')
@@ -43,7 +44,7 @@ app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    socket.emit('leave-game')
+    socket.emit('leave-game', )
     app.quit()
   }
 })
@@ -124,13 +125,14 @@ socket.on('updateChatLog', (msg) => {
  * the game. Also closes previous modal window
  */
 ipcMain.on('host', (event, msg) => {
-  socket.emit('host-game', msg.name, (error) => {
+  socket.emit('host-game', msg.name, (error, playerID) => {
     if (error) {
       event.sender.send('error', error)
     } else {
       // let mainWin = windowGraph.windows.find((element) => {
       //   return element.id === 0
       // })
+      game.addPlayer(new Player(playerID))
       let hostWin = windowGraph.windows.find((element) => {
         return element.id === msg.id
       })
@@ -156,13 +158,15 @@ ipcMain.on('host-game', (event, id) => {
  * which game instance you want to join
  */
 ipcMain.on('join', (event, data) => {
-  socket.emit('join', data.game.id)
-  game.gameId = data.game.id
-  let joinWin = windowGraph.windows.find((element) => {
-    return element.id === data.id
+  socket.emit('join', data.game.id, (playerID) => {
+    game.gameId = data.game.id
+    game.addPlayer(new Player(playerID))
+    let joinWin = windowGraph.windows.find((element) => {
+      return element.id === data.id
+    })
+    joinWin.window.close()
+    loadGameQueueWindow()
   })
-  joinWin.window.close()
-  loadGameQueueWindow()
 })
 
 /**

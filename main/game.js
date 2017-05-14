@@ -8,6 +8,10 @@ class Game {
     this.paused = false
     this.player = undefined
   }
+
+  addPlayer (player) {
+    this.player = player
+  }
 }
 
 module.exports = {
