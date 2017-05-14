@@ -1,10 +1,13 @@
 # Haunted-Web-Client
-A Engine and Multiplayer Game run on Electron
+A cross-platform Engine and Multiplayer Game run on Electron
 
 ## Installation
 ```$ npm install```
 Once installed
 ```$ npm start``` to play the game.
+
+## Requirements
+1. haunted-server [a link](https://github.com/CIS585S17/haunted-server)
 
 ## Debug
 You can turn dev-tools on and off on all windows by going into main.js and turning debug to false for off and true for on.
@@ -27,3 +30,4 @@ have chosen their character, the game will start.
 ## Future Work
 1. Allow player to move to multiple rooms
 2. Remove player from socket.io room on server so they can host/join a new game.
+3. Turn into a downloadable executable game using Electron build tools
