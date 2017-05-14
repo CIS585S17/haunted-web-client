@@ -15,7 +15,6 @@ let queueWindow
  */
 function createWindow () {
   windowGraph.startWindow()
-//    windowGraph.gameWindow()
 }
 
 /**
@@ -136,10 +135,6 @@ ipcMain.on('host', (event, msg) => {
       })
       hostWin.window.close()
       loadGameQueueWindow()
-      // socket.emit('get-characters', (characters) => {
-      //   game.availableCharacters = characters
-      //   loadGameQueueWindow()
-      // })
     }
   })
 })
@@ -262,7 +257,6 @@ ipcMain.on('select-character', (event, charID) => {
 })
 
 ipcMain.on('start', (event) => {
-  console.log(game.gameId)
   socket.emit('start', game.gameId)
 })
 
