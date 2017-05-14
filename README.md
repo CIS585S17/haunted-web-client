@@ -7,7 +7,7 @@ Once installed
 ```$ npm start``` to play the game.
 
 ## Requirements
-1. haunted-server [a link](https://github.com/CIS585S17/haunted-server)
+1. [haunted-server](https://github.com/CIS585S17/haunted-server)
 
 ## Debug
 You can turn dev-tools on and off on all windows by going into main.js and turning debug to false for off and true for on.
