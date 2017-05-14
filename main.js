@@ -44,7 +44,7 @@ app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    socket.emit('leave-game', )
+    socket.emit('leave-game', game.player.id)
     app.quit()
   }
 })
@@ -234,7 +234,7 @@ ipcMain.on('quit-game', (event) => {
  * window.
  */
 ipcMain.on('quit-to-main-window', (event, data) => {
-  socket.emit('leave-game')
+  socket.emit('leave-game', game.player.id)
   windowGraph.startWindow()
   for (let i = 0; i < windowGraph.windows.length - 1; i++) {
     windowGraph.windows[i].window.close()
