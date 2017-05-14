@@ -229,6 +229,7 @@ ipcMain.on('quit-game', (event) => {
  * window.
  */
 ipcMain.on('quit-to-main-window', (event, data) => {
+  socket.emit('leave-game')
   windowGraph.startWindow()
   for (let i = 0; i < windowGraph.windows.length - 1; i++) {
     windowGraph.windows[i].window.close()
