@@ -246,6 +246,7 @@ ipcMain.on('quit-to-main-window', (event, data) => {
 /**
  * Event that closes modal menu window and resumes the
  * game
+ * @param {integer} id The id number of the window to close
  */
 ipcMain.on('resume-game', (event, id) => {
   game.paused = false

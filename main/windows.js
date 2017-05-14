@@ -219,25 +219,39 @@ class WindowGraph {
    *
    * @memberOf WindowGraph
    */
-  optionsWindow (index) {
-    this.windows.push(new this.BrowserWindow({width: 400, height: 450, resizable: true, maximizable: false, parent: this.windows[index], modal: true, show: false}))
-    let i = this.windows.length - 1
-    let optionsWin = this.windows[i]
-    optionsWin.loadURL(`file://${this.dirname}/public/options/options.html`)
-    optionsWin.once('ready-to-show', () => {
-      optionsWin.show()
+  optionsWindow (parentWin, options) {
+    this.windows.push(new GameWindow(
+      this.windows.length,
+      this.debug,
+      this.dirname,
+      'options/options.html',
+      true,
+      options,
+      new this.BrowserWindow({width: 800, height: 600, resizable: false, maximizable: false, parent: parentWin.window, modal: true, show: false})
+    ))
+    let win = this.windows[this.windows.length - 1]
+    win.window.on('closed', () => {
+      this.windows.splice(this.windows.indexOf(win), 1)
     })
-    optionsWin.webContents.on('did-finish-load', () => {
-      optionsWin.webContents.send('load', i)
-    })
-    if (this.debug) {
-      optionsWin.webContents.openDevTools()
-    }
 
-    optionsWin.on('closed', () => {
-      this.windows.splice(i, 1)
+    // this.windows.push(new this.BrowserWindow({width: 400, height: 450, resizable: true, maximizable: false, parent: this.windows[index], modal: true, show: false}))
+    // let i = this.windows.length - 1
+    // let optionsWin = this.windows[i]
+    // optionsWin.loadURL(`file://${this.dirname}/public/options/options.html`)
+    // optionsWin.once('ready-to-show', () => {
+    //   optionsWin.show()
+    // })
+    // optionsWin.webContents.on('did-finish-load', () => {
+    //   optionsWin.webContents.send('load', i)
+    // })
+    // if (this.debug) {
+    //   optionsWin.webContents.openDevTools()
+    // }
 
-    })
+    // optionsWin.on('closed', () => {
+    //   this.windows.splice(i, 1)
+
+    // })
   }
 
   /**
