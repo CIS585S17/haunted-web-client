@@ -7,7 +7,7 @@ Once installed
 ```$ npm start``` to play the game.
 
 ## Requirements
-1. [haunted-server](https://github.com/CIS585S17/haunted-server) currently running on Heroku
+1. [haunted-server](https://github.com/CIS585S17/haunted-server/tree/v1.0) currently running on Heroku
 
 ## Debug
 You can turn dev-tools on and off on all windows by going into main.js and turning debug to false for off and true for on.
