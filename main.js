@@ -184,9 +184,9 @@ ipcMain.on('join-game', (event, index) => {
  * collision with a door.
  */
 ipcMain.on('door-collision', (event, direction) => {
-  console.log('before socket emit')
+  // console.log('before socket emit')
   socket.emit('room-request', direction, (room) => {
-    console.log('before event sender')
+    // console.log('before event sender')
     event.sender.send('the-room', room)
   })
 })
@@ -212,6 +212,7 @@ ipcMain.on('options', (event, index) => {
  */
 ipcMain.on('pause-game', (event, id) => {
   game.paused = true
+  console.log(id)
   let win = windowGraph.windows.find((element) => {
     return element.id === id
   })
@@ -250,6 +251,8 @@ ipcMain.on('quit-to-main-window', (event, data) => {
  */
 ipcMain.on('resume-game', (event, id) => {
   game.paused = false
+  console.log('length: ', windowGraph.windows)
+  console.log(id)
   windowGraph.windows.find((element) => {
     return element.id === id
   }).window.close()

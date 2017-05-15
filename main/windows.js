@@ -13,7 +13,7 @@ class GameWindow {
    * @param {string} dirname The path of the directory of the parent
    * @param {string} file The path of the html file from the renderer directory
    * @param {boolean} modal Identifies the window as a modal if true
-   * @param {object} options Any additional properties to send renderer
+   * @param {object} options Any additional properties to send to renderer
    * @param {BrowserWindow} window The window to be loaded and displayed
    *
    * @memberOf GameWindow
@@ -88,7 +88,7 @@ class WindowGraph {
    * Cereate the game window allowing the player to play the game.
    * Handle close Event for the window when called, dereference the window
    * and remove it from the windows array.
-   * @param {object} options Any additional properties to send renderer
+   * @param {object} options Any additional properties to send to renderer
    *
    * @memberOf WindowGraph
    */
@@ -114,7 +114,7 @@ class WindowGraph {
    * Handle close Event for the window when called, dereference the window
    * and remove it from the windows array.
    * @param {GameWindow} parentWin The parent of this modal window
-   * @param {object} options Any additional properties to send renderer
+   * @param {object} options Any additional properties to send to renderer
    *
    * @memberOf WindowGraph
    */
@@ -140,7 +140,7 @@ class WindowGraph {
    * Handle close Event for the window when called, dereference the window
    * and remove it from the windows array.
    * @param {GameWindow} parentWin The parent of this modal window
-   * @param {object} options Any additional properties to send renderer
+   * @param {object} options Any additional properties to send to renderer
    *
    * @memberOf WindowGraph
    */
@@ -165,7 +165,7 @@ class WindowGraph {
    * Handle close Event for the window when called, dereference the window
    * and remove it from the windows array.
    * @param {GameWindow} parentWin The parent of this modal window
-   * @param {object} options Any additional properties to send renderer
+   * @param {object} options Any additional properties to send to renderer
    *
    * @memberOf WindowGraph
    */
@@ -190,7 +190,7 @@ class WindowGraph {
    * Handle close Event for the window when called, dereference the window
    * and remove it from the windows array.
    * @param {GameWindow} parentWin The parent of this modal window
-   * @param {object} options Any additional properties to send renderer
+   * @param {object} options Any additional properties to send to renderer
    *
    * @memberOf WindowGraph
    */
@@ -215,7 +215,7 @@ class WindowGraph {
    * Handle close Event for the window when called, dereference the window
    * and remove it from the windows array.
    * @param {GameWindow} parentWin The parent of this modal window
-   * @param {object} options Any additional properties to send renderer
+   * @param {object} options Any additional properties to send to renderer
    *
    * @memberOf WindowGraph
    */
@@ -233,32 +233,13 @@ class WindowGraph {
     win.window.on('closed', () => {
       this.windows.splice(this.windows.indexOf(win), 1)
     })
-
-    // this.windows.push(new this.BrowserWindow({width: 400, height: 450, resizable: true, maximizable: false, parent: this.windows[index], modal: true, show: false}))
-    // let i = this.windows.length - 1
-    // let optionsWin = this.windows[i]
-    // optionsWin.loadURL(`file://${this.dirname}/public/options/options.html`)
-    // optionsWin.once('ready-to-show', () => {
-    //   optionsWin.show()
-    // })
-    // optionsWin.webContents.on('did-finish-load', () => {
-    //   optionsWin.webContents.send('load', i)
-    // })
-    // if (this.debug) {
-    //   optionsWin.webContents.openDevTools()
-    // }
-
-    // optionsWin.on('closed', () => {
-    //   this.windows.splice(i, 1)
-
-    // })
   }
 
   /**
    * Creates the start main menu window.
    * Handle close Event for the window when called, dereference the window
    * and remove it from the windows array.
-   * @param {object} options Any additional properties to send renderer
+   * @param {object} options Any additional properties to send to renderer
    *
    * @memberOf WindowGraph
    */
