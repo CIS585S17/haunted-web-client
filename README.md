@@ -26,7 +26,7 @@ have chosen their character, the game will start.
 1. Once player leaves the game they have to shut down the game by exiting all windows and restarting to reconnect to the server. The game does not crash, but it returns
    a empty character list when on the game-queue window. The problem is the player is still part of the socket.io room and they need to be removed so they can be added to a new game instance.
    Currently still working on how to do this using socket.io, know it can be done just not implemented yet.
-2. Resume game button ends the game.
+2. Resume game button ends the game. Noticed it would end game on one computer but not on second players computer. 
 
 ## Future Work
 1. Allow player to move to multiple rooms
